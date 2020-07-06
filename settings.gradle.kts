@@ -1,1 +1,1 @@
-rootProject.name = "offender-assessment-api"
+rootProject.name = "offender-assessments-api"

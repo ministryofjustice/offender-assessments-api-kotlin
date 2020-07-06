@@ -1,6 +1,6 @@
 spring:
   application:
-    name: offender-assessment-api
+    name: offender-assessments-api
   cache:
     cache-names: users
     caffeine:
