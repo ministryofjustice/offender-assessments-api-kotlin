@@ -1,0 +1,36 @@
+package uk.gov.justice.digital.oasys.jpa.entities
+
+import java.io.Serializable
+import javax.persistence.*
+
+@Entity
+@Table(name = "SSP_OBJECTIVE_MEASURE")
+data class SspObjectiveMeasure (
+
+        @Id
+        @Column(name = "SSP_OBJECTIVE_MEASURE_PK")
+        private var sspObjectiveMeasurePk: Long? = null,
+
+        @Column(name = "OBJECTIVE_STATUS_COMMENTS")
+        private val objectiveStatusComments: String? = null,
+
+        @ManyToOne
+        @JoinColumns(JoinColumn(name = "OBJECTIVE_STATUS_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OBJECTIVE_STATUS_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
+        private val objectiveStatus: RefElement? = null,
+
+        @Column(name = "SSP_OBJECTIVES_IN_SET_PK")
+        private val sspObjectivesInSetPk: Long? = null
+
+) : Serializable {
+
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o !is SspObjectiveMeasure) return false
+        return sspObjectiveMeasurePk == o.sspObjectiveMeasurePk
+    }
+
+    override fun hashCode(): Int {
+        return 31
+    }
+
+}
