@@ -18,7 +18,7 @@ import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 @Service
 @Transactional(readOnly = true)
 class AssessmentService constructor(
-        private val simpleAssessmentRepository: AssessmentRepository,
+        private val assessmentRepository: AssessmentRepository,
         private val offenderService: OffenderService,
         private val sectionService: SectionService
 ) {
@@ -33,38 +33,36 @@ class AssessmentService constructor(
 
     fun getAssessmentsForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<AssessmentSummaryDto>? {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
-        val assessments = simpleAssessmentRepository.getAssessmentsForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
+        val assessments = assessmentRepository.getAssessmentsForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
         log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
         return AssessmentSummaryDto.from(assessments);
     }
 
     fun getLatestAssessmentForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto? {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
-        val assessment = simpleAssessmentRepository.getLatestAssessment(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
+        val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus) ?:
+                throw EntityNotFoundException("Assessment for Oasys Offender ${offenderId}, not found!")
         log.info("Found Assessment type: ${assessment?.assessmentType} status: ${assessment?.assessmentStatus} for identity: ($identity, $identityType)")
         return populateAssessmentDto(assessment);
     }
 
     fun getAssessment(oasysSetId: Long?): AssessmentDto? {
-        val assessment = simpleAssessmentRepository.getAssessment(oasysSetId) ?:
+        val assessment = assessmentRepository.getAssessment(oasysSetId) ?:
                 throw EntityNotFoundException("Assessment for OasysSetId ${oasysSetId}, not found!")
         log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for oasysSetId: $oasysSetId")
         return populateAssessmentDto(assessment)
     }
 
     private fun populateAssessmentDto(assessment: Assessment?): AssessmentDto? {
-        val childSafeguardingIndicated = calculateChildSafeguardingIndicated(assessment?.assessmentType, assessment?.oasysSetPk)
+        val childSafeguardingIndicated = calculateChildSafeguardingIndicated(assessment?.oasysSetPk)
         val needs= calculateNeeds(assessment?.assessmentType, assessment?.oasysSetPk)
         return AssessmentDto.from(assessment, childSafeguardingIndicated, needs)
     }
 
-    private fun calculateChildSafeguardingIndicated(assessmentType: String?, oasysSetId: Long?) : Boolean? {
-        if (LAYER_3 != assessmentType) {
-            return null
-        }
+    private fun calculateChildSafeguardingIndicated(oasysSetId: Long?) : Boolean? {
         val roshSection = sectionService.getSectionForAssessment(oasysSetId, ROSH_SECTION)
         val answers = roshSection?.getRefAnswers(setOf("R2.1", "R2.2"))
-        if (answers?.isEmpty() == true) {
+        if (answers.isNullOrEmpty()) {
             return null;
         }
         return anyAnswersArePositive(answers?.values)

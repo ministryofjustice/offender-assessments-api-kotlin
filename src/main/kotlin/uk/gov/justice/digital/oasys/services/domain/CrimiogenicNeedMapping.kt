@@ -27,6 +27,7 @@ class CrimiogenicNeedMapping {
                     "4" to mapOf(
                             HARM_QUESTION to "4.96",
                             REOFFENDING_QUESTION to "3.98"),
+                    //TODO: Financial is not an official need
                     "5" to mapOf(
                             HARM_QUESTION to "5.98",
                             REOFFENDING_QUESTION to "5.99"),
@@ -42,6 +43,7 @@ class CrimiogenicNeedMapping {
                     "9" to mapOf(
                             HARM_QUESTION to "9.98",
                             REOFFENDING_QUESTION to "9.99"),
+                    //TODO: Emotional Wellbeing is not an official need
                     "10" to mapOf(
                             HARM_QUESTION to "10.98",
                             REOFFENDING_QUESTION to "10.99"),

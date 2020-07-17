@@ -5,16 +5,14 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.oasys.jpa.entities.Offender
 
-
 @DisplayName("Offender DTO Tests")
 class OffenderDtoTest {
 
-    var offender: Offender = setupOffender();
-
     @Test
     fun `Builds valid Offender DTO from Entity`() {
-
+        val offender: Offender = setupOffender()
         val offenderDto = OffenderDto.from(offender)
+
         assertThat(offenderDto.oasysOffenderId).isEqualTo(offender.offenderPk)
         assertThat(offenderDto.familyName).isEqualTo(offender.familyName)
         assertThat(offenderDto.forename1).isEqualTo(offender.forename1)

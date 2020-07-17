@@ -16,10 +16,10 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
         return queryFactory.selectFrom(assessment).where(assessment.oasysSetPk.eq(oasysSetId)).fetchFirst()
     }
 
-    fun getLatestAssessment(offenderId: Long?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Assessment? {
+    fun getLatestAssessmentForOffender(offenderId: Long?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Assessment? {
         val query = getAssessmentsQueryForOffender(offenderId)
         filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-         return query?.orderBy(assessment.dateCompleted.desc())?.fetchFirst();
+         return query.orderBy(assessment.dateCompleted.desc())?.fetchFirst();
     }
 
     fun getAssessmentsForOffender(offenderId: Long?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<Assessment>? {
@@ -37,13 +37,10 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
         return query.where(assessment.group.offenderPk.eq(offenderId))
     }
 
-
-
     private fun filterQuery(query: JPAQuery<Assessment>, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?) {
-        if(filterGroupStatus?.isNotEmpty() == true) {
+        if(filterAssessmentStatus?.isNotEmpty() == true) {
             query.where(assessment.assessmentStatus.equalsIgnoreCase(filterAssessmentStatus))
         }
-
         if (filterAssessmentType?.isNotEmpty() == true) {
             query.where(assessment.assessmentType.equalsIgnoreCase(filterAssessmentType))
         }
