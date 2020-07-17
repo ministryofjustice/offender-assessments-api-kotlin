@@ -31,7 +31,7 @@ data class QuestionDto(
     companion object {
 
         fun from(oasysQuestions: Collection<OasysQuestion?>?): Set<QuestionDto?>? {
-            return oasysQuestions?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
+            return oasysQuestions?.mapNotNull { from(it) }?.toSet().orEmpty()
         }
 
         fun from(question: OasysQuestion?): QuestionDto? {

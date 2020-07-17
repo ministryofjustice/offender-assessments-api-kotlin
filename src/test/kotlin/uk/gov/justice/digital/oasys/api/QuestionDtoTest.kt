@@ -21,6 +21,20 @@ class QuestionDtoTest {
 
 
     @Test
+    fun `Builds Question DTO from Null Entity`() {
+        val oasysQuestion : OasysQuestion? = null
+        val questionDto = QuestionDto.from(oasysQuestion)
+        assertThat(questionDto).isNull()
+    }
+
+    @Test
+    fun `Builds Question DTO ignoring null objects`() {
+        val oasysQuestion : OasysQuestion? = null
+        val questionDto = QuestionDto.from(setOf(oasysQuestion))
+        assertThat(questionDto).isEmpty()
+    }
+
+    @Test
     fun `Builds Question DTO with free form text if present`() {
         val oasysQuestions = setOf(setupFreeFormQuestion())
         val questionDto = QuestionDto.from(oasysQuestions)?.first()
