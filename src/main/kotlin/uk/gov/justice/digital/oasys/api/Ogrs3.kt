@@ -4,7 +4,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.math.BigDecimal
 import java.util.*
 
-class Ogrs3 (
+data class Ogrs3 (
     var ogrs3_1Year: BigDecimal? = null,
     var ogrs3_2Year: BigDecimal? = null,
     var reconvictionRisk: RefElementDto? = null

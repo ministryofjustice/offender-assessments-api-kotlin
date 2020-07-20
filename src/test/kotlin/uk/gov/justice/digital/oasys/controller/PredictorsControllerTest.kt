@@ -2,6 +2,7 @@ package uk.gov.justice.digital.oasys.controller
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.jdbc.SqlGroup
@@ -10,12 +11,12 @@ import uk.gov.justice.digital.oasys.api.Predictor
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-
 @SqlGroup(
         Sql(scripts = ["classpath:ogr-ovp-ogp/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
         Sql(scripts = ["classpath:ogr-ovp-ogp/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 )
 
+@AutoConfigureWebTestClient
 class PredictorsControllerTest : IntegrationTest() {
 
     private val oasysSetID1 = 5430L
@@ -30,20 +31,8 @@ class PredictorsControllerTest : IntegrationTest() {
     private val bookingId = "BOOKIN"
     private val invalidBookingId = "bookingId2"
 
-
-//    @Value("${sample.token}")
-//    private String validOauthToken
-//
-//    @BeforeEach
-//    public void setup() {
-//        RestAssured.port = port
-//        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-//                (aClass, s) -> objectMapper
-//        ))
-//    }
-
     @Test
-    fun `can get OGP for offender CRNs`() {
+    fun `can get OGP for Offender CRNs`() {
           webTestClient.get().uri("/offenders/crn/${crn}/predictors")
                   .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                   .exchange()
@@ -57,11 +46,8 @@ class PredictorsControllerTest : IntegrationTest() {
                  }
     }
 
-
-
-
     @Test
-    fun `get Predictors For Unknown Offender Gives Not Found`() {
+    fun `get predictors for unknown Offender gives Not Found`() {
 
         webTestClient.get().uri("/offenders/crn/${invalidCrn}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
@@ -70,7 +56,7 @@ class PredictorsControllerTest : IntegrationTest() {
     }
 
     @Test
-    fun `can get predictors for offender PNC` ()  {
+    fun `can get predictors for Offender PNC` ()  {
         webTestClient.get().uri("/offenders/pnc/${pnc}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
@@ -84,9 +70,8 @@ class PredictorsControllerTest : IntegrationTest() {
                 }
     }
 
-
     @Test
-    fun `get Predictors For Unknown Offender Pnc Gives Not Found` () {
+    fun `get predictors for unknown offender PNC gives Not Found` () {
         webTestClient.get().uri("/offenders/pnc/${invalidPnc}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
@@ -94,7 +79,7 @@ class PredictorsControllerTest : IntegrationTest() {
     }
 
     @Test
-    fun `can Get Predictors For Offender Nomis Id` () {
+    fun `can get predictors for offender nomis ID` () {
         webTestClient.get().uri("/offenders/nomisId/${nomis}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
@@ -108,18 +93,16 @@ class PredictorsControllerTest : IntegrationTest() {
                 }
     }
 
-
     @Test
-    fun `get Predictors For Unknown Offender Nomis Id Gives Not Found` () {
+    fun `get predictors for unknown offender nomis ID gives Not Found` () {
         webTestClient.get().uri("/offenders/nomis/${invalidNomis}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isNotFound
     }
 
-
     @Test
-    fun `can Get Predictors For Offender Booking Id` () {
+    fun `can get predictors for offender booking ID` () {
         webTestClient.get().uri("/offenders/bookingId/${bookingId}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
@@ -133,16 +116,16 @@ class PredictorsControllerTest : IntegrationTest() {
                 }
     }
 
-
     @Test
-    fun `get Predictors For Unknown Offender Booking Id Gives Not Found` () {
+    fun `get predictors for unknown offender booking ID gives Not Found` () {
         webTestClient.get().uri("/offenders/bookingId/${invalidBookingId}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isNotFound
     }
+
     @Test
-    fun `can Get Predictors For Oasys offender Pk` () {
+    fun `can get predictors for Oasys offender PK` () {
         webTestClient.get().uri("/offenders/oasysOffenderId/${1234}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
@@ -156,29 +139,28 @@ class PredictorsControllerTest : IntegrationTest() {
                 }
     }
 
-
     @Test
-    fun `get Predictors For Unknown Oasys offender Pk Gives Not Found` () {
+    fun `get predictors for unknown Oasys offender PK gives Not Found` () {
         webTestClient.get().uri("/offenders/oasysOffenderId/${2L}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isNotFound
     }
 
-private fun validatePredictors(predictors: List<Predictor>?) {
 
-    val predictor1:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
-    val predictor2:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
+    private fun validatePredictors(predictors: List<Predictor>?) {
 
-    //Oasys Set 5430L
-    assertThat(predictor1?.oasysSetId).isEqualTo(oasysSetID1)
-    assertThat(predictor1?.refAssessmentVersionCode).isEqualTo("LAYER3")
-    assertThat(predictor1?.refAssessmentVersionNumber).isEqualTo("1")
-    assertThat(predictor1?.refAssessmentId).isEqualTo(4L)
-    assertThat(predictor1?.completedDate).isNull()
-    assertThat(predictor1?.voidedDateTime).isNull()
-    assertThat(predictor1?.assessmentCompleted).isEqualTo(false)
+        val predictor1:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
+        val predictor2:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
 
+        //Oasys Set 5430L
+        assertThat(predictor1?.oasysSetId).isEqualTo(oasysSetID1)
+        assertThat(predictor1?.refAssessmentVersionCode).isEqualTo("LAYER3")
+        assertThat(predictor1?.refAssessmentVersionNumber).isEqualTo("1")
+        assertThat(predictor1?.refAssessmentId).isEqualTo(4L)
+        assertThat(predictor1?.completedDate).isNull()
+        assertThat(predictor1?.voidedDateTime).isNull()
+        assertThat(predictor1?.assessmentCompleted).isEqualTo(false)
 
         //OGP
         assertThat(predictor1?.ogp?.ogpStaticWeightedScore).isEqualTo(BigDecimal.valueOf(3))
@@ -210,14 +192,15 @@ private fun validatePredictors(predictors: List<Predictor>?) {
         assertThat(predictor1?.ogr3?.reconvictionRisk?.code).isEqualTo("L")
 
 
-    //Oasys Set 5431L
-    assertThat(predictor2?.oasysSetId).isEqualTo(oasysSetID2)
-    assertThat(predictor2?.refAssessmentVersionCode).isEqualTo("LAYER3")
-    assertThat(predictor2?.refAssessmentVersionNumber).isEqualTo("1")
-    assertThat(predictor2?.refAssessmentId).isEqualTo(4L)
-    assertThat(predictor2?.completedDate).isEqualTo(LocalDateTime.of(2018,7,21,23,0,9))
-    assertThat(predictor2?.voidedDateTime).isEqualTo(LocalDateTime.of(2018,6,20,23,0,9))
-    assertThat(predictor2?.assessmentCompleted).isEqualTo(true)
+
+        //Oasys Set 5431L
+        assertThat(predictor2?.oasysSetId).isEqualTo(oasysSetID2)
+        assertThat(predictor2?.refAssessmentVersionCode).isEqualTo("LAYER3")
+        assertThat(predictor2?.refAssessmentVersionNumber).isEqualTo("1")
+        assertThat(predictor2?.refAssessmentId).isEqualTo(4L)
+        assertThat(predictor2?.completedDate).isEqualTo(LocalDateTime.of(2018,7,21,23,0,9))
+        assertThat(predictor2?.voidedDateTime).isEqualTo(LocalDateTime.of(2018,6,20,23,0,9))
+        assertThat(predictor2?.assessmentCompleted).isEqualTo(true)
 
         //OGP
         assertThat(predictor2?.ogp?.ogpStaticWeightedScore).isEqualTo(BigDecimal.valueOf(3))

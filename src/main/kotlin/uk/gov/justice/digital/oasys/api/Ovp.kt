@@ -4,7 +4,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.math.BigDecimal
 import java.util.*
 
-class Ovp (
+data class Ovp (
     var ovpStaticWeightedScore: BigDecimal? = null,
     var ovpDynamicWeightedScore: BigDecimal? = null,
     var ovpTotalWeightedScore: BigDecimal? = null,
