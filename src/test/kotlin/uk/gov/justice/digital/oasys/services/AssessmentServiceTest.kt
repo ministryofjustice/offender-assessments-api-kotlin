@@ -1,8 +1,5 @@
 package uk.gov.justice.digital.oasys.services
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
@@ -52,8 +49,8 @@ class AssessmentServiceTest {
         assertThrows<EntityNotFoundException> { assessmentsService.getAssessment(oasysSetPk) }
 
         verify(exactly = 1) { assessmentRepository.getAssessment(oasysSetPk)  }
-        verify(never()) { sectionService.getSectionForAssessment(oasysSetPk, any())}
-        verify(never()) { sectionService.getSectionsForAssessment(oasysSetPk, any())}
+        verify(exactly = 0) { sectionService.getSectionForAssessment(oasysSetPk, any()) }
+        verify(exactly = 0) { sectionService.getSectionsForAssessment(oasysSetPk, any())}
     }
 
     @Test
