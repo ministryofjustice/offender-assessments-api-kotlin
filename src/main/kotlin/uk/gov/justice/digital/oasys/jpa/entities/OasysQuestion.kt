@@ -33,7 +33,7 @@ data class OasysQuestion(
         val refQuestion: RefQuestion? = null,
 
         @OneToOne(mappedBy = "oasysQuestion")
-        val oasysAnswer: OasysAnswer? = null,
+        var oasysAnswer: OasysAnswer? = null,
 
         @Column(name = "CREATE_DATE")
         private var createDate: Time? = null,

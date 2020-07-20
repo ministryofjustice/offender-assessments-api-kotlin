@@ -13,7 +13,7 @@ data class OasysAnswer(
 
         @OneToOne
         @JoinColumn(name = "OASYS_QUESTION_PK")
-        val oasysQuestion: OasysQuestion? = null,
+        var oasysQuestion: OasysQuestion? = null,
 
         @OneToOne
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"), JoinColumn(name = "REF_QUESTION_CODE", referencedColumnName = "REF_QUESTION_CODE"), JoinColumn(name = "REF_ANSWER_CODE", referencedColumnName = "REF_ANSWER_CODE"))

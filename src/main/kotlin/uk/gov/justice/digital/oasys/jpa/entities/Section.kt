@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "OASYS_SECTION")
-class Section(
+data class Section(
 
         @Id
         @Column(name = "OASYS_SECTION_PK")
@@ -51,7 +51,7 @@ class Section(
 
     fun getRefAnswers(questionKeys: Set<String?>): Map<String?, String?>? {
         return oasysQuestions?.filter { q -> questionKeys.contains(q.refQuestion?.refQuestionCode) }
-                ?.map { it.oasysAnswer?.refAnswer?.refQuestionCode to it.oasysAnswer?.refAnswer?.refAnswerCode }?.toMap()
+                ?.map { it.refQuestion?.refQuestionCode to it.oasysAnswer?.refAnswer?.refAnswerCode }?.toMap()
     }
 
     override fun equals(o: Any?): Boolean {

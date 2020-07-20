@@ -10,6 +10,7 @@ data class RefAssessmentVersion(
 
         @Id @Column(name = "REF_ASS_VERSION_CODE")
         var refAssVersionCode: String? = null,
+
         @Id
         @Column(name = "VERSION_NUMBER")
         val versionNumber: String? = null,

@@ -4,8 +4,10 @@ import io.swagger.annotations.ApiModelProperty
 import uk.gov.justice.digital.oasys.jpa.entities.Offender
 
 data class OffenderDto(
+
         @ApiModelProperty(value = "OASys Offender PK", example = "123456")
         val oasysOffenderId: Long?,
+
         @ApiModelProperty(value = "Limited Access Offender", example = "true")
         val limitedAccessOffender: Boolean? = null,
 

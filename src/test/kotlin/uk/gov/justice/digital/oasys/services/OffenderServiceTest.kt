@@ -17,7 +17,7 @@ import uk.gov.justice.digital.oasys.jpa.repositories.OffenderRepository
 @DisplayName("Offender Service Tests")
 class OffenderServiceTest  {
     private val offenderRepository: OffenderRepository = mockk()
-    private val offenderLinkRepository = mockk<OffenderLinkRepository>()
+    private val offenderLinkRepository: OffenderLinkRepository = mockk()
 
     private val service = OffenderService(offenderRepository, offenderLinkRepository)
 

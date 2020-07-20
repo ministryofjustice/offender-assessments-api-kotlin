@@ -41,7 +41,7 @@ class OffenderRepository constructor(entityManager: EntityManager) {
                 query.where(offender.prisonNumber.eq(identity))
                 query.where(offender.deletedDate.isNull)
             }
-            else -> throw EntityNotFoundException("Offender not found for ${identityType}, ${identity}")
+            else -> throw EntityNotFoundException("Offender not found for $identityType, $identity")
         }
         val result = query.fetch()
 
