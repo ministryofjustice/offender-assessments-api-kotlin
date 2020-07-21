@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.oasys.jpa.entities
 
-import java.sql.Time
 import javax.persistence.*
 
 @Entity
@@ -50,10 +49,9 @@ data class RefSection(
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o !is RefSection) return false
-        val that = o
-        return refAssVersionCode == that.refAssVersionCode &&
-                versionNumber == that.versionNumber &&
-                refSectionCode == that.refSectionCode
+        return refAssVersionCode == o.refAssVersionCode &&
+                versionNumber == o.versionNumber &&
+                refSectionCode == o.refSectionCode
     }
 
     override fun hashCode(): Int {

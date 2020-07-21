@@ -19,7 +19,7 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     fun getLatestAssessmentForOffender(offenderId: Long?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Assessment? {
         val query = getAssessmentsQueryForOffender(offenderId)
         filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-         return query.orderBy(assessment.dateCompleted.desc())?.fetchFirst();
+         return query.orderBy(assessment.dateCompleted.desc())?.fetchFirst()
     }
 
     fun getAssessmentsForOffender(offenderId: Long?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<Assessment>? {
@@ -49,9 +49,9 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
         }
         if (filterVoided != null) {
             if (filterVoided) {
-                query.where(assessment.assessmentVoidedDate.isNotNull())
+                query.where(assessment.assessmentVoidedDate.isNotNull)
             } else {
-                query.where(assessment.assessmentVoidedDate.isNull())
+                query.where(assessment.assessmentVoidedDate.isNull)
             }
         }
     }

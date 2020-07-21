@@ -60,9 +60,9 @@ class SentenceDtoTest {
 
         val sentenceDto = SentenceDto.from(setOf(setupOffenceBlockNullSentence()))?.first()
 
-        assertThat(sentenceDto?.sentenceCode).isNull();
-        assertThat(sentenceDto?.sentenceDescription).isNull();
-        assertThat(sentenceDto?.custodial).isNull();
+        assertThat(sentenceDto?.sentenceCode).isNull()
+        assertThat(sentenceDto?.sentenceDescription).isNull()
+        assertThat(sentenceDto?.custodial).isNull()
         assertThat(sentenceDto?.cja).isNull()
         assertThat(sentenceDto?.offenceDate).isEqualTo(LocalDate.MIN)
         assertThat(sentenceDto?.sentenceDate).isEqualTo(LocalDate.MAX)

@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.oasys.api
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -36,19 +35,19 @@ class AssessmentSummaryDtoTest {
 
     @Test
     fun `Builds valid Assessment Summary DTO Null`() {
-        var assessmentDto = AssessmentSummaryDto.from(null)
+        val assessmentDto = AssessmentSummaryDto.from(null)
         assertThat(assessmentDto).isEmpty()
     }
 
     @Test
     fun `Builds valid Assessment Summary DTO empty set`() {
-        var assessmentDto = AssessmentSummaryDto.from(emptySet())
+        val assessmentDto = AssessmentSummaryDto.from(emptySet())
         assertThat(assessmentDto).isEmpty()
     }
 
     @Test
     fun `Builds valid Assessment Summary DTO null values in set set`() {
-        var assessmentDto = AssessmentSummaryDto.from(setOf(null))
+        val assessmentDto = AssessmentSummaryDto.from(setOf(null))
         assertThat(assessmentDto).isEmpty()
     }
 

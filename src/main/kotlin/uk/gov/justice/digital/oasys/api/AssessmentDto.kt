@@ -60,7 +60,7 @@ data class AssessmentDto(
     companion object {
         fun from(assessment: Assessment?, childSafeguardingIndicated: Boolean?, needs: Collection<CrimiogenicNeed?>?): AssessmentDto {
 
-            val assessmentVersion = assessment?.assessmentVersion;
+            val assessmentVersion = assessment?.assessmentVersion
             return AssessmentDto(
                     assessment?.oasysSetPk,
                     assessmentVersion?.refAssVersionCode,

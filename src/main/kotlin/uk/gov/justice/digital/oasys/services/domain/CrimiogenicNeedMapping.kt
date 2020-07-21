@@ -3,11 +3,11 @@ package uk.gov.justice.digital.oasys.services.domain
 class CrimiogenicNeedMapping {
 
     companion object {
-        private val REOFFENDING_QUESTION = "reoffendingQuestion"
-        private val HARM_QUESTION = "harmQuestion"
+        private const val REOFFENDING_QUESTION = "reoffendingQuestion"
+        private const val HARM_QUESTION = "harmQuestion"
 
         fun getNeedsSectionHeadings(): Set<String>? {
-            return needsSections().keys.toSet();
+            return needsSections().keys.toSet()
         }
 
         fun getHarmQuestion(section: String?): String? {

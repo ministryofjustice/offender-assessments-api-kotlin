@@ -16,7 +16,7 @@ class QuestionDtoTest {
         val oasysQuestions = setOf(setupQuestion1098(), setupQuestion1099(), setupFreeFormQuestion())
         val validQuestions = setOf("10.98", "10.99", "IP.1")
         val questionDtos = QuestionDto.from(oasysQuestions)
-        assertThat(questionDtos?.map { q -> q?.refQuestionCode }).containsExactlyInAnyOrderElementsOf(validQuestions);
+        assertThat(questionDtos?.map { q -> q?.refQuestionCode }).containsExactlyInAnyOrderElementsOf(validQuestions)
     }
 
 

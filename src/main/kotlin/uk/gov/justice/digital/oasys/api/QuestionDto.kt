@@ -42,7 +42,7 @@ data class QuestionDto(
                     refQuestion?.refQuestionCode,
                     question.oasysQuestionPk,
                     refQuestion?.displaySort,
-                    question?.displayScore,
+                    question.displayScore,
                     refQuestion?.refSectionQuestion,
                     AnswerDto.from(question))
         }

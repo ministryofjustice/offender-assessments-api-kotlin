@@ -49,13 +49,13 @@ class SectionDtoTest {
 
     @Test
     fun `Builds valid Section DTO Null`() {
-        var sectionDto = SectionDto.from(null)
+        val sectionDto = SectionDto.from(null)
         assertThat(sectionDto).isEmpty()
     }
 
     @Test
     fun `Builds valid Section DTO Null in Set`() {
-        var sectionDto = SectionDto.from(setOf(null))
+        val sectionDto = SectionDto.from(setOf(null))
         assertThat(sectionDto).isEmpty()
     }
 

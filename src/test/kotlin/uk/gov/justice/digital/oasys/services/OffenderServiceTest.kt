@@ -27,7 +27,7 @@ class OffenderServiceTest  {
         every { offenderRepository.getOffender("OASYS", "1") } returns offender
         every { offenderLinkRepository.findMergedOffenderOrNull(1L) } returns null
 
-        var result = service.getOffender("OASYS", "1");
+        val result = service.getOffender("OASYS", "1")
 
         assertThat(result.oasysOffenderId).isEqualTo(1L)
         assertThat(result.mergedOasysOffenderId).isNull()
@@ -36,19 +36,19 @@ class OffenderServiceTest  {
     @Test
     fun `return merged offender when requested offender has been merged`() {
         val expectedMergedOffender = 2L
-        var offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
-        var mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
-        var linkedOffender = OffenderLink(mergedOffenderPK = 2L)
+        val offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
+        val mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
+        val linkedOffender = OffenderLink(mergedOffenderPK = 2L)
 
         every { offenderRepository.getOffender("oasysOffenderId", "1") } returns offender
         every { offenderRepository.getOffender("oasysOffenderId", expectedMergedOffender.toString()) } returns mergedOffender
         every { offenderLinkRepository.findMergedOffenderOrNull(1L) } returns linkedOffender
         every { offenderLinkRepository.findMergedOffenderOrNull(expectedMergedOffender) } returns null
 
-        val result = service.getOffender("oasysOffenderId", "1");
+        val result = service.getOffender("oasysOffenderId", "1")
 
-        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender);
-        assertThat(result.mergedOasysOffenderId).isEqualTo(1L);
+        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender)
+        assertThat(result.mergedOasysOffenderId).isEqualTo(1L)
 
         verify(exactly = 1) { offenderRepository.getOffender("oasysOffenderId", "1")  }
         verify(exactly = 1) { offenderLinkRepository.findMergedOffenderOrNull(1L)  }
@@ -58,10 +58,10 @@ class OffenderServiceTest  {
     @Test
     fun `return merged offender when requested offender has been merged twice`() {
         val expectedMergedOffender = 3L
-        var offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
-        var mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
-        var linkedOffender = OffenderLink(mergedOffenderPK = 2L)
-        var linkedOffender2 = OffenderLink(mergedOffenderPK = 3L)
+        val offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
+        val mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
+        val linkedOffender = OffenderLink(mergedOffenderPK = 2L)
+        val linkedOffender2 = OffenderLink(mergedOffenderPK = 3L)
 
         every { offenderRepository.getOffender("oasysOffenderId", "1") } returns offender
         every { offenderRepository.getOffender("oasysOffenderId", expectedMergedOffender.toString()) } returns mergedOffender
@@ -69,10 +69,10 @@ class OffenderServiceTest  {
         every { offenderLinkRepository.findMergedOffenderOrNull(2L) } returns linkedOffender2
         every { offenderLinkRepository.findMergedOffenderOrNull(expectedMergedOffender) } returns null
 
-        val result = service.getOffender("oasysOffenderId", "1");
+        val result = service.getOffender("oasysOffenderId", "1")
 
-        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender);
-        assertThat(result.mergedOasysOffenderId).isEqualTo(1L);
+        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender)
+        assertThat(result.mergedOasysOffenderId).isEqualTo(1L)
 
         verify(exactly = 1) { offenderRepository.getOffender("oasysOffenderId", "1")  }
         verify(exactly = 1) { offenderLinkRepository.findMergedOffenderOrNull(1L)  }
@@ -83,11 +83,11 @@ class OffenderServiceTest  {
     @Test
     fun `return merged offender when requested offender has been merged three times`() {
         val expectedMergedOffender = 4L
-        var offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
-        var mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
-        var linkedOffender = OffenderLink(mergedOffenderPK = 2L)
-        var linkedOffender2 = OffenderLink(mergedOffenderPK = 3L)
-        var linkedOffender3 = OffenderLink(mergedOffenderPK = 4L)
+        val offender = setupOffender().copy(mergeIndicated = "Y", offenderPk = 1L)
+        val mergedOffender = setupOffender().copy(mergeIndicated = "N", offenderPk = expectedMergedOffender)
+        val linkedOffender = OffenderLink(mergedOffenderPK = 2L)
+        val linkedOffender2 = OffenderLink(mergedOffenderPK = 3L)
+        val linkedOffender3 = OffenderLink(mergedOffenderPK = 4L)
 
         every { offenderRepository.getOffender("oasysOffenderId", "1") } returns offender
         every { offenderRepository.getOffender("oasysOffenderId", "3") } returns mergedOffender
@@ -97,10 +97,10 @@ class OffenderServiceTest  {
         every { offenderLinkRepository.findMergedOffenderOrNull(3L) } returns linkedOffender3
         every { offenderLinkRepository.findMergedOffenderOrNull(expectedMergedOffender) } returns null
 
-        val result = service.getOffender("oasysOffenderId", "1");
+        val result = service.getOffender("oasysOffenderId", "1")
 
-        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender);
-        assertThat(result.mergedOasysOffenderId).isEqualTo(1L);
+        assertThat(result.oasysOffenderId).isEqualTo(expectedMergedOffender)
+        assertThat(result.mergedOasysOffenderId).isEqualTo(1L)
 
         verify(exactly = 1) { offenderRepository.getOffender("oasysOffenderId", "1")  }
         verify(exactly = 1) { offenderLinkRepository.findMergedOffenderOrNull(1L)  }

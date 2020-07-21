@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.http.HttpHeaders
 import com.microsoft.applicationinsights.core.dependencies.google.gson.GsonBuilder
 
-class OAuthMockServer : WireMockServer(8090) {
+class OAuthMockServer : WireMockServer(9090) {
   private val gson = GsonBuilder().create()
 
   fun stubGrantToken() {

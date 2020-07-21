@@ -22,7 +22,7 @@ class SectionService (private val sectionRepository: SectionRepository) {
     fun getSectionsForAssessment(oasysSetId: Long?, sectionIds: Set<String>?): Collection<Section>? {
         val sections = sectionRepository.getSectionsForAssessment(oasysSetId, sectionIds)
         log.info("Found ${sections?.size} Sections for oasysSetId: $oasysSetId")
-        return sections;
+        return sections
     }
 
 }

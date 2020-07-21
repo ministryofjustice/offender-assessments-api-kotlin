@@ -2,7 +2,7 @@ package uk.gov.justice.digital.oasys.services
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.OffenderDto
 import uk.gov.justice.digital.oasys.jpa.entities.Offender
 import uk.gov.justice.digital.oasys.jpa.entities.OffenderLink
@@ -22,7 +22,7 @@ class OffenderService(private val offenderRepository: OffenderRepository,
     }
 
     fun getOffender(identityType: String?, identity: String?) : OffenderDto {
-        var offender = OffenderDto.from(getOffenderFromRepository(identityType, identity))
+        val offender = OffenderDto.from(getOffenderFromRepository(identityType, identity))
         AssessmentService.log.info("Found Offender for identity: $identity ,$identityType)")
         return offender
     }
@@ -34,19 +34,19 @@ class OffenderService(private val offenderRepository: OffenderRepository,
 
     private fun checkForOffenderMerge(offender : Offender?) : Offender? {
         if(offender?.mergeIndicated.equals("Y")) {
-            var linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(offender?.offenderPk);
+            val linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(offender?.offenderPk)
             if (linkedOffender != null) {
-                var mergedOffenderPK = findMergedOffenderPK(linkedOffender)
-                var mergedOffender = getOffenderFromRepository("oasysOffenderId", mergedOffenderPK.toString());
+                val mergedOffenderPK = findMergedOffenderPK(linkedOffender)
+                val mergedOffender = getOffenderFromRepository("oasysOffenderId", mergedOffenderPK.toString())
                 mergedOffender?.mergedOffenderPK = offender?.offenderPk
-                return mergedOffender;
+                return mergedOffender
             }
         }
-        return offender;
+        return offender
     }
 
     private fun findMergedOffenderPK(mergedOffender : OffenderLink?) : Long? {
-            var linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(mergedOffender?.mergedOffenderPK);
+            val linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(mergedOffender?.mergedOffenderPK)
             if (linkedOffender != null) {
                 return findMergedOffenderPK(linkedOffender)
             }

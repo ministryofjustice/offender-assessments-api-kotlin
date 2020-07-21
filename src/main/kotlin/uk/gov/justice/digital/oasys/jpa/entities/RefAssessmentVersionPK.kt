@@ -17,9 +17,8 @@ class RefAssessmentVersionPK (
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o !is RefAssessmentVersionPK) return false
-        val that = o
-        return refAssVersionCode == that.refAssVersionCode &&
-                versionNumber == that.versionNumber
+        return refAssVersionCode == o.refAssVersionCode &&
+                versionNumber == o.versionNumber
     }
 
     override fun hashCode(): Int {
