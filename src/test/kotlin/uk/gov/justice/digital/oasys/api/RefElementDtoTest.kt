@@ -23,7 +23,7 @@ class RefElementDtoTest {
 
     @Test
     fun `Builds valid RefElement DTO Null`() {
-        var refElementDto = RefElementDto.from(null)
+        val refElementDto = RefElementDto.from(null)
         assertThat(refElementDto).isNull()
     }
 }

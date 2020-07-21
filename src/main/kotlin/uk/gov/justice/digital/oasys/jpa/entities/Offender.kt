@@ -64,7 +64,7 @@ data class Offender (
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o !is Offender) return false
-        return offenderPk == o?.offenderPk
+        return offenderPk == o.offenderPk
     }
 
     override fun hashCode(): Int {

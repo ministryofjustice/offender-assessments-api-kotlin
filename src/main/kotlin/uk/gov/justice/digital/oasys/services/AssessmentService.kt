@@ -35,15 +35,15 @@ class AssessmentService constructor(
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessments = assessmentRepository.getAssessmentsForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
         log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
-        return AssessmentSummaryDto.from(assessments);
+        return AssessmentSummaryDto.from(assessments)
     }
 
     fun getLatestAssessmentForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto? {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus) ?:
                 throw EntityNotFoundException("Assessment for Oasys Offender ${offenderId}, not found!")
-        log.info("Found Assessment type: ${assessment?.assessmentType} status: ${assessment?.assessmentStatus} for identity: ($identity, $identityType)")
-        return populateAssessmentDto(assessment);
+        log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for identity: ($identity, $identityType)")
+        return populateAssessmentDto(assessment)
     }
 
     fun getAssessment(oasysSetId: Long?): AssessmentDto? {
@@ -63,9 +63,9 @@ class AssessmentService constructor(
         val roshSection = sectionService.getSectionForAssessment(oasysSetId, ROSH_SECTION)
         val answers = roshSection?.getRefAnswers(setOf("R2.1", "R2.2"))
         if (answers.isNullOrEmpty()) {
-            return null;
+            return null
         }
-        return anyAnswersArePositive(answers?.values)
+        return anyAnswersArePositive(answers.values)
     }
 
 
@@ -84,12 +84,12 @@ class AssessmentService constructor(
         val sectionName = SectionHeader.findByValue(sectionCode)
 
         val answers = section?.getRefAnswers(setOf(CrimiogenicNeedMapping.getHarmQuestion(sectionCode),
-                CrimiogenicNeedMapping.getReoffendingQuestion(sectionCode)));
+                CrimiogenicNeedMapping.getReoffendingQuestion(sectionCode)))
 
         val riskHarm = isPositiveAnswer(answers?.get(CrimiogenicNeedMapping.getHarmQuestion(sectionCode)))
         val riskReoffending = isPositiveAnswer(answers?.get(CrimiogenicNeedMapping.getReoffendingQuestion(sectionCode)))
-        val overThreshold = sectionIsOverThreshold(section);
-        val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd);
+        val overThreshold = sectionIsOverThreshold(section)
+        val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd)
 
         return CrimiogenicNeed(sectionName, shortDescription, riskHarm, riskReoffending, overThreshold, flaggedAsNeed)
     }

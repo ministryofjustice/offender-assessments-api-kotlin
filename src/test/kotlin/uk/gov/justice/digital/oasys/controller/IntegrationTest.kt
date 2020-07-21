@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.oasys.controller
 
-import com.google.gson.Gson
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -19,9 +18,6 @@ import java.time.Duration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["test"])
 abstract class IntegrationTest {
-
-    @Autowired
-    private lateinit var gson: Gson
 
     @Autowired
     internal lateinit var webTestClient: WebTestClient

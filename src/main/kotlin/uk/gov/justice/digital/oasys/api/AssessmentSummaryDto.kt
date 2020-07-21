@@ -3,8 +3,6 @@ package uk.gov.justice.digital.oasys.api
 import io.swagger.annotations.ApiModelProperty
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.time.LocalDateTime
-import java.util.*
-import java.util.stream.Collectors
 
 data class AssessmentSummaryDto(
 
@@ -54,7 +52,7 @@ data class AssessmentSummaryDto(
 
         private fun from(assessment: Assessment?): AssessmentSummaryDto {
 
-            val assessmentVersion = assessment?.assessmentVersion;
+            val assessmentVersion = assessment?.assessmentVersion
             return AssessmentSummaryDto(
                     assessment?.oasysSetPk,
                     assessmentVersion?.refAssVersionCode,

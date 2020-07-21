@@ -13,8 +13,8 @@ class AnswerDtoTest {
     @Test
     fun `Builds valid AnswerDto with no question free form text`() {
 
-        var oasysQuestion = OasysQuestion();
-        var oasysAnswer = OasysAnswer(
+        val oasysQuestion = OasysQuestion()
+        val oasysAnswer = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
                         defaultDisplayScore = 2L,
@@ -24,7 +24,7 @@ class AnswerDtoTest {
                         qaRawScore = 3L,
                         refSectionAnswer = "No"))
 
-        oasysQuestion.oasysAnswer = oasysAnswer;
+        oasysQuestion.oasysAnswer = oasysAnswer
         oasysAnswer.oasysQuestion = oasysQuestion
 
         val answer = AnswerDto.from(oasysQuestion)
@@ -41,7 +41,7 @@ class AnswerDtoTest {
     @Test
     fun `Builds valid AnswerDto with only free form text`() {
 
-        var oasysQuestion = OasysQuestion(freeFormatAnswer = "Free form answer");
+        val oasysQuestion = OasysQuestion(freeFormatAnswer = "Free form answer")
         val answer = AnswerDto.from(oasysQuestion)
         assertThat(answer?.freeFormText).isEqualTo("Free form answer")
     }

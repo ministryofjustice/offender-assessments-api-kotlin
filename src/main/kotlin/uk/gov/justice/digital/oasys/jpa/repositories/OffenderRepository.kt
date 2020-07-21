@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.oasys.jpa.repositories
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import uk.gov.justice.digital.oasys.jpa.entities.Offender
@@ -47,8 +46,8 @@ class OffenderRepository constructor(entityManager: EntityManager) {
 
         when {
             result.size == 1 -> return result[0]
-            result.size > 1 -> throw DuplicateOffenderRecordException("Duplicate offender found for ${identityType} ${identity}")
-            else ->  throw EntityNotFoundException("Offender not found for ${identityType}, ${identity}")
+            result.size > 1 -> throw DuplicateOffenderRecordException("Duplicate offender found for $identityType $identity")
+            else ->  throw EntityNotFoundException("Offender not found for $identityType, $identity")
         }
 
     }

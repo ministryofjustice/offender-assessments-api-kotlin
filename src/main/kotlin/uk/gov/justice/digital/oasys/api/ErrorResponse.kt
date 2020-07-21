@@ -12,5 +12,4 @@ data class ErrorResponse(
     @ApiModelProperty(required = true, value = "Internal Error Code", example = "20012", position = 1) val errorCode: Int? = null,
     @ApiModelProperty(required = true, value = "Error message information", example = "Prisoner Not Found", position = 2) val userMessage: String? = null,
     @ApiModelProperty(required = false, value = "Additional information about the error", example = "Hard disk failure", position = 4) val moreInfo: String? = null
-) {
-}
+)

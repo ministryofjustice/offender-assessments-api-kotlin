@@ -12,7 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
-open class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
+class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired(required = false)
     private val buildProperties: BuildProperties? = null
