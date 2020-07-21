@@ -4,12 +4,12 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.math.BigDecimal
 
 data class Ogp(
-    var ogpStaticWeightedScore: BigDecimal? = null,
-    var ogpDynamicWeightedScore: BigDecimal? = null,
-    var ogpTotalWeightedScore: BigDecimal? = null,
-    var ogp1Year: BigDecimal? = null,
-    var ogp2Year: BigDecimal? = null,
-    var ogpRisk: RefElementDto? = null
+    val ogpStaticWeightedScore: BigDecimal? = null,
+    val ogpDynamicWeightedScore: BigDecimal? = null,
+    val ogpTotalWeightedScore: BigDecimal? = null,
+    val ogp1Year: BigDecimal? = null,
+    val ogp2Year: BigDecimal? = null,
+    val ogpRisk: RefElementDto? = null
 ) {
 
     companion object {

@@ -12,18 +12,17 @@ import uk.gov.justice.digital.oasys.api.*
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
-import uk.gov.justice.digital.oasys.jpa.repositories.SimpleAssessmentRepository
+import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 import java.math.BigDecimal
 import java.time.LocalDateTime
-
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("Predictor Service Tests")
 class PredictorServiceTest {
 
     private val offenderService = mockk<OffenderService>()
-    private val simpleAssessmentRepository: SimpleAssessmentRepository = mockk()
-    private val predictionService: PredictionService = PredictionService(offenderService, simpleAssessmentRepository)
+    private val assessmentRepository: AssessmentRepository = mockk()
+    private val predictionService: PredictionService = PredictionService(offenderService, assessmentRepository)
     private val version = setupVersion()
 
     @Test
@@ -31,19 +30,17 @@ class PredictorServiceTest {
         val assessment = setupAssessment()
 
         every { offenderService.getOffenderIdByIdentifier("OASYS", "1")} returns (1L)
-
-        every { simpleAssessmentRepository.getAssessmentsForOffender(1L)} returns(setOf(assessment))
+        every { assessmentRepository.getAssessmentsForOffender(1L)} returns(setOf(assessment))
 
         val predictors = predictionService.getAllPredictorsForOffender("OASYS", "1")
 
-        verify(exactly = 1) { simpleAssessmentRepository.getAssessmentsForOffender(1L) }
+        verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(1L) }
         verify(exactly = 1) { offenderService.getOffenderIdByIdentifier("OASYS", "1") }
 
-        val validpredictor = setUpValidPredictor(assessment)
-        assertThat(predictors.first()).isEqualTo(validpredictor)
+        val validPredictor = setUpValidPredictor(assessment)
+        assertThat(predictors?.first()).isEqualTo(validPredictor)
 
     }
-
 
     private fun setupVersion(): RefAssessmentVersion {
         return RefAssessmentVersion( refAssVersionUk = 1L,
@@ -98,7 +95,6 @@ class PredictorServiceTest {
                 ogp1Year = assessment.ogp1Year,
                 ogp2Year = assessment.ogp2Year,
                 ogpRisk  = RefElementDto(code = "L", description = assessment.ogpRiskRecon?.refElementDesc))
-
 
         val ovp = Ovp(ovpStaticWeightedScore = assessment.ovpStWesc,
                 ovpDynamicWeightedScore = assessment.ovpDyWesc,

@@ -11,9 +11,9 @@ import java.time.LocalDateTime
 @DisplayName("Predictor DTO Tests")
 class PredictorTest {
 
-    val created = LocalDateTime.now()
-    val completed = created.plusMonths(3)
-    val voided = created.plusMonths(4)
+    private val created = LocalDateTime.now()
+    private val completed = created.plusMonths(3)
+    private val voided = created.plusMonths(4)
 
     @Test
     fun `should build valid Predictor DTO`() {
@@ -34,12 +34,6 @@ class PredictorTest {
         val predictor = Predictor.from(setupAssessment())
         assertThat(predictor?.completedDate).isNotNull()
         assertThat(predictor?.assessmentCompleted).isTrue()
-    }
-
-    @Test
-    fun `should build valid null Predictor DTO`() {
-        val dto = Predictor.from(null)
-        assertThat(dto).isNull()
     }
 
     private fun setupVersion(): RefAssessmentVersion {

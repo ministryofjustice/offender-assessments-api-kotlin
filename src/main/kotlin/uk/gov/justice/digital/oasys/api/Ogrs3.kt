@@ -5,9 +5,9 @@ import java.math.BigDecimal
 import java.util.*
 
 data class Ogrs3 (
-    var ogrs3_1Year: BigDecimal? = null,
-    var ogrs3_2Year: BigDecimal? = null,
-    var reconvictionRisk: RefElementDto? = null
+    val ogrs3_1Year: BigDecimal? = null,
+    val ogrs3_2Year: BigDecimal? = null,
+    val reconvictionRisk: RefElementDto? = null
 ) {
     companion object {
         fun from(assessment: Assessment?): Ogrs3? {

@@ -22,7 +22,7 @@ class Ogrs3Test {
 
     @Test
     fun `should build valid null OGRS3 DTO`() {
-        val dto = Predictor.from(null)
+        val dto = Ogrs3.from(null)
         assertThat(dto).isNull()
     }
 
