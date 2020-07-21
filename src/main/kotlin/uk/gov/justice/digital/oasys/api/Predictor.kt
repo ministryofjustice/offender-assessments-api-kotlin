@@ -17,7 +17,12 @@ import java.time.LocalDateTime
         val ogp: Ogp? = null
 ) {
   companion object {
-      fun from(assessment: Assessment?): Predictor? {
+
+      fun from(assessments: Collection<Assessment?>?): Collection<Predictor>? {
+          return assessments?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
+      }
+
+     fun from(assessment: Assessment?): Predictor {
           val assessmentVersion = assessment?.assessmentVersion
           return Predictor( assessment?.oasysSetPk,
                   assessmentVersion?.refAssVersionCode,

@@ -18,28 +18,27 @@ import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("Predictor Service Tests")
-class PredictorServiceTest {
+class PredictorsServiceTest {
 
     private val offenderService = mockk<OffenderService>()
     private val assessmentRepository: AssessmentRepository = mockk()
-    private val predictionService: PredictionService = PredictionService(offenderService, assessmentRepository)
+    private val predictorsService: PredictorsService = PredictorsService(offenderService, assessmentRepository)
     private val version = setupVersion()
 
     @Test
-    fun `should get all OGP For Offender`() {
+    fun `should get all Predictors For Offender`() {
         val assessment = setupAssessment()
 
         every { offenderService.getOffenderIdByIdentifier("OASYS", "1")} returns (1L)
         every { assessmentRepository.getAssessmentsForOffender(1L)} returns(setOf(assessment))
 
-        val predictors = predictionService.getAllPredictorsForOffender("OASYS", "1")
+        val predictors = predictorsService.getAllPredictorsForOffender("OASYS", "1")
 
         verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(1L) }
         verify(exactly = 1) { offenderService.getOffenderIdByIdentifier("OASYS", "1") }
 
         val validPredictor = setUpValidPredictor(assessment)
         assertThat(predictors?.first()).isEqualTo(validPredictor)
-
     }
 
     private fun setupVersion(): RefAssessmentVersion {

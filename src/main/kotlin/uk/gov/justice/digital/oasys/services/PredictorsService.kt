@@ -8,17 +8,17 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 
 @Service
-class PredictionService ( private val  offenderService: OffenderService,
-                          private val  assessmentRepository: AssessmentRepository) {
+class PredictorsService (private val  offenderService: OffenderService,
+                         private val  assessmentRepository: AssessmentRepository) {
 
     companion object {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun getAllPredictorsForOffender(identityType:String, identity: String): Set<Predictor>? {
+    fun getAllPredictorsForOffender(identityType:String, identity: String): Collection<Predictor>? {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessments: Collection<Assessment>? = assessmentRepository.getAssessmentsForOffender(offenderId)
         log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
-        return assessments?.mapNotNull { Predictor.from(it) }?.toSet()
+        return Predictor.from(assessments)
     }
 }
