@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.jpa.repositories
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +19,7 @@ import javax.persistence.EntityManager
         Sql(scripts = ["classpath:offender/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
         Sql(scripts = ["classpath:offender/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 )
+@DisplayName("Offender Repository Tests")
 class OffenderRepositoryTest(@Autowired
                              private val entityManager: EntityManager) : IntegrationTest() {
 
