@@ -62,13 +62,13 @@ class OffenderRepositoryTest(@Autowired
         val exception = assertThrows<DuplicateOffenderRecordException> { offenderRepository.getOffender(crn, duplicateCrn) }
         assertThat(exception.message).isEqualTo("Duplicate offender found for $crnType $duplicateCrn")
     }
-//
-//    @Test
-//    fun `throws exception for CRN offender with null identifier`() {
-//        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(crn, null) }
-//        assertThat(exception.message).isEqualTo("Offender not found for $crnType, $invalidId")
-//    }
-//
+
+    @Test
+    fun `throws exception for CRN offender with null identifier`() {
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(crn, null) }
+        assertThat(exception.message).isEqualTo("Identifier id is null")
+    }
+
 
 
     // Offender by PNC
@@ -98,6 +98,11 @@ class OffenderRepositoryTest(@Autowired
         assertThat(exception.message).isEqualTo("Duplicate offender found for $pncType $duplicatedPnc")
     }
 
+    @Test
+    fun `throws exception for PNC offender with null identifier`() {
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(pnc, null) }
+        assertThat(exception.message).isEqualTo("Identifier id is null")
+    }
 
 
     // Offender by nomis
@@ -127,6 +132,11 @@ class OffenderRepositoryTest(@Autowired
         assertThat(exception.message).isEqualTo("Duplicate offender found for $nomisType $duplicatedNomis")
     }
 
+    @Test
+    fun `throws exception for NOMIS offender with null identifier`() {
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(nomis, null) }
+        assertThat(exception.message).isEqualTo("Identifier id is null")
+    }
 
 
     //Offender by booking
@@ -156,6 +166,12 @@ class OffenderRepositoryTest(@Autowired
         assertThat(exception.message).isEqualTo("Duplicate offender found for $bookingType $duplicatedBooking")
     }
 
+    @Test
+    fun `throws exception for Booking offender with null identifier`() {
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(booking, null) }
+        assertThat(exception.message).isEqualTo("Identifier id is null")
+    }
+
 
     //Offender by OASYS
     @Test
@@ -170,17 +186,23 @@ class OffenderRepositoryTest(@Autowired
         assertThat(exception.message).isEqualTo("Offender not found for OASYS, 0000")
     }
 
+    @Test
+    fun `throws exception for OASYS offender with null identifier`() {
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(oasys, null) }
+        assertThat(exception.message).isEqualTo("Identifier id is null")
+    }
+
 
 
     @Test
     fun `throws exception with null identity type`() {
-        val exception = assertThrows<EntityNotFoundException> { offenderRepository.getOffender(null, crn) }
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(null, crn) }
         assertThat(exception.message).isEqualTo("Identifier type not found for null, $crn")
     }
 
     @Test
     fun `throws exception with invalid identity type`() {
-        val exception = assertThrows<EntityNotFoundException> { offenderRepository.getOffender(invalidId, crn) }
+        val exception = assertThrows<IllegalArgumentException> { offenderRepository.getOffender(invalidId, crn) }
         assertThat(exception.message).isEqualTo("Identifier type not found for $invalidId, $crn")
     }
 }

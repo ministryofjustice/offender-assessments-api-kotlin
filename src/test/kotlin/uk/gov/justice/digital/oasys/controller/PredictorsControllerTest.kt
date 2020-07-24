@@ -95,7 +95,7 @@ class PredictorsControllerTest : IntegrationTest() {
 
     @Test
     fun `get predictors for unknown offender nomis ID gives Not Found` () {
-        webTestClient.get().uri("/offenders/nomis/${invalidNomis}/predictors")
+        webTestClient.get().uri("/offenders/nomisId/${invalidNomis}/predictors")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isNotFound
