@@ -281,6 +281,24 @@ class OffenderControllerTest : IntegrationTest() {
                 }
     }
 
+    @Test
+    fun `null Offender ID returns Not found`() {
+
+        webTestClient.get().uri("/offenders/${OffenderIdentifier.NOMIS.value}/")
+                .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
+                .exchange()
+                .expectStatus().isNotFound
+    }
+
+    @Test
+    fun `null Offender ID and Identifier returns Not Found`() {
+
+        webTestClient.get().uri("/offenders/")
+                .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
+                .exchange()
+                .expectStatus().isNotFound
+    }
+
     private fun validateOffender(offender: OffenderDto?) {
         assertThat(offender?.oasysOffenderId).isEqualTo(oasysOffenderId)
         assertThat(offender?.limitedAccessOffender).isTrue()
@@ -298,5 +316,4 @@ class OffenderControllerTest : IntegrationTest() {
         assertThat(offender?.bookingNumber).isEqualTo(booking)
         assertThat(offender?.mergePncNumber).isEqualTo("MPNC")
     }
-
 }
