@@ -33,7 +33,7 @@ class AssessmentController (private val assessmentService: AssessmentService) {
                                   @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
                                   @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
                                   @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
-                                  @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<AssessmentSummaryDto?>? {
+                                  @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<AssessmentSummaryDto> {
         return assessmentService.getAssessmentsForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
     }
 
@@ -45,7 +45,7 @@ class AssessmentController (private val assessmentService: AssessmentService) {
                       @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
                       @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
                       @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
-                      @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): AssessmentDto? {
+                      @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): AssessmentDto {
         return  assessmentService.getLatestAssessmentForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
     }
 }

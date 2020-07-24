@@ -3,7 +3,7 @@ package uk.gov.justice.digital.oasys.api
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @DisplayName("Assessment DTO Tests")
@@ -15,11 +15,11 @@ class AssessmentNeedDtoTest {
         val assessmentNeed = setupAssessmentNeed()
         val assessmentNeedDto = AssessmentNeedDto.from(setOf(assessmentNeed)).first()
 
-        assertThat(assessmentNeedDto?.name).isEqualTo(assessmentNeed.name)
-        assertThat(assessmentNeedDto?.overThreshold).isEqualTo(assessmentNeed.overThreshold)
-        assertThat(assessmentNeedDto?.riskOfHarm).isEqualTo(assessmentNeed.riskOfHarm)
-        assertThat(assessmentNeedDto?.riskOfReoffending).isEqualTo(assessmentNeed.riskOfReoffending)
-        assertThat(assessmentNeedDto?.flaggedAsNeed).isEqualTo(assessmentNeed.flaggedAsNeed)
+        assertThat(assessmentNeedDto.name).isEqualTo(assessmentNeed.name)
+        assertThat(assessmentNeedDto.overThreshold).isEqualTo(assessmentNeed.overThreshold)
+        assertThat(assessmentNeedDto.riskOfHarm).isEqualTo(assessmentNeed.riskOfHarm)
+        assertThat(assessmentNeedDto.riskOfReoffending).isEqualTo(assessmentNeed.riskOfReoffending)
+        assertThat(assessmentNeedDto.flaggedAsNeed).isEqualTo(assessmentNeed.flaggedAsNeed)
     }
 
     @Test
@@ -40,8 +40,8 @@ class AssessmentNeedDtoTest {
         assertThat(assessmentNeedDto).isEmpty()
     }
 
-    private fun setupAssessmentNeed(): CrimiogenicNeed {
-        return CrimiogenicNeed(
+    fun setupAssessmentNeed(): CriminogenicNeed {
+        return CriminogenicNeed(
                 SectionHeader.DRUG_MISUSE,
                 "Drug Misuse",
                 false,

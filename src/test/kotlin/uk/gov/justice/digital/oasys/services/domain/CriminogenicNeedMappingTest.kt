@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("Crimiogenic Need Mapping Tests")
-class CrimiogenicNeedMappingTest {
+@DisplayName("Criminogenic Need Mapping Tests")
+class CriminogenicNeedMappingTest {
 
     private val section = SectionHeader.DRUG_MISUSE
     private val name = "Drug Misuse"
@@ -13,7 +13,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is True when Risk of Harm set`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 true,
@@ -31,7 +31,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is True when Risk of Reoffending set`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 null,
@@ -49,7 +49,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is True when over threshold set`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 null,
@@ -67,7 +67,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is True when flagged`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 false,
@@ -85,7 +85,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is True when multiple set`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 false,
@@ -103,7 +103,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is False when all unset`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 null,
@@ -121,7 +121,7 @@ class CrimiogenicNeedMappingTest {
 
     @Test
     fun `Any Risk Flag is False when all false`() {
-        val assessmentNeed = CrimiogenicNeed(
+        val assessmentNeed = CriminogenicNeed(
                 section,
                 name,
                 false,

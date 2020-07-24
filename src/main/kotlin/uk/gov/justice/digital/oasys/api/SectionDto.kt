@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.oasys.api
 
+import uk.gov.justice.digital.oasys.api.DtoUtils.ynToBoolean
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 
 data class SectionDto(
@@ -22,10 +23,8 @@ data class SectionDto(
 ) {
 
     companion object {
-        private val POSITIVE_ANSWERS: Set<String> = setOf("YES", "Y")
-
-        fun from(sections: Collection<Section?>?): Collection<SectionDto?> {
-            return sections?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
+        fun from(sections: Collection<Section?>?): Collection<SectionDto> {
+            return sections?.filterNotNull()?.mapNotNull { from(it) }?.toSet().orEmpty()
         }
 
         private fun from(section: Section?): SectionDto? {
@@ -44,7 +43,7 @@ data class SectionDto(
                     section?.sectOvpRawScore,
                     section?.sectOtherWeightedScore,
                     section?.sectOtherRawScore,
-                    POSITIVE_ANSWERS.contains(section?.lowScoreNeedAttnInd),
+                    section?.lowScoreNeedAttnInd.ynToBoolean(),
                     QuestionDto.from(section?.oasysQuestions)
             )
         }

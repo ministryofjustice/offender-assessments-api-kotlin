@@ -14,12 +14,12 @@ import javax.persistence.EntityManager
 class OffenderRepository constructor(entityManager: EntityManager) {
     private val queryFactory = JPAQueryFactory(entityManager)
 
-    fun getOffender(identifierType: String?, identifier: String?): Offender? {
+    fun getOffender(identifierType: String?, identifier: String?): Offender {
         val offenderIdentifier = OffenderIdentifier.fromString(identifierType)
         return getOffenderByIdentifier(offenderIdentifier, identifier)
     }
 
-    private fun getOffenderByIdentifier(identityType: OffenderIdentifier?, identity: String?): Offender? {
+    private fun getOffenderByIdentifier(identityType: OffenderIdentifier?, identity: String?): Offender {
 
         val query = queryFactory.selectFrom(offender)
         when (identityType) {

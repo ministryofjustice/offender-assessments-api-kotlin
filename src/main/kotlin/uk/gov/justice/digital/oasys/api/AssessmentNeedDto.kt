@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 class AssessmentNeedDto (
@@ -26,11 +26,11 @@ class AssessmentNeedDto (
 
 ) {
     companion object {
-        fun from(needs: Collection<CrimiogenicNeed?>?): Collection<AssessmentNeedDto?> {
-            return needs?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
+       fun from(needs: Collection<CriminogenicNeed?>?): Collection<AssessmentNeedDto> {
+            return needs?.filterNotNull()?.mapNotNull { from(it) }?.toSet().orEmpty()
         }
 
-        private fun from(need: CrimiogenicNeed?): AssessmentNeedDto? {
+        private fun from(need: CriminogenicNeed?): AssessmentNeedDto? {
             return AssessmentNeedDto(
                     need?.section,
                     need?.name,

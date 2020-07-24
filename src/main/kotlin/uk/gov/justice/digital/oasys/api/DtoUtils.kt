@@ -10,16 +10,4 @@ object DtoUtils {
             null
         } else this.equals("Y", ignoreCase = true)
     }
-
-    fun refElementDesc(refElement: RefElement): String? {
-        return if (Objects.isNull(refElement)) {
-            null
-        } else refElement.refElementDesc
-    }
-
-    fun refElementCode(refElement: RefElement): String? {
-        return if (Objects.isNull(refElement)) {
-            null
-        } else refElement.refElementCode
-    }
 }

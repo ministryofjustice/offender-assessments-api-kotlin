@@ -22,8 +22,8 @@ data class SentenceDto (
 ) {
 
     companion object {
-        fun from(offenceBlocks: Set<OffenceBlock?>?): Set<SentenceDto?>? {
-            return offenceBlocks?.map { from(it) }?.filter { it !=null }?.toSet()
+        fun from(offenceBlocks: Set<OffenceBlock?>?): Set<SentenceDto> {
+            return offenceBlocks?.mapNotNull { from(it) }?.toSet().orEmpty()
         }
 
         private fun from(offenceBlock: OffenceBlock?): SentenceDto? {

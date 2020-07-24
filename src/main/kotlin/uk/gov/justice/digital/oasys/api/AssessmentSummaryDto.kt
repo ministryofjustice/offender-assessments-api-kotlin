@@ -46,7 +46,7 @@ data class AssessmentSummaryDto(
 
     companion object {
 
-        fun from(assessments: Collection<Assessment?>?): Collection<AssessmentSummaryDto>? {
+        fun from(assessments: Collection<Assessment?>?): Collection<AssessmentSummaryDto> {
             return assessments?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
         }
 

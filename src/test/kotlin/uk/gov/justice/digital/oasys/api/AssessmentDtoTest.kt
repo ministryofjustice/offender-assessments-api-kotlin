@@ -7,7 +7,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.AssessmentGroup
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
 import uk.gov.justice.digital.oasys.jpa.entities.Section
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import java.time.LocalDateTime
 
@@ -18,7 +18,7 @@ class AssessmentDtoTest {
     @Test
     fun `Builds valid Assessment DTO from Entity with no child safeguarding and needs`() {
 
-        val needs= setOf(CrimiogenicNeed(SectionHeader.ACCOMMODATION,
+        val needs= setOf(CriminogenicNeed(SectionHeader.ACCOMMODATION,
                 "Accomodation",
                 true,
                 true,
@@ -65,30 +65,6 @@ class AssessmentDtoTest {
         assertThat(assessmentDto.childSafeguardingIndicated).isNull()
         assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
     }
-
-    @Test
-    fun `Builds valid Assessment DTO from Entity with child safeguarding and null needs`() {
-
-        val assessmentDto = AssessmentDto.from(assessment, true, null)
-
-        assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
-        assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)
-        assertThat(assessmentDto.assessmentType).isEqualTo(assessment.assessmentType)
-        assertThat(assessmentDto.historicStatus).isEqualTo(assessment.group?.historicStatus)
-        assertThat(assessmentDto.assessmentStatus).isEqualTo(assessment.assessmentStatus)
-        assertThat(assessmentDto.createdDateTime).isEqualTo(assessment.createDate)
-        assertThat(assessmentDto.refAssessmentId).isEqualTo(assessment.assessmentVersion?.refAssVersionUk)
-        assertThat(assessmentDto.refAssessmentVersionCode).isEqualTo(assessment.assessmentVersion?.refAssVersionCode)
-        assertThat(assessmentDto.refAssessmentVersionNumber).isEqualTo(assessment.assessmentVersion?.versionNumber)
-        assertThat(assessmentDto.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(assessment.assessmentVersion?.oasysScoringAlgVersion)
-        assertThat(assessmentDto.completedDateTime).isEqualTo(assessment.dateCompleted)
-        assertThat(assessmentDto.voidedDateTime).isEqualTo(assessment.assessmentVoidedDate)
-        assertThat(assessmentDto.sections).hasSize(assessment.oasysSections!!.size)
-        assertThat(assessmentDto.childSafeguardingIndicated).isTrue()
-        assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
-    }
-
-
 
 
     private fun setupAssessmentGroup() : AssessmentGroup {
