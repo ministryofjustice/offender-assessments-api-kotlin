@@ -48,7 +48,7 @@ import java.time.LocalDateTime
     }
 
     @Test
-    fun `return null for null offender PK`(){
+    fun `return null for null merged offender PK`(){
         val offenderLink = offenderLinkRepository.findMergedOffenderOrNull(900L)
         assertThat(offenderLink).isNull()
     }

@@ -16,6 +16,7 @@ class OffenderRepository constructor(entityManager: EntityManager) {
 
     fun getOffender(identifierType: String?, identifier: String?): Offender? {
         val offenderIdentifier = OffenderIdentifier.fromString(identifierType)
+                ?: throw EntityNotFoundException("Identifier type not found for $identifierType, $identifier")
         return getOffenderByIdentifier(offenderIdentifier, identifier)
     }
 
@@ -49,7 +50,5 @@ class OffenderRepository constructor(entityManager: EntityManager) {
             result.size > 1 -> throw DuplicateOffenderRecordException("Duplicate offender found for $identityType $identity")
             else ->  throw EntityNotFoundException("Offender not found for $identityType, $identity")
         }
-
     }
-
 }
