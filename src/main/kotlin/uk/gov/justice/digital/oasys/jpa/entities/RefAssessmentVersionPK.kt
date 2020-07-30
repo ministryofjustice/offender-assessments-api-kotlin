@@ -7,11 +7,11 @@ import javax.persistence.Id
 class RefAssessmentVersionPK (
         @Id
         @Column(name = "REF_ASS_VERSION_CODE")
-        private val refAssVersionCode: String? = null,
+        val refAssVersionCode: String? = null,
 
         @Id
         @Column(name = "VERSION_NUMBER")
-        private val versionNumber: String? = null
+        val versionNumber: String? = null
 ) : Serializable
 {
     override fun equals(o: Any?): Boolean {

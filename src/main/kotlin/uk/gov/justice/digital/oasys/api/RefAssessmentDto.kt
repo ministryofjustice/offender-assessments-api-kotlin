@@ -13,13 +13,14 @@ data class RefAssessmentDto(
 
     companion object {
 
-        fun from(version: RefAssessmentVersion?): RefAssessmentDto? {
-            return RefAssessmentDto( version?.refAssVersionUk,
-                    version?.refAssVersionCode,
-                    version?.versionNumber,
-                    version?.oasysScoringAlgVersion,
-                    version?.refModuleCode,
-                    RefSectionDto.from(version?.refSections))
+        fun from(version: RefAssessmentVersion): RefAssessmentDto {
+            return RefAssessmentDto(
+                    version.refAssVersionUk,
+                    version.refAssVersionCode,
+                    version.versionNumber,
+                    version.oasysScoringAlgVersion,
+                    version.refModuleCode,
+                    RefSectionDto.from(version.refSections))
         }
     }
 }
