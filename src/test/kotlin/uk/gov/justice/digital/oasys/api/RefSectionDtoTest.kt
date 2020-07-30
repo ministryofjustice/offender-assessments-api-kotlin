@@ -10,10 +10,22 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefSection
 class RefSectionDtoTest {
 
     @Test
-    fun `Builds valid Reference Section DTO from Entity`() {
-        val section = setupSection()
-        val dto = RefSectionDto.from(section)
-        assertThat(dto).isEqualTo(setupValidDto())
+    fun `Builds valid Reference Section DTOs from Entities`() {
+        val sections = setupSectionCollection()
+        val refSectionDtos = RefSectionDto.from(sections)
+
+        assertThat(refSectionDtos).isEqualTo(setupValidDtos())
+    }
+
+    @Test
+    fun `Builds valid Reference Section DTO from null entity`() {
+        val refSectionDto = RefSectionDto.from(null)
+        assertThat(refSectionDto).isEmpty()
+    }
+
+    private fun setupSectionCollection(): Collection<RefSection> {
+        val section =  setupSection()
+        return listOf(section, section.copy(refSectionCode = "3"))
     }
 
     private fun setupSection(): RefSection {
@@ -27,7 +39,12 @@ class RefSectionDtoTest {
                 refQuestions = emptyList())
     }
 
-    private fun setupValidDto(): RefSectionDto? {
+    private fun setupValidDtos(): Collection<RefSectionDto?>? {
+        val dto = setupValidDto()
+        return setOf(dto, dto.copy(refSectionCode = "3"))
+    }
+
+    private fun setupValidDto(): RefSectionDto {
         return RefSectionDto(
                 refSectionId = 12L,
                 refSectionCode = "Any Code",

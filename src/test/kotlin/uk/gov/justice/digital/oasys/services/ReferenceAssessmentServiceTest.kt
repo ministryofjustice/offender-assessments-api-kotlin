@@ -7,12 +7,14 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 import uk.gov.justice.digital.oasys.api.RefAssessmentDto
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersionPK
 import uk.gov.justice.digital.oasys.jpa.repositories.ReferenceAssessmentRepository
+import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 
 @ExtendWith(MockKExtension::class)
@@ -24,16 +26,23 @@ class ReferenceAssessmentServiceTest {
 
     @Test
     fun `Return reference assessment for type and version`(){
+        val versionCode = "Any Code"
+        val versionNumber = "Any Version"
         val refAssessmentVersion = setupRefAssessmentVersion()
+        every {referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK(versionCode, versionNumber))} returns (refAssessmentVersion)
 
-        every {referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK("Any Code","Any Version"))} returns (refAssessmentVersion)
+        val refAssessmentDto = referenceAssessmentService.getReferenceAssessmentOf(versionCode, versionNumber)
+        verify(exactly = 1) { referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK(versionCode,versionNumber)) }
+        assertThat(refAssessmentDto).isEqualTo(setupValidDto())
+    }
 
-        val refAssessmentDto = referenceAssessmentService.getReferenceAssessmentOf("Any Code", "Any Version")
+    @Test
+    fun `Throws not found for invalid type and version`(){
+        val invalidString = "invalid"
+        every {referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK(invalidString,invalidString))} returns (null)
 
-        verify(exactly = 1) { referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK("Any Code","Any Version")) }
-
-        val validRefAssessmentDto = setupValidDto()
-        assertThat(refAssessmentDto).isEqualTo(validRefAssessmentDto)
+        assertThrows<EntityNotFoundException> { referenceAssessmentService.getReferenceAssessmentOf(invalidString, invalidString) }
+        verify(exactly = 1) { referenceAssessmentRepository.findByIdOrNull(RefAssessmentVersionPK(invalidString,invalidString)) }
     }
 
     private fun setupRefAssessmentVersion(): RefAssessmentVersion{

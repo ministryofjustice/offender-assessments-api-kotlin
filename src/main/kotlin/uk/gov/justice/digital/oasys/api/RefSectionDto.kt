@@ -19,7 +19,7 @@ data class RefSectionDto (
             return refSections?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
         }
 
-        fun from(refSection: RefSection): RefSectionDto {
+        private fun from(refSection: RefSection): RefSectionDto {
             return RefSectionDto(
                     refSection.crimNeedScoreThreshold,
                     refSection.refSectionCode,

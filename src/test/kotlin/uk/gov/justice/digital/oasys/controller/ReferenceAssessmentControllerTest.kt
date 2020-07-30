@@ -34,7 +34,7 @@ class ReferenceAssessmentControllerTest : IntegrationTest() {
     }
 
     @Test
-    fun `get Reference Assessment for invalid assessment type gives Not Found`() {
+    fun `get Reference Assessment for invalid assessment type code gives Not Found`() {
 
         webTestClient.get().uri("/referenceassessments/type/$invalid/revision/$versionNumber")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
@@ -43,7 +43,7 @@ class ReferenceAssessmentControllerTest : IntegrationTest() {
     }
 
     @Test
-    fun `get Reference Assessment for invalid assessment version gives Not Found`() {
+    fun `get Reference Assessment for invalid assessment version number gives Not Found`() {
 
         webTestClient.get().uri("/referenceassessments/type/$versionCode/revision/$invalid")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))

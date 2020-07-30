@@ -18,7 +18,7 @@ data class RefQuestionDto (
             return refQuestions?.filterNotNull()?.map { from(it) }.orEmpty()
         }
 
-        fun from(refQuestion: RefQuestion): RefQuestionDto {
+        private fun from(refQuestion: RefQuestion): RefQuestionDto {
             return RefQuestionDto(
                     refDisplaySort = refQuestion.displaySort,
                     refMandatoryIndicator = refQuestion.mandatoryInd.ynToBoolean(),

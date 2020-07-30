@@ -9,10 +9,21 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefQuestion
 class RefQuestionDtoTest {
 
     @Test
-    fun `Builds valid Reference Question DTO from Entity`() {
+    fun `Builds valid Reference Question DTOs from Entities`() {
+        val questions = setupQuestions()
+        val referenceQuestionDtos = RefQuestionDto.from(questions)
+        assertThat(referenceQuestionDtos).isEqualTo(setupValidDtos())
+    }
+
+    @Test
+    fun `Builds valid Reference Question DTO from null entity`() {
+        val refQuestionDto = RefQuestionDto.from(null)
+        assertThat(refQuestionDto).isEmpty()
+    }
+
+    private fun setupQuestions(): Collection<RefQuestion> {
         val question = setupQuestion()
-        val dto = RefQuestionDto.from(question)
-        assertThat(dto).isEqualTo(setupValidDto())
+        return listOf(question, question.copy(refQuestionCode = "3"))
     }
 
     private fun setupQuestion(): RefQuestion {
@@ -27,7 +38,12 @@ class RefQuestionDtoTest {
         )
     }
 
-    private fun setupValidDto(): RefQuestionDto? {
+    private fun setupValidDtos(): Collection<RefQuestionDto> {
+        val dto = setupValidDto()
+        return listOf(dto, dto.copy(refQuestionCode = "3"))
+    }
+
+    private fun setupValidDto(): RefQuestionDto{
         return RefQuestionDto(
                 refDisplaySort = 2L,
                 refMandatoryIndicator = true,
