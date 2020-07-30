@@ -7,7 +7,7 @@ import javax.persistence.Id
 class RefAssessmentVersionPK (
         @Id
         @Column(name = "REF_ASS_VERSION_CODE")
-        private var refAssVersionCode: String? = null,
+        private val refAssVersionCode: String? = null,
 
         @Id
         @Column(name = "VERSION_NUMBER")

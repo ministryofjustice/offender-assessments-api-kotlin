@@ -3,7 +3,7 @@ package uk.gov.justice.digital.oasys.api
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.math.BigDecimal
 
-data class Ogp(
+data class OgpDto(
     val ogpStaticWeightedScore: BigDecimal? = null,
     val ogpDynamicWeightedScore: BigDecimal? = null,
     val ogpTotalWeightedScore: BigDecimal? = null,
@@ -13,10 +13,10 @@ data class Ogp(
 ) {
 
     companion object {
-        fun from(assessment: Assessment?): Ogp? {
+        fun from(assessment: Assessment?): OgpDto? {
             return if (assessment == null) {
                 null
-            } else Ogp(
+            } else OgpDto(
                     assessment.ogpStWesc,
                     assessment.ogpDyWesc,
                     assessment.ogpTotWesc,

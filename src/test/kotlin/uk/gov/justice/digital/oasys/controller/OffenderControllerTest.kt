@@ -239,14 +239,14 @@ class OffenderControllerTest : IntegrationTest() {
     @Test
     fun `PNC returns error when duplicate record found`() {
 
-        webTestClient.get().uri("/offenders/${OffenderIdentifier.PNC.value}/${duplicatePnc}")
+        webTestClient.get().uri("/offenders/${OffenderIdentifier.PNC.value}/$duplicatePnc")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().is4xxClientError
                 .expectBody<ErrorResponse>()
                 .consumeWith {
-                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for PNC ${duplicatePnc}")
-                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for PNC ${duplicatePnc}")
+                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for PNC $duplicatePnc")
+                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for PNC $duplicatePnc")
                     assertThat(it.responseBody?.status).isEqualTo(409)
                 }
     }
@@ -254,14 +254,14 @@ class OffenderControllerTest : IntegrationTest() {
     @Test
     fun `Delius CRN returns error when duplicate record found`() {
 
-        webTestClient.get().uri("/offenders/${OffenderIdentifier.CRN.value}/${duplicateCrn}")
+        webTestClient.get().uri("/offenders/${OffenderIdentifier.CRN.value}/$duplicateCrn")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().is4xxClientError
                 .expectBody<ErrorResponse>()
                 .consumeWith {
-                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for CRN ${duplicateCrn}")
-                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for CRN ${duplicateCrn}")
+                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for CRN $duplicateCrn")
+                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for CRN $duplicateCrn")
                     assertThat(it.responseBody?.status).isEqualTo(409)
                 }
     }
@@ -269,14 +269,14 @@ class OffenderControllerTest : IntegrationTest() {
     @Test
     fun `NOMIS ID returns error when duplicate record found`() {
 
-        webTestClient.get().uri("/offenders/${OffenderIdentifier.NOMIS.value}/${duplicateNomis}")
+        webTestClient.get().uri("/offenders/${OffenderIdentifier.NOMIS.value}/$duplicateNomis")
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().is4xxClientError
                 .expectBody<ErrorResponse>()
                 .consumeWith {
-                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for NOMIS ${duplicateNomis}")
-                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for NOMIS ${duplicateNomis}")
+                    assertThat(it.responseBody?.developerMessage).contains("Duplicate offender found for NOMIS $duplicateNomis")
+                    assertThat(it.responseBody?.userMessage).contains("Duplicate offender found for NOMIS $duplicateNomis")
                     assertThat(it.responseBody?.status).isEqualTo(409)
                 }
     }

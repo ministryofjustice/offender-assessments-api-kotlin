@@ -20,10 +20,9 @@ data class SentenceDto (
         val sentenceLengthCustodyDays: Long? = null
         
 ) {
-
     companion object {
         fun from(offenceBlocks: Set<OffenceBlock?>?): Set<SentenceDto?>? {
-            return offenceBlocks?.map { from(it) }?.filter { it !=null }?.toSet()
+            return offenceBlocks?.map { from(it) }?.filterNotNull()?.toSet()
         }
 
         private fun from(offenceBlock: OffenceBlock?): SentenceDto? {

@@ -10,19 +10,19 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import java.math.BigDecimal
 
 @DisplayName("OGRS3 DTO Tests")
-class Ogrs3Test {
+class Ogrs3DtoTest {
     
     @Test
     fun `should build valid OGRS3 DTO`() {
         val assessment = setupAssessment()
-        val ogr = Ogrs3.from(assessment)
+        val ogr = Ogrs3Dto.from(assessment)
 
         assertThat(ogr).isEqualTo(setupValidOgrs3())
     }
 
     @Test
     fun `should build valid null OGRS3 DTO`() {
-        val dto = Ogrs3.from(null)
+        val dto = Ogrs3Dto.from(null)
         assertThat(dto).isNull()
     }
 
@@ -33,8 +33,8 @@ class Ogrs3Test {
         )
     }
 
-    private fun setupValidOgrs3():Ogrs3 {
-        return Ogrs3(ogrs3_1Year = BigDecimal.valueOf(4),
+    private fun setupValidOgrs3():Ogrs3Dto {
+        return Ogrs3Dto(ogrs3_1Year = BigDecimal.valueOf(4),
                 ogrs3_2Year = BigDecimal.valueOf(5),
                 reconvictionRisk = RefElementDto(description = "Low", code = "L")
         )
