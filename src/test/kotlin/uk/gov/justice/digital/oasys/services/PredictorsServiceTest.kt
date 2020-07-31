@@ -85,17 +85,17 @@ class PredictorsServiceTest {
                 ogrs3RiskRecon = RefElement( refElementDesc="Low", refElementCode = "L"))
     }
 
-    private fun setUpValidPredictor(assessment:Assessment): Predictor {
+    private fun setUpValidPredictor(assessment:Assessment): PredictorDto {
 
         //OGP
-        val ogp = Ogp(ogpStaticWeightedScore = assessment.ogpStWesc,
+        val ogp = OgpDto(ogpStaticWeightedScore = assessment.ogpStWesc,
                 ogpDynamicWeightedScore = assessment.ogpDyWesc,
                 ogpTotalWeightedScore = assessment.ogpTotWesc,
                 ogp1Year = assessment.ogp1Year,
                 ogp2Year = assessment.ogp2Year,
                 ogpRisk  = RefElementDto(code = "L", description = assessment.ogpRiskRecon?.refElementDesc))
 
-        val ovp = Ovp(ovpStaticWeightedScore = assessment.ovpStWesc,
+        val ovp = OvpDto(ovpStaticWeightedScore = assessment.ovpStWesc,
                 ovpDynamicWeightedScore = assessment.ovpDyWesc,
                 ovpTotalWeightedScore = assessment.ovpTotWesc,
                 ovp1Year = assessment.ovp1Year,
@@ -107,11 +107,11 @@ class PredictorsServiceTest {
                 ovpAgeWeightedScore = assessment.ovpAgeWesc,
                 ovpSexWeightedScore = assessment.ovpSexWesc )
 
-        val ogrs3 = Ogrs3(ogrs3_1Year = assessment.ogrs31Year,
+        val ogrs3 = Ogrs3Dto(ogrs3_1Year = assessment.ogrs31Year,
                 ogrs3_2Year = assessment.ogrs32Year,
                 reconvictionRisk = RefElementDto(code = "L", description = assessment.ogrs3RiskRecon?.refElementDesc))
 
-        return Predictor(oasysSetId = assessment.oasysSetPk,
+        return PredictorDto(oasysSetId = assessment.oasysSetPk,
                 refAssessmentVersionCode = version.refAssVersionCode,
                 refAssessmentVersionNumber = version.versionNumber,
                 refAssessmentId = version.refAssVersionUk,

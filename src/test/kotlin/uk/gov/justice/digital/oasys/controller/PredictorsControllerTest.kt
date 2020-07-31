@@ -7,7 +7,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.WebTestClient.ListBodySpec
-import uk.gov.justice.digital.oasys.api.Predictor
+import uk.gov.justice.digital.oasys.api.PredictorDto
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -37,8 +37,8 @@ class PredictorsControllerTest : IntegrationTest() {
                   .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                   .exchange()
                  .expectStatus().isOk
-                 .expectBodyList(Predictor::class.java)
-                 .consumeWith<ListBodySpec<Predictor>> {
+                 .expectBodyList(PredictorDto::class.java)
+                 .consumeWith<ListBodySpec<PredictorDto>> {
                      val predictors= it.responseBody
                      assertThat(predictors?.map{ a -> a.oasysSetId})
                              .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
@@ -61,8 +61,8 @@ class PredictorsControllerTest : IntegrationTest() {
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isOk
-                .expectBodyList(Predictor::class.java)
-                .consumeWith<ListBodySpec<Predictor>> {
+                .expectBodyList(PredictorDto::class.java)
+                .consumeWith<ListBodySpec<PredictorDto>> {
                     val predictors= it.responseBody
                     assertThat(predictors?.map{ a -> a.oasysSetId})
                             .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
@@ -84,8 +84,8 @@ class PredictorsControllerTest : IntegrationTest() {
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isOk
-                .expectBodyList(Predictor::class.java)
-                .consumeWith<ListBodySpec<Predictor>> {
+                .expectBodyList(PredictorDto::class.java)
+                .consumeWith<ListBodySpec<PredictorDto>> {
                     val predictors= it.responseBody
                     assertThat(predictors?.map{ a -> a.oasysSetId})
                             .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
@@ -107,8 +107,8 @@ class PredictorsControllerTest : IntegrationTest() {
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isOk
-                .expectBodyList(Predictor::class.java)
-                .consumeWith<ListBodySpec<Predictor>> {
+                .expectBodyList(PredictorDto::class.java)
+                .consumeWith<ListBodySpec<PredictorDto>> {
                     val predictors= it.responseBody
                     assertThat(predictors?.map{ a -> a.oasysSetId})
                             .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
@@ -130,8 +130,8 @@ class PredictorsControllerTest : IntegrationTest() {
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isOk
-                .expectBodyList(Predictor::class.java)
-                .consumeWith<ListBodySpec<Predictor>> {
+                .expectBodyList(PredictorDto::class.java)
+                .consumeWith<ListBodySpec<PredictorDto>> {
                     val predictors= it.responseBody
                     assertThat(predictors?.map{ a -> a.oasysSetId})
                             .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
@@ -148,10 +148,10 @@ class PredictorsControllerTest : IntegrationTest() {
     }
 
 
-    private fun validatePredictors(predictors: List<Predictor>?) {
+    private fun validatePredictors(predictors: List<PredictorDto>?) {
 
-        val predictor1:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
-        val predictor2:Predictor? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
+        val predictor1:PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
+        val predictor2:PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
 
         //Oasys Set 5430L
         assertThat(predictor1?.oasysSetId).isEqualTo(oasysSetID1)

@@ -39,7 +39,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(5)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -68,7 +68,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(5)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -96,7 +96,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(5)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -125,7 +125,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(5)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -153,7 +153,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(5)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -181,7 +181,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(3)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -199,7 +199,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(1)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -218,7 +218,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(4)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -236,7 +236,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(4)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -254,7 +254,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(1)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -272,7 +272,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(4)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -290,7 +290,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(1)
                     assertThat(summaries.map{ a -> a.assessmentId})
@@ -309,7 +309,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<Collection<AssessmentSummaryDto>>()
                 .consumeWith {
-                    val summaries = it.responseBody;
+                    val summaries = it.responseBody
 
                     assertThat(summaries).hasSize(3)
                     assertThat(summaries.map{ a -> a.assessmentId})

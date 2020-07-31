@@ -9,7 +9,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import java.time.LocalDateTime
 
 @DisplayName("Predictor DTO Tests")
-class PredictorTest {
+class PredictorDtoTest {
 
     private val created = LocalDateTime.now()
     private val completed = created.plusMonths(3)
@@ -18,22 +18,22 @@ class PredictorTest {
     @Test
     fun `should build valid Predictor DTO`() {
         val assessment = setupAssessment()
-        val predictor = Predictor.from(assessment)
+        val predictor = PredictorDto.from(assessment)
         assertThat(predictor).isEqualTo(setupValidPredictor())
     }
 
     @Test
     fun `should not be completed when completed date is null`() {
-        val predictor = Predictor.from(Assessment())
-        assertThat(predictor?.completedDate).isNull()
-        assertThat(predictor?.assessmentCompleted).isFalse()
+        val predictor = PredictorDto.from(Assessment())
+        assertThat(predictor.completedDate).isNull()
+        assertThat(predictor.assessmentCompleted).isFalse()
     }
 
     @Test
     fun `should be completed when completed date is not null`() {
-        val predictor = Predictor.from(setupAssessment())
-        assertThat(predictor?.completedDate).isNotNull()
-        assertThat(predictor?.assessmentCompleted).isTrue()
+        val predictor = PredictorDto.from(setupAssessment())
+        assertThat(predictor.completedDate).isNotNull()
+        assertThat(predictor.assessmentCompleted).isTrue()
     }
 
     private fun setupVersion(): RefAssessmentVersion {
@@ -56,8 +56,8 @@ class PredictorTest {
                 otherRiskRecon = RefElement(refElementDesc = "Low", refElementCode = "L"))
     }
 
-    private fun setupValidPredictor(): Predictor {
-        return Predictor( oasysSetId = 1234L,
+    private fun setupValidPredictor(): PredictorDto {
+        return PredictorDto( oasysSetId = 1234L,
                 refAssessmentVersionCode = "Any Ref Version Code",
                 refAssessmentVersionNumber = "Any Version",
                 refAssessmentId = 1L,
@@ -65,8 +65,8 @@ class PredictorTest {
                 assessmentCompleted = true,
                 voidedDateTime = voided,
                 otherRisk = RefElementDto(description = "Low", code = "L"),
-                ogp = Ogp(),
-                ovp = Ovp(),
-                ogr3 = Ogrs3())
+                ogp = OgpDto(),
+                ovp = OvpDto(),
+                ogr3 = Ogrs3Dto())
     }
 }

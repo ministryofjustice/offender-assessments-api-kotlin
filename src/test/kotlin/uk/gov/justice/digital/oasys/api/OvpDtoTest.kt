@@ -8,19 +8,19 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import java.math.BigDecimal 
 
 @DisplayName("OVP DTO Tests")
-class OvpTest {
+class OvpDtoTest {
 
     @Test
     fun `should build valid OVP DTO`() {
         val assessment = setupAssessment() 
-        val ovp = Ovp.from(assessment)
+        val ovp = OvpDto.from(assessment)
         val validOvp = setupValidOvp()
         assertThat(ovp).isEqualTo(validOvp)
     }
 
     @Test
     fun ` should build valid null OVP DTO`() {
-        val dto = Ovp.from(null) 
+        val dto = OvpDto.from(null)
         assertThat(dto).isNull() 
     }
 
@@ -39,8 +39,8 @@ class OvpTest {
         )
     }
 
-    private fun setupValidOvp():Ovp {
-        return Ovp(ovp1Year = BigDecimal.valueOf(1),
+    private fun setupValidOvp():OvpDto {
+        return OvpDto(ovp1Year = BigDecimal.valueOf(1),
                 ovp2Year = BigDecimal.valueOf(2),
                 ovpAgeWeightedScore = BigDecimal.valueOf(3),
                 ovpDynamicWeightedScore = BigDecimal.valueOf(4),

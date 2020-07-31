@@ -9,19 +9,19 @@ import java.math.BigDecimal
 
 
 @DisplayName("OGP DTO Tests")
-class OgpTest {
+class OgpDtoTest {
 
     @Test
     fun `should build valid OGP DTO`() {
         val assessment = setupAssessment()
-        val ogp = Ogp.from(assessment)
+        val ogp = OgpDto.from(assessment)
 
         assertThat(ogp).isEqualTo(setupValidOgp())
     }
 
     @Test
     fun `should build valid null OGP DTO`() {
-        val dto = Ogp.from(null)
+        val dto = OgpDto.from(null)
         assertThat(dto).isNull()
     }
 
@@ -34,8 +34,8 @@ class OgpTest {
                 ogpRiskRecon = RefElement(refElementDesc = ("Low"), refElementCode = ("L"))
         )
     }
-    private fun setupValidOgp(): Ogp {
-        return Ogp(ogpStaticWeightedScore = BigDecimal.valueOf(1),
+    private fun setupValidOgp(): OgpDto {
+        return OgpDto(ogpStaticWeightedScore = BigDecimal.valueOf(1),
                 ogpDynamicWeightedScore = BigDecimal.valueOf(2),
                 ogpTotalWeightedScore = BigDecimal.valueOf(3),
                 ogp1Year = BigDecimal.valueOf(4),
