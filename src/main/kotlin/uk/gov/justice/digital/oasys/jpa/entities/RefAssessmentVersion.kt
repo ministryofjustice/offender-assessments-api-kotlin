@@ -48,13 +48,13 @@ data class RefAssessmentVersion(
 
         @OneToMany
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"))
-        private val refSections: List<RefSection>? = null
+        val refSections: List<RefSection>? = null
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefAssessmentVersion) return false
-        return refAssVersionCode == o.refAssVersionCode &&
-                versionNumber == o.versionNumber
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefAssessmentVersion) return false
+        return refAssVersionCode == other.refAssVersionCode &&
+                versionNumber == other.versionNumber
     }
 
     override fun hashCode(): Int {

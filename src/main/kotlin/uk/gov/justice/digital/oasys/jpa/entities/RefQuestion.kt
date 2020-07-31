@@ -45,7 +45,7 @@ data class RefQuestion(
         private val refQuestionCodeParent: String? = null,
 
         @Column(name = "QA_WEIGHTING")
-        private val qaWeighting: Long? = null,
+        val qaWeighting: Long? = null,
 
         @Column(name = "CT_AREA_EST_CODE")
         private val ctAreaEstCode: String? = null,
@@ -55,7 +55,7 @@ data class RefQuestion(
 
         @OneToMany
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"), JoinColumn(name = "REF_QUESTION_CODE", referencedColumnName = "REF_QUESTION_CODE"))
-        private val refAnswers: List<RefAnswer>? = null
+        val refAnswers: List<RefAnswer>? = null
 
 ) {
     override fun equals(o: Any?): Boolean {

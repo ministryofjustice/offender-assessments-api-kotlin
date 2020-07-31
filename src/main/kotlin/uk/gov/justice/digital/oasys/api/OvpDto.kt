@@ -4,7 +4,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.math.BigDecimal
 import java.util.*
 
-data class Ovp (
+data class OvpDto (
     val ovpStaticWeightedScore: BigDecimal? = null,
     val ovpDynamicWeightedScore: BigDecimal? = null,
     val ovpTotalWeightedScore: BigDecimal? = null,
@@ -19,10 +19,10 @@ data class Ovp (
 ) {
 
     companion object {
-        fun from(assessment: Assessment?): Ovp? {
+        fun from(assessment: Assessment?): OvpDto? {
             return if (Objects.isNull(assessment)) {
                 null
-            } else Ovp(
+            } else OvpDto(
                     assessment?.ovpStWesc,
                     assessment?.ovpDyWesc,
                     assessment?.ovpTotWesc,
