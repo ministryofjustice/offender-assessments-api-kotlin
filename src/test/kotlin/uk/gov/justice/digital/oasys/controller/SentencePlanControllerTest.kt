@@ -79,7 +79,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .expectBody<BasicSentencePlanDto>()
                 .consumeWith {
                     val sentencePlan = it.responseBody
-                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan(sentencePlan))
+                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
                 }
     }
 
@@ -118,7 +118,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .expectBody<BasicSentencePlanDto>()
                 .consumeWith {
                     val sentencePlan = it.responseBody
-                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan(sentencePlan))
+                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
                 }
     }
 
@@ -156,7 +156,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .expectBody<BasicSentencePlanDto>()
                 .consumeWith {
                     val sentencePlan = it.responseBody
-                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan(sentencePlan))
+                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
                 }
     }
 
@@ -194,7 +194,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .expectBody<BasicSentencePlanDto>()
                 .consumeWith {
                     val sentencePlan = it.responseBody
-                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan(sentencePlan))
+                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
                 }
     }
 
@@ -232,11 +232,11 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .expectBody<BasicSentencePlanDto>()
                 .consumeWith {
                     val sentencePlan = it.responseBody
-                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan(sentencePlan))
+                    assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
                 }
     }
 
-    fun setupBasicSentencePlan(sentencePlan: BasicSentencePlanDto): BasicSentencePlanDto {
+    fun setupBasicSentencePlan(): BasicSentencePlanDto {
 
         return BasicSentencePlanDto(
                 sentencePlanId = 100L,

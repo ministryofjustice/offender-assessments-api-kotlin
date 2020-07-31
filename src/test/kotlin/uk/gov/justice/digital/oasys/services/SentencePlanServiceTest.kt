@@ -5,10 +5,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.BasicSentencePlanObj
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -46,6 +48,22 @@ class SentencePlanServiceTest {
         assertThat(basicSentencePlan.createdDate).isEqualTo(LocalDate.of(2020,1,1))
 
         verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(1L)  }
+    }
+
+    @Test
+    fun `throws not found exception when null assessment returned`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns 1L
+        every { assessmentRepository.getLatestAssessmentForOffender(1L) } returns null
+
+        assertThrows<EntityNotFoundException> { service.getLatestBasicSentencePlanForOffender("OASYS", "1") }
+    }
+
+    @Test
+    fun `throws not found exception when null assessment has no basic sentence plan items`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns 1L
+        every { assessmentRepository.getLatestAssessmentForOffender(1L) } returns Assessment()
+
+        assertThrows<EntityNotFoundException> { service.getLatestBasicSentencePlanForOffender("OASYS", "1") }
     }
 
     private fun setupAssessment(): Assessment {

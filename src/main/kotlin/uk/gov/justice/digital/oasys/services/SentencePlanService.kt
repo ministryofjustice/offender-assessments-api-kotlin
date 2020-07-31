@@ -22,7 +22,7 @@ class SentencePlanService (
     fun getLatestBasicSentencePlanForOffender(identityType: String?, identity: String?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): BasicSentencePlanDto {
         val offenderId = getOffenderIdByIdentifier(identityType, identity)
         val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-                ?: throw EntityNotFoundException("Latest Basic Sentence Plan for Offender $offenderId, not found")
+                ?: throw EntityNotFoundException("Latest assessment for Offender $offenderId, not found")
 
         log.info("Found Latest Assessment type: ${assessment.assessmentType}status: ${assessment.assessmentStatus} for identity: ($identity,$identityType)")
         return BasicSentencePlanDto.from(assessment)
