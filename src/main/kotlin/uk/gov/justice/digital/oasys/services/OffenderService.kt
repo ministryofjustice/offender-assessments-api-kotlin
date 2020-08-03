@@ -17,28 +17,28 @@ class OffenderService(private val offenderRepository: OffenderRepository,
         val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun getOffenderIdByIdentifier(identityType: String?, identity: String?) : Long? {
-        return getOffenderFromRepository(identityType, identity)?.offenderPk
+    fun getOffenderIdByIdentifier(identityType: String?, identity: String?) : Long {
+        return getOffenderFromRepository(identityType, identity).offenderPk
     }
 
     fun getOffender(identityType: String?, identity: String?) : OffenderDto {
         val offender = OffenderDto.from(getOffenderFromRepository(identityType, identity))
-        AssessmentService.log.info("Found Offender for identity: $identity ,$identityType)")
+        log.info("Found Offender for identity: $identity ,$identityType)")
         return offender
     }
 
-    private fun getOffenderFromRepository(identityType : String?, identity: String?) : Offender? {
+    private fun getOffenderFromRepository(identityType : String?, identity: String?) : Offender {
         return checkForOffenderMerge(offenderRepository.getOffender(identityType, identity))
 
     }
 
-    private fun checkForOffenderMerge(offender : Offender?) : Offender? {
+    private fun checkForOffenderMerge(offender : Offender) : Offender {
         if(offender?.mergeIndicated.equals("Y")) {
             val linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(offender?.offenderPk)
             if (linkedOffender != null) {
                 val mergedOffenderPK = findMergedOffenderPK(linkedOffender)
                 val mergedOffender = getOffenderFromRepository("oasysOffenderId", mergedOffenderPK.toString())
-                mergedOffender?.mergedOffenderPK = offender?.offenderPk
+                mergedOffender.mergedOffenderPK = offender.offenderPk
                 return mergedOffender
             }
         }

@@ -37,14 +37,14 @@ class SectionDtoTest {
     fun `Builds valid Offender DTO Low Score Indicator No`() {
         val section = setupSection().copy(lowScoreNeedAttnInd = "N")
         val sectionDto = SectionDto.from(setOf(section)).first()
-        assertThat(sectionDto?.lowScoreAttentionNeeded).isFalse()
+        assertThat(sectionDto.lowScoreAttentionNeeded).isFalse()
     }
 
     @Test
     fun `Builds valid Offender DTO Low Score Indicator Null`() {
         val section = setupSection().copy(lowScoreNeedAttnInd = null)
         val sectionDto = SectionDto.from(setOf(section)).first()
-        assertThat(sectionDto?.lowScoreAttentionNeeded).isFalse()
+        assertThat(sectionDto.lowScoreAttentionNeeded).isNull()
     }
 
     @Test

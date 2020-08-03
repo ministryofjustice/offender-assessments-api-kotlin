@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.oasys.services.domain
 
-class CrimiogenicNeed (
+class CriminogenicNeed (
     val section: SectionHeader? = null,
     val name: String? = null,
     val riskOfHarm: Boolean? = null,

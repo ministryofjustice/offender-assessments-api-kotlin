@@ -2,7 +2,7 @@ package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import java.time.LocalDateTime
 
 data class AssessmentDto(
@@ -58,7 +58,7 @@ data class AssessmentDto(
 ) {
 
     companion object {
-        fun from(assessment: Assessment?, childSafeguardingIndicated: Boolean?, needs: Collection<CrimiogenicNeed?>?): AssessmentDto {
+        fun from(assessment: Assessment?, childSafeguardingIndicated: Boolean?, needs: Collection<CriminogenicNeed?>): AssessmentDto {
 
             val assessmentVersion = assessment?.assessmentVersion
             return AssessmentDto(

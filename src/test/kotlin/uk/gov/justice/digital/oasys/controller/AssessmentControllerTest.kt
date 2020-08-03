@@ -20,6 +20,7 @@ import java.time.LocalDateTime
 class AssessmentControllerTest : IntegrationTest() {
 
     private val validOasysSetId = 5433L
+    private val oasysOffenderId = 1234L
 
     @Test
     fun `access forbidden when no authority`() {
@@ -58,6 +59,21 @@ class AssessmentControllerTest : IntegrationTest() {
                 .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
                 .exchange()
                 .expectStatus().isNotFound
+    }
+
+    @Test
+    fun `offender PK returns latest date assessment by created date`() {
+
+        webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/latest")
+                .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
+                .exchange()
+                .expectStatus().isOk
+                .expectBody<AssessmentDto>()
+                .consumeWith {
+                    val assessment = it.responseBody
+                    assertThat(assessment?.assessmentId).isEqualTo(5434L)
+                    assertThat(assessment?.createdDateTime).isEqualToIgnoringSeconds(LocalDateTime.of(2018,5,22,23,0))
+                }
     }
 
 

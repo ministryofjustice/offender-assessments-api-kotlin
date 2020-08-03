@@ -115,7 +115,7 @@ data class Assessment(
 
         @OneToMany
         @JoinColumn(name = "OASYS_SET_PK", referencedColumnName = "OASYS_SET_PK")
-        val basicSentencePlanList: MutableSet<BasicSentencePlanObj?>? = mutableSetOf(),
+        val basicSentencePlanList: Set<BasicSentencePlanObj?>? = mutableSetOf(),
 
         @OneToMany
         @JoinColumn(name = "OASYS_SET_PK", referencedColumnName = "OASYS_SET_PK")

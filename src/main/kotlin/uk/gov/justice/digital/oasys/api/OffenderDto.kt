@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
+import uk.gov.justice.digital.oasys.api.DtoUtils.ynToBoolean
 import uk.gov.justice.digital.oasys.jpa.entities.Offender
 
 data class OffenderDto(
@@ -57,7 +58,7 @@ data class OffenderDto(
     fun from(offender: Offender?): OffenderDto {
         return OffenderDto(
                 offender?.offenderPk,
-                ynToBoolean(offender?.limitedAccessOffender),
+                offender?.limitedAccessOffender.ynToBoolean(),
                 offender?.familyName,
                 offender?.forename1,
                 offender?.forename2,
@@ -73,11 +74,6 @@ data class OffenderDto(
                 offender?.mergePncNumber,
                 offender?.mergedOffenderPK
             )
-        }
-        private fun ynToBoolean(ynValue: String?): Boolean? {
-            return if (!(ynValue.equals("Y", ignoreCase = true) || ynValue.equals("N", ignoreCase = true))) {
-                null
-            } else ynValue.equals("Y", ignoreCase = true)
         }
     }
 

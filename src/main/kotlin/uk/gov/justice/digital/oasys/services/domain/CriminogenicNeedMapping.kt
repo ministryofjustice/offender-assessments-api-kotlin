@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.oasys.services.domain
 
-class CrimiogenicNeedMapping {
+class CriminogenicNeedMapping {
 
     companion object {
         private const val REOFFENDING_QUESTION = "reoffendingQuestion"

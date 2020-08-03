@@ -9,8 +9,8 @@ import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeed
-import uk.gov.justice.digital.oasys.services.domain.CrimiogenicNeedMapping
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeedMapping
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
@@ -31,14 +31,14 @@ class AssessmentService constructor(
         val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun getAssessmentsForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<AssessmentSummaryDto>? {
+    fun getAssessmentsForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<AssessmentSummaryDto> {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessments = assessmentRepository.getAssessmentsForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
         log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
         return AssessmentSummaryDto.from(assessments)
     }
 
-    fun getLatestAssessmentForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto? {
+    fun getLatestAssessmentForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus) ?:
                 throw EntityNotFoundException("Assessment for Oasys Offender ${offenderId}, not found!")
@@ -46,14 +46,14 @@ class AssessmentService constructor(
         return populateAssessmentDto(assessment)
     }
 
-    fun getAssessment(oasysSetId: Long?): AssessmentDto? {
+    fun getAssessment(oasysSetId: Long?): AssessmentDto {
         val assessment = assessmentRepository.getAssessment(oasysSetId) ?:
                 throw EntityNotFoundException("Assessment for OasysSetId ${oasysSetId}, not found!")
         log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for oasysSetId: $oasysSetId")
         return populateAssessmentDto(assessment)
     }
 
-    private fun populateAssessmentDto(assessment: Assessment?): AssessmentDto? {
+    private fun populateAssessmentDto(assessment: Assessment?): AssessmentDto {
         val childSafeguardingIndicated = calculateChildSafeguardingIndicated(assessment?.oasysSetPk)
         val needs= calculateNeeds(assessment?.assessmentType, assessment?.oasysSetPk)
         return AssessmentDto.from(assessment, childSafeguardingIndicated, needs)
@@ -68,30 +68,29 @@ class AssessmentService constructor(
         return anyAnswersArePositive(answers.values)
     }
 
-
-    private fun calculateNeeds(assessmentType: String?, oasysSetId: Long?): Collection<CrimiogenicNeed?>? {
+    private fun calculateNeeds(assessmentType: String?, oasysSetId: Long?): Collection<CriminogenicNeed> {
         if (LAYER_3 != assessmentType) {
             return emptySet()
         }
-        val needsSections: Collection<Section>? = sectionService.getSectionsForAssessment(oasysSetId, CrimiogenicNeedMapping.getNeedsSectionHeadings())
-        return needsSections?.map { checkRiskAndThresholdLevels(it) }?.filter(CrimiogenicNeed::anyRiskFlagged)
+        val needsSections: Collection<Section> = sectionService.getSectionsForAssessment(oasysSetId, CriminogenicNeedMapping.getNeedsSectionHeadings())
+        return needsSections?.map { checkRiskAndThresholdLevels(it) }.filter(CriminogenicNeed::anyRiskFlagged).orEmpty()
     }
 
-    private fun checkRiskAndThresholdLevels(section: Section?): CrimiogenicNeed {
+    private fun checkRiskAndThresholdLevels(section: Section?): CriminogenicNeed {
 
         val sectionCode = section?.refSection?.refSectionCode
         val shortDescription = section?.refSection?.sectionType?.refElementShortDesc
         val sectionName = SectionHeader.findByValue(sectionCode)
 
-        val answers = section?.getRefAnswers(setOf(CrimiogenicNeedMapping.getHarmQuestion(sectionCode),
-                CrimiogenicNeedMapping.getReoffendingQuestion(sectionCode)))
+        val answers = section?.getRefAnswers(setOf(CriminogenicNeedMapping.getHarmQuestion(sectionCode),
+                CriminogenicNeedMapping.getReoffendingQuestion(sectionCode)))
 
-        val riskHarm = isPositiveAnswer(answers?.get(CrimiogenicNeedMapping.getHarmQuestion(sectionCode)))
-        val riskReoffending = isPositiveAnswer(answers?.get(CrimiogenicNeedMapping.getReoffendingQuestion(sectionCode)))
+        val riskHarm = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getHarmQuestion(sectionCode)))
+        val riskReoffending = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getReoffendingQuestion(sectionCode)))
         val overThreshold = sectionIsOverThreshold(section)
         val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd)
 
-        return CrimiogenicNeed(sectionName, shortDescription, riskHarm, riskReoffending, overThreshold, flaggedAsNeed)
+        return CriminogenicNeed(sectionName, shortDescription, riskHarm, riskReoffending, overThreshold, flaggedAsNeed)
     }
 
 
