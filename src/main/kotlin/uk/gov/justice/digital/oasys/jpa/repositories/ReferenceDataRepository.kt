@@ -8,7 +8,9 @@ import java.time.LocalDateTime
 
 @Repository
 interface ReferenceDataRepository : JpaRepository<RefElement?, Long?> {
-    @Query("SELECT r FROM RefElement r where (r.refCategoryCode = ?1) " +
-            "AND (?2 BETWEEN r.startDate and r.endDate)")
+    @Query("""
+            SELECT r FROM RefElement r where (r.refCategoryCode = ?1)
+            AND (?2 BETWEEN r.startDate and r.endDate)
+            """)
     fun findAllByRefCategoryCodeAndBetweenStartAndEndDate(refCategoryCode: String?, endDate: LocalDateTime?): Collection<RefElement?>?
 }
