@@ -9,13 +9,15 @@ data class CriminogenicNeedDto (
 ) {
     companion object {
         fun from(sspCrimNeedObjPivots: Set<SspCrimNeedObjPivot>?): Set<CriminogenicNeedDto?> {
-            return sspCrimNeedObjPivots?.map {
-                CriminogenicNeedDto(
-                        code = it.criminogenicNeed?.refElementCode,
-                        description = it.criminogenicNeed?.refElementDesc,
-                        priority = it.displaySort)
-            }
-                    ?.toSet().orEmpty()
+            return sspCrimNeedObjPivots?.map { from(it) }?.toSet().orEmpty()
         }
+
+      private fun from( sspCrimNeedObjPivot: SspCrimNeedObjPivot?): CriminogenicNeedDto?{
+          return CriminogenicNeedDto(
+                  code = sspCrimNeedObjPivot?.criminogenicNeed?.refElementCode,
+                  description = sspCrimNeedObjPivot?.criminogenicNeed?.refElementDesc,
+                  priority = sspCrimNeedObjPivot?.displaySort)
+      }
+
     }
 }

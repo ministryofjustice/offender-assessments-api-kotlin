@@ -18,21 +18,39 @@ data class FullSentencePlanDto (
             if (assessment?.sspObjectivesInSets.isNullOrEmpty() && section == null) {
                 return null
             }
-            val sentencePlanFields = mutableMapOf<String?, QuestionDto?>()
-            val questions: List<OasysQuestion>? = section?.oasysQuestions?.toMutableList()
-                    ?.sortedWith(compareBy { it.refQuestion?.displaySort })
-            questions?.forEach { sentencePlanFields[it.refQuestion?.refQuestionCode] = QuestionDto.from(it) }
-
-            if (section?.refSection != null) {
-                section.refSection?.refQuestions?.forEach { questionRef -> sentencePlanFields.putIfAbsent(questionRef.refQuestionCode, QuestionDto.from(questionRef)) }
-            }
             return FullSentencePlanDto(
                     assessment?.oasysSetPk,
                     assessment?.createDate,
                     assessment?.dateCompleted,
                     ObjectiveDto.from(assessment?.sspObjectivesInSets),
-                    sentencePlanFields)
+                    buildSentencePlanFields(section))
+        }
+
+        private fun buildSentencePlanFields(section: Section?): MutableMap<String?, QuestionDto?> {
+            val questions = buildSortedQuestionsList(section?.oasysQuestions)
+            val sentencePlanFields = mutableMapOf<String?, QuestionDto?>()
+            populateFields(questions, sentencePlanFields)
+            populateFields(section, sentencePlanFields)
+            return sentencePlanFields
+        }
+
+        private fun buildSortedQuestionsList(oasysQuestions: Set<OasysQuestion>?): List<OasysQuestion>? {
+            return oasysQuestions?.toMutableList()
+                    ?.sortedWith(compareBy { it.refQuestion?.displaySort })
+        }
+
+        private fun populateFields(questions: List<OasysQuestion>?, sentencePlanFields: MutableMap<String?, QuestionDto?>): MutableMap<String?, QuestionDto?> {
+            questions?.forEach {
+                sentencePlanFields[it.refQuestion?.refQuestionCode] = QuestionDto.from(it)
+            }
+            return sentencePlanFields
+        }
+
+        private fun populateFields(section: Section?, sentencePlanFields: MutableMap<String?, QuestionDto?>): MutableMap<String?, QuestionDto?> {
+            if (section?.refSection != null) {
+                section.refSection?.refQuestions?.forEach { questionRef -> sentencePlanFields.putIfAbsent(questionRef.refQuestionCode, QuestionDto.from(questionRef)) }
+            }
+            return sentencePlanFields
         }
     }
-
 }

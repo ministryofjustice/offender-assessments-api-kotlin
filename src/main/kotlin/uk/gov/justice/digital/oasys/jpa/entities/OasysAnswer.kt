@@ -41,4 +41,7 @@ data class OasysAnswer(
                 return 31
         }
 
+        override fun toString(): String {
+                return oasysAnswerPk.toString()
+        }
 }
