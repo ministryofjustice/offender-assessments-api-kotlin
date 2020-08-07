@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
-class AssessmentNeedDto (
+data class AssessmentNeedDto (
 
         @ApiModelProperty(value = "Section Header", example = "ACCOMMODATION")
         val section: SectionHeader? = null,
