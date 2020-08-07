@@ -17,7 +17,7 @@ class AuthenticationControllerSentencePlanTest : IntegrationTest() {
     @MockkBean
     private lateinit var authenticationRepository: AuthenticationRepository
 
-    @MockBean
+    @MockkBean
     private lateinit var userRepository: UserRepository
 
     @Test
