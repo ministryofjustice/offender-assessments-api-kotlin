@@ -9,19 +9,52 @@ import uk.gov.justice.digital.oasys.jpa.entities.*
 class ObjectiveDtoTest {
 
     @Test
-    fun `Build Objective DTO from SSP Objectives in Set`() {
-        val objectivesInSet: Set<SspObjectivesInSet>? = setupObjectivesInSet()
+    fun `Build Objective DTO from SSP Objectives entity set`() {
+        val objectivesInSet = setupObjectivesInSet()
         val objectives = ObjectiveDto.from(objectivesInSet)
-        assertThat(objectives).isEqualTo(setupObjectiveDto())
+        assertThat(objectives).isEqualTo(setupValidObjectiveDto())
     }
-    
-    private fun setupObjectiveDto():Set<ObjectiveDto>{
+
+    @Test
+    fun `Build empty DTO set from empty SSP Objectives entity set`() {
+        val objectives = ObjectiveDto.from(emptySet())
+        assertThat(objectives).isEqualTo(emptySet<ObjectiveDto>())
+    }
+
+    @Test
+    fun `Build empty DTO set from null SSP Objectives entity set`() {
+        val objectives = ObjectiveDto.from(null)
+        assertThat(objectives).isEqualTo(emptySet<ObjectiveDto>())
+    }
+
+    private fun setupObjectivesInSet(): Set<SspObjectivesInSet> {
+        val objective = SspObjectivesInSet(
+                objectiveType = RefElement(
+                        refElementCode = "code 1",
+                        refElementShortDesc = "short desc 1",
+                        refElementDesc = "description 1"),
+                sspObjectiveMeasure = SspObjectiveMeasure(),
+                sspObjIntervenePivots = emptySet(),
+                sspObjective = (SspObjective(
+                        objectiveDesc = "Objective description",
+                        sspObjectivePk = 2L,
+                        objective = Objective(
+                                objectiveCode = "code",
+                                objectiveUk = 1L,
+                                objectiveDesc = "objective description",
+                                objectiveHeading = RefElement(
+                                        refElementCode = null,
+                                        refElementShortDesc = null,
+                                        refElementDesc = "description 2")))),
+                sspObjectivesInSetPk = 2L)
+        return setOf(objective)
+    }
+
+    private fun setupValidObjectiveDto():Set<ObjectiveDto>{
         return setOf( ObjectiveDto(
                 criminogenicNeeds = emptySet(),
                 interventions = emptySet(),
-                objectiveMeasure = ObjectiveMeasureDto(
-                        comments = null,
-                        status = null),
+                objectiveMeasure = ObjectiveMeasureDto(),
                 objectiveType = RefElementDto(
                         code = "code 1",
                         shortDescription = "short desc 1",
@@ -32,22 +65,5 @@ class ObjectiveDtoTest {
                 objectiveComment = "Objective description",
                 howMeasured = null,
                 createdDate = null))
-    }
-
-    private fun setupObjectivesInSet(): Set<SspObjectivesInSet> {
-        val objective = SspObjectivesInSet(objectiveType = RefElement(refElementCode = "code 1", refElementShortDesc = "short desc 1", refElementDesc = "description 1"),
-                sspObjectiveMeasure = SspObjectiveMeasure(),
-                sspObjIntervenePivots = setOf(SspObjIntervenePivot()),
-                sspObjective = (SspObjective(
-                        objectiveDesc = "Objective description",
-                        sspObjectivePk = 2L,
-                        objective = Objective(
-                                objectiveCode = "code",
-                                objectiveUk = 1L,
-                                objectiveDesc = "objective description",
-                                objectiveHeading = RefElement(
-                                        refElementCode = "code 2", refElementShortDesc = "short desc 2", refElementDesc = "description 2")))),
-                sspObjectivesInSetPk = 2L)
-        return setOf(objective)
     }
 }

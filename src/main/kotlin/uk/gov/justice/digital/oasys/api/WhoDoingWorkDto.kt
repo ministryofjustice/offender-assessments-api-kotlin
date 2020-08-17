@@ -10,12 +10,14 @@ data class WhoDoingWorkDto (
 
     companion object{
         fun from(sspWhoDoWorkPivot: Set<SspWhoDoWorkPivot?>?): Set<WhoDoingWorkDto> {
-            return sspWhoDoWorkPivot?.filterNotNull()?.map {
-                        WhoDoingWorkDto(
-                                code = it.whoDoWork?.refElementCode,
-                                comments = it.comments,
-                                description = it.whoDoWork?.refElementDesc)
-                    }?.toSet().orEmpty()
+            return sspWhoDoWorkPivot?.mapNotNull { from(it) }?.toSet().orEmpty()
+        }
+
+        private fun from(sspWhoDoWorkPivot: SspWhoDoWorkPivot?):WhoDoingWorkDto?{
+            return WhoDoingWorkDto(
+                    code = sspWhoDoWorkPivot?.whoDoWork?.refElementCode,
+                    comments = sspWhoDoWorkPivot?.comments,
+                    description = sspWhoDoWorkPivot?.whoDoWork?.refElementDesc)
         }
     }
 }

@@ -1,16 +1,24 @@
 package uk.gov.justice.digital.oasys.api
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import uk.gov.justice.digital.oasys.jpa.entities.SspObjectiveMeasure
 
+@DisplayName("Objective Measure DTO Tests")
 class ObjectiveMeasureDtoTest {
     @Test
-    fun shouldReturnObjectiveMeasureDtoForEntity() {
+    fun `Builds valid Objective Measure DTO from entity`() {
         val objectiveMeasure= setupSspObjectiveMeasure()
         val measure = ObjectiveMeasureDto.from(objectiveMeasure)
-        Assertions.assertThat(measure).isEqualTo(setupValidObjectiveMeasureDto())
+        assertThat(measure).isEqualTo(setupValidObjectiveMeasureDto())
+    }
+
+    @Test
+    fun `Builds valid null Objective Measure DTO from null entity`() {
+        val measure = ObjectiveMeasureDto.from(null)
+        assertThat(measure).isNull()
     }
 
     private fun setupSspObjectiveMeasure():SspObjectiveMeasure {

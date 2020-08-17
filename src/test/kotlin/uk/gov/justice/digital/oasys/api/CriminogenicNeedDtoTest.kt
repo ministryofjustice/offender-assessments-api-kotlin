@@ -10,16 +10,21 @@ import uk.gov.justice.digital.oasys.jpa.entities.SspCrimNeedObjPivot
 class CriminogenicNeedDtoTest {
 
     @Test
-    fun `Build Criminogenic Need DTO Set from Entity Set`() {
+    fun `Build Criminogenic Need DTO Set from entity Set`() {
         val sspCrimNeedObjPivots = setupSspCrimNeedObjPivotEntity()
         val needs = CriminogenicNeedDto.from(sspCrimNeedObjPivots)
-        assertThat(needs).isEqualTo(setupCriminogenicNeedDto())
+        assertThat(needs).isEqualTo(setupValidCriminogenicNeedDto())
     }
 
     @Test
-    fun `Build empty Criminogenic Need DTO Set from null Entity Set`() {
-        val sspCrimNeedObjPivots: Set<SspCrimNeedObjPivot>? = null
-        val needs = CriminogenicNeedDto.from(sspCrimNeedObjPivots)
+    fun `Build empty Criminogenic Need DTO Set from null entity Set`() {
+        val needs = CriminogenicNeedDto.from(null)
+        assertThat(needs).isEmpty()
+    }
+
+    @Test
+    fun `Build empty Criminogenic Need DTO Set from empty entity Set`() {
+        val needs = CriminogenicNeedDto.from(emptySet())
         assertThat(needs).isEmpty()
     }
 
@@ -35,7 +40,7 @@ class CriminogenicNeedDtoTest {
         return setOf(need1, need2)
     }
 
-    private fun setupCriminogenicNeedDto(): Set<CriminogenicNeedDto>{
+    private fun setupValidCriminogenicNeedDto(): Set<CriminogenicNeedDto>{
         return setOf(
                 CriminogenicNeedDto(code = "I10", description = "Need 1", priority = 1L),
                 CriminogenicNeedDto(code = "I20", description = "Need 2", priority = 2L)

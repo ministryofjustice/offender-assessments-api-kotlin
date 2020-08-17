@@ -22,7 +22,7 @@ data class ObjectiveDto(
             } else sspObjectivesInSets.mapNotNull { from(it) }.toSet()
         }
 
-        fun from(sspObjectivesInSet: SspObjectivesInSet?): ObjectiveDto? {
+        private fun from(sspObjectivesInSet: SspObjectivesInSet?): ObjectiveDto? {
             return if (sspObjectivesInSet == null) {
                 null
             } else ObjectiveDto(

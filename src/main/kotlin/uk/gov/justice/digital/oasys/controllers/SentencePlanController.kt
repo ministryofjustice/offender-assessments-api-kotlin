@@ -51,8 +51,8 @@ class SentencePlanController (private val sentencePlanService: SentencePlanServi
                                         @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
                                         @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
                                         @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<FullSentencePlanDto?>? {
-        log.info("Retrieving Full Sentence Plans for Identity {},{}", identityType, identity)
-        log.info("Found Full Sentence Plans for Identity {},{}", identityType, identity)
+        log.info("Retrieving Full Sentence Plans for Identity {}, {}", identityType, identity)
+        log.info("Found Full Sentence Plans for Identity {}, {}", identityType, identity)
         return sentencePlanService.getFullSentencePlansForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
     }
 
@@ -62,8 +62,8 @@ class SentencePlanController (private val sentencePlanService: SentencePlanServi
     fun getFullSentencePlanForOffender(@PathVariable("identityType") identityType: String?,
                                        @PathVariable("identity") identity: String?,
                                        @PathVariable("oasysSetPk") oasysSetPk: Long?): FullSentencePlanDto? {
-        log.info("Retrieving Full Sentence Plans for Identity {},{}", identityType, identity)
-        log.info("Found Full Sentence Plans for Identity {},{}", identityType, identity)
+        log.info("Retrieving Full Sentence Plan for Identity {}, {}", identityType, identity)
+        log.info("Found Full Sentence Plan for Identity {}, {}", identityType, identity)
         return sentencePlanService.getFullSentencePlan(oasysSetPk)
     }
 
@@ -75,8 +75,8 @@ class SentencePlanController (private val sentencePlanService: SentencePlanServi
                                            @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
                                            @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
                                            @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<FullSentencePlanSummaryDto?>? {
-        log.info("Retrieving Summary Sentence Plans for Identity {},{}", identityType, identity)
-        log.info("Found Summary Sentence Plans for Identity {},{}", identityType, identity)
+        log.info("Retrieving Summary Sentence Plans for Identity {}, {}", identityType, identity)
+        log.info("Found Summary Sentence Plans for Identity {}, {}", identityType, identity)
         return sentencePlanService.getFullSentencePlanSummariesForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
     }
 }

@@ -23,34 +23,30 @@ data class FullSentencePlanDto (
                     assessment?.createDate,
                     assessment?.dateCompleted,
                     ObjectiveDto.from(assessment?.sspObjectivesInSets),
-                    buildSentencePlanFields(section))
+                    getSentencePlanFieldsFrom(section))
         }
 
-        private fun buildSentencePlanFields(section: Section?): MutableMap<String?, QuestionDto?> {
-            val questions = buildSortedQuestionsList(section?.oasysQuestions)
-            val sentencePlanFields = mutableMapOf<String?, QuestionDto?>()
-            populateFields(questions, sentencePlanFields)
-            populateFields(section, sentencePlanFields)
+        private fun getSentencePlanFieldsFrom(section: Section?): MutableMap<String?, QuestionDto?> {
+            val sentencePlanFields = getSentencePlanFieldsFrom(section?.oasysQuestions)
+            if (section?.refSection != null) {
+                section.refSection?.refQuestions?.forEach {refQuestion ->
+                    sentencePlanFields.putIfAbsent(refQuestion.refQuestionCode, QuestionDto.from(refQuestion)) }
+            }
             return sentencePlanFields
         }
 
-        private fun buildSortedQuestionsList(oasysQuestions: Set<OasysQuestion>?): List<OasysQuestion>? {
+        private fun getSentencePlanFieldsFrom(oasysQuestions: Set<OasysQuestion>?): MutableMap<String?, QuestionDto?> {
+            val questions = getSortedQuestionsListFrom(oasysQuestions)
+            val oasysQuestionFields = mutableMapOf<String?, QuestionDto?>()
+            questions?.forEach {oasysQuestion ->
+                oasysQuestionFields[oasysQuestion.refQuestion?.refQuestionCode] = QuestionDto.from(oasysQuestion)
+            }
+            return oasysQuestionFields
+        }
+
+        private fun getSortedQuestionsListFrom(oasysQuestions: Set<OasysQuestion>?): List<OasysQuestion>? {
             return oasysQuestions?.toMutableList()
                     ?.sortedWith(compareBy { it.refQuestion?.displaySort })
-        }
-
-        private fun populateFields(questions: List<OasysQuestion>?, sentencePlanFields: MutableMap<String?, QuestionDto?>): MutableMap<String?, QuestionDto?> {
-            questions?.forEach {
-                sentencePlanFields[it.refQuestion?.refQuestionCode] = QuestionDto.from(it)
-            }
-            return sentencePlanFields
-        }
-
-        private fun populateFields(section: Section?, sentencePlanFields: MutableMap<String?, QuestionDto?>): MutableMap<String?, QuestionDto?> {
-            if (section?.refSection != null) {
-                section.refSection?.refQuestions?.forEach { questionRef -> sentencePlanFields.putIfAbsent(questionRef.refQuestionCode, QuestionDto.from(questionRef)) }
-            }
-            return sentencePlanFields
         }
     }
 }

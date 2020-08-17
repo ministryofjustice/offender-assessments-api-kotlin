@@ -38,7 +38,7 @@ data class RefSection(
 
         @OneToMany
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"))
-        var refQuestions: List<RefQuestion>? = null
+        val refQuestions: List<RefQuestion>? = null
 
 
 ) {
