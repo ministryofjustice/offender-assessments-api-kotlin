@@ -89,8 +89,8 @@ class SentencePlanServiceTest {
 
     @Test
     fun `return Full Sentence Plans for Offender`() {
-        every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns 12
-        every { assessmentRepository.getAssessmentsForOffender(12, "groupStatus", "assessmentType", false, "assessmentStatus") } returns setOf(setupAssessment())
+        every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns offenderId
+        every { assessmentRepository.getAssessmentsForOffender(offenderId, "groupStatus", "assessmentType", false, "assessmentStatus") } returns setOf(setupAssessment())
         every { sectionService.getSectionsForAssessment(oasysSetId = oasysSetId, sectionIds = sectionIds) } returns setOf(setupSection())
 
         val fullSentencePlans = service.getFullSentencePlansForOffender(oasysType, identity, "groupStatus", "assessmentType", false, "assessmentStatus")
@@ -100,8 +100,8 @@ class SentencePlanServiceTest {
 
     @Test
     fun `return Full Sentence Plan Summaries for Offender`() {
-        every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns 12
-        every { assessmentRepository.getAssessmentsForOffender(12, "groupStatus", "assessmentType", false, "assessmentStatus") } returns setOf(setupAssessment())
+        every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns offenderId
+        every { assessmentRepository.getAssessmentsForOffender(offenderId, "groupStatus", "assessmentType", false, "assessmentStatus") } returns setOf(setupAssessment())
         every { sectionService.getSectionsForAssessment(oasysSetId = oasysSetId, sectionIds = sectionIds) } returns setOf(setupSection())
 
         val fullSentencePlanSummaries = service.getFullSentencePlanSummariesForOffender(oasysType, identity, "groupStatus", "assessmentType", false, "assessmentStatus")

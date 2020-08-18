@@ -40,8 +40,4 @@ data class OasysAnswer(
         override fun hashCode(): Int {
                 return 31
         }
-
-        override fun toString(): String {
-                return oasysAnswerPk.toString()
-        }
 }

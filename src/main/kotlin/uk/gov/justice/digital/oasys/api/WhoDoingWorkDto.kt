@@ -8,7 +8,8 @@ data class WhoDoingWorkDto (
         val comments: String? = null
 ) {
 
-    companion object{
+    companion object {
+
         fun from(sspWhoDoWorkPivot: Set<SspWhoDoWorkPivot?>?): Set<WhoDoingWorkDto> {
             return sspWhoDoWorkPivot?.mapNotNull { from(it) }?.toSet().orEmpty()
         }

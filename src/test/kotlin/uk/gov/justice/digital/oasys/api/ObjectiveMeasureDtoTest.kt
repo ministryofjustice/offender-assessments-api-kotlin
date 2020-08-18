@@ -10,7 +10,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.SspObjectiveMeasure
 class ObjectiveMeasureDtoTest {
     @Test
     fun `Builds valid Objective Measure DTO from entity`() {
-        val objectiveMeasure= setupSspObjectiveMeasure()
+        val objectiveMeasure = setupSspObjectiveMeasure()
         val measure = ObjectiveMeasureDto.from(objectiveMeasure)
         assertThat(measure).isEqualTo(setupValidObjectiveMeasureDto())
     }

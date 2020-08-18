@@ -5,7 +5,6 @@ import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import java.time.LocalDateTime
 
-
 data class FullSentencePlanDto (
         var oasysSetId: Long? = null,
         var createdDate: LocalDateTime? = null,
@@ -13,7 +12,9 @@ data class FullSentencePlanDto (
         var objectives: Set<ObjectiveDto?>? = null,
         var questions: MutableMap<String?, QuestionDto?>? = null
 ) {
+
     companion object {
+
         fun from(assessment: Assessment?, section: Section?): FullSentencePlanDto? {
             if (assessment?.sspObjectivesInSets.isNullOrEmpty() && section == null) {
                 return null

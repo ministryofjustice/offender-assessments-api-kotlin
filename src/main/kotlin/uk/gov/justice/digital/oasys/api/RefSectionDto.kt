@@ -15,6 +15,7 @@ data class RefSectionDto (
 ) {
 
     companion object {
+
         fun from(refSections: Collection<RefSection?>?): Collection<RefSectionDto> {
             return refSections?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
         }

@@ -9,7 +9,9 @@ data class FullSentencePlanSummaryDto (
     var createdDate: LocalDateTime? = null,
     var completedDate: LocalDateTime? = null
 ){
+
     companion object {
+
         fun from(assessment: Assessment, section: Section?): FullSentencePlanSummaryDto? {
             return if (assessment.sspObjectivesInSets.isNullOrEmpty() && section == null) {
                 null

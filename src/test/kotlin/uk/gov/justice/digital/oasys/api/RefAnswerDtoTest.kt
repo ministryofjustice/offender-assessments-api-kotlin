@@ -27,9 +27,10 @@ class RefAnswerDtoTest {
     }
 
     private fun setUpAnswer(): RefAnswer {
-        return RefAnswer(refAnswerCode = "Any Code",
-                        refAnswerUk = 10L,
-                        displaySort = 20L )
+        return RefAnswer(
+                refAnswerCode = "Any Code",
+                refAnswerUk = 10L,
+                displaySort = 20L )
     }
 
     private fun setupValidDtos(): Collection<RefAnswerDto>? {
@@ -38,8 +39,9 @@ class RefAnswerDtoTest {
     }
 
     private fun setupValidDto(): RefAnswerDto {
-        return RefAnswerDto(refAnswerCode = "Any Code",
-                        refAnswerId = 10L,
-                        refDisplaySort = 20L )
+        return RefAnswerDto(
+                refAnswerCode = "Any Code",
+                refAnswerId = 10L,
+                refDisplaySort = 20L )
     }
 }
