@@ -12,6 +12,7 @@ import uk.gov.justice.digital.oasys.services.exceptions.DuplicateOffenderRecordE
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedException
 
 
 @ControllerAdvice
@@ -49,6 +50,18 @@ class ControllerAdvice {
     fun handle(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse?> {
         log.error("HttpMessageNotReadableException: {}", e.message)
         return ResponseEntity(ErrorResponse(status= 400, developerMessage = e.message), HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handle(e: IllegalArgumentException): ResponseEntity<ErrorResponse?> {
+        log.error("IllegalArgumentException: {}", e.message)
+        return ResponseEntity(ErrorResponse(status= 400, developerMessage = e.message), HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(UserNotAuthorisedException::class)
+    fun handle(e: UserNotAuthorisedException): ResponseEntity<ErrorResponse?> {
+        log.error("UserNotAuthorisedException: {}", e.message)
+        return ResponseEntity(ErrorResponse(status= 401, developerMessage = e.message), HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(Exception::class)
