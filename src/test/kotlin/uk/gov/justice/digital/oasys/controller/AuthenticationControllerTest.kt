@@ -23,6 +23,7 @@ import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 class AuthenticationControllerTest : IntegrationTest() {
 
     private val userCode = "USER1"
+    private val validUserCode = "USER_CODE"
 
     @MockkBean
     private lateinit var authenticationRepository: AuthenticationRepository
@@ -68,7 +69,7 @@ class AuthenticationControllerTest : IntegrationTest() {
     @Test
     fun `valid credentials returns OK 200`() {
 
-        every { authenticationRepository.validateCredentials("USER_CODE", "PASSWORD") } returns """{STATE: "SUCCESS"}"""
+        every { authenticationRepository.validateCredentials(validUserCode, "PASSWORD") } returns """{STATE: "SUCCESS"}"""
         val user = ValidateUserRequest("USER_CODE", "PASSWORD")
 
         webTestClient.post().uri("/authentication/user/validate")
@@ -85,7 +86,7 @@ class AuthenticationControllerTest : IntegrationTest() {
     @Test
     fun `invalid credentials returns 401`() {
 
-        every { authenticationRepository.validateCredentials("USER_CODE", "INVALIDPASSWORD") } returns """{STATE: "FAILURE"}"""
+        every { authenticationRepository.validateCredentials(validUserCode, "INVALIDPASSWORD") } returns """{STATE: "FAILURE"}"""
         val user = ValidateUserRequest("USER_CODE", "INVALIDPASSWORD")
 
         webTestClient.post().uri("/authentication/user/validate")
@@ -103,7 +104,7 @@ class AuthenticationControllerTest : IntegrationTest() {
     @Test
     fun `invalid OASys response returns 401`() {
 
-        every { authenticationRepository.validateCredentials("USER_CODE", "INVALIDPASSWORD") } returns null
+        every { authenticationRepository.validateCredentials(validUserCode, "INVALIDPASSWORD") } returns null
         val user = ValidateUserRequest("USER_CODE", "INVALIDPASSWORD")
 
         webTestClient.post().uri("/authentication/user/validate")

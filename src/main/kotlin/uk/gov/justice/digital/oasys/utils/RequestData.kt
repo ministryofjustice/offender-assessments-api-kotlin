@@ -46,8 +46,6 @@ class RequestData(excludeUris: String?) : HandlerInterceptor {
             log.trace("Response: ${request.method} ${request.requestURI} - Status $status - Start ${start.format(formatter)}, Duration $duration ms")
         }
 
-        MDC.put(REQUEST_DURATION, duration.toString())
-        MDC.put(RESPONSE_STATUS, status.toString())
         MDC.clear()
     }
 

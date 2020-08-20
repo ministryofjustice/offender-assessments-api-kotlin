@@ -30,6 +30,13 @@ class AuthenticationServiceTest {
     private val telemetryClient: TelemetryClient = mockk(relaxed = true)
     private val service = AuthenticationService(userRepository, authenticationRepository, telemetryClient)
 
+
+    private val username = "TEST_USER"
+    private val password = "PASSWORD"
+    private val sessionId = 123456L
+    private val offenderId = 1L
+
+
     @Test
     fun `return User for OASys user code`() {
         val user = setupUser()
@@ -50,45 +57,45 @@ class AuthenticationServiceTest {
 
     @Test
     fun `throws not found exception when no user returns`() {
-        val userCode = "TEST_USER"
+        val userCode = username
         every { userRepository.findOasysUserByOasysUserCodeIgnoreCase(userCode) } returns null
         assertThrows<EntityNotFoundException> { service.getUserByUserId(userCode) }
     }
 
     @Test
     fun `returns true when user is authenticated`() {
-        every { authenticationRepository.validateCredentials("TEST_USER", "PASSWORD") } returns """{STATE: "SUCCESS"}"""
-        val result = service.validateUserCredentials("TEST_USER", "PASSWORD")
+        every { authenticationRepository.validateCredentials(username, password) } returns """{STATE: "SUCCESS"}"""
+        val result = service.validateUserCredentials(username, password)
         assertThat(result.authenticated).isTrue()
-        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "PASSWORD") }
+        verify(exactly = 1) { authenticationRepository.validateCredentials(username, password) }
     }
 
     @Test
     fun `throws exception when user is not authenticated`() {
-        every { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") } returns """{STATE: "FAILED"}"""
-        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials("TEST_USER", "BADPASSWORD") }
+        every { authenticationRepository.validateCredentials(username, "BADPASSWORD") } returns """{STATE: "FAILED"}"""
+        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials(username, "BADPASSWORD") }
         assertThat(exception.message).isEqualTo("Invalid username or password")
-        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") }
+        verify(exactly = 1) { authenticationRepository.validateCredentials(username, "BADPASSWORD") }
     }
 
     @Test
     fun `throws exception when function returns invalid JSON`() {
-        every { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") } returns ""
-        val exception = assertThrows<UserNotAuthorisedException> { service.validateUserCredentials("TEST_USER", "BADPASSWORD") }
+        every { authenticationRepository.validateCredentials(username, "BADPASSWORD") } returns ""
+        val exception = assertThrows<UserNotAuthorisedException> { service.validateUserCredentials(username, "BADPASSWORD") }
         assertThat(exception.message).isEqualTo("Failed to parse authentication check result from OASys")
-        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") }
+        verify(exactly = 1) { authenticationRepository.validateCredentials(username, "BADPASSWORD") }
     }
 
     @Test
     fun `throws exception when password is null`() {
-        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials("TEST_USER", null) }
+        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials(username, null) }
         assertThat(exception.message).isEqualTo("User credentials cannot be empty")
         verify(exactly = 0) { authenticationRepository.validateCredentials(any(), any()) }
     }
 
     @Test
     fun `throws exception when username is null`() {
-        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials(null, "PASSWORD") }
+        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials(null, password) }
         assertThat(exception.message).isEqualTo("User credentials cannot be empty")
         verify(exactly = 0) { authenticationRepository.validateCredentials(any(), any()) }
     }
@@ -102,54 +109,54 @@ class AuthenticationServiceTest {
 
     @Test
     fun `returns WRITE when user is can write sentence plan`() {
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "EDIT"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, 123456L, OffenderPermissionResource.SENTENCE_PLAN)
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "EDIT"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, sessionId, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.WRITE)
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     @Test
     fun `returns READ when user is can only read sentence plan`() {
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "READ"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, 123456L, OffenderPermissionResource.SENTENCE_PLAN)
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "READ"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, sessionId, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.READ_ONLY)
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     @Test
     fun `returns UNAUTHORISED when user has no access to sentence plan`() {
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "NO_ACCESS"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, 123456L, OffenderPermissionResource.SENTENCE_PLAN)
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "NO_ACCESS"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, sessionId, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.UNAUTHORISED)
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     @Test
     fun `returns UNAUTHORISED when function returns invalid JSON`() {
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "INVALID_RESULT"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, 123456L, OffenderPermissionResource.SENTENCE_PLAN)
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "INVALID_RESULT"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, sessionId, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.UNAUTHORISED)
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     @Test
     fun `retrieves session from database when no session ID provided`() {
-        every { userRepository.findCurrentUserSessionForOffender(1, "TEST_USER") } returns 123456L
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "READ"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, null, OffenderPermissionResource.SENTENCE_PLAN)
+        every { userRepository.findCurrentUserSessionForOffender(offenderId, username) } returns sessionId
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "READ"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, null, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.READ_ONLY)
-        verify(exactly = 1) { userRepository.findCurrentUserSessionForOffender(1, "TEST_USER") }
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 1) { userRepository.findCurrentUserSessionForOffender(offenderId, username) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     @Test
     fun `does not retrieve session from database when session ID provided`() {
-        every { userRepository.findCurrentUserSessionForOffender(1, "TEST_USER") } returns 123456L
-        every { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) } returns """{STATE: "READ"}"""
-        val result = service.userCanAccessOffenderRecord("TEST_USER", 1L, 123456L, OffenderPermissionResource.SENTENCE_PLAN)
+        every { userRepository.findCurrentUserSessionForOffender(offenderId, username) } returns sessionId
+        every { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) } returns """{STATE: "READ"}"""
+        val result = service.userCanAccessOffenderRecord(username, offenderId, sessionId, OffenderPermissionResource.SENTENCE_PLAN)
         assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.READ_ONLY)
-        verify(exactly = 0) { userRepository.findCurrentUserSessionForOffender(1, "TEST_USER") }
-        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
+        verify(exactly = 0) { userRepository.findCurrentUserSessionForOffender(offenderId, username) }
+        verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
     }
 
     private fun setupUser(): OasysUser {
