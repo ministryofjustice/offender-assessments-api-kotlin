@@ -78,6 +78,7 @@ class AuthenticationService(
         log.info("Attempting to authorise user $oasysUserCode for offender $offenderId")
 
         if (oasysUserCode.isNullOrEmpty() || offenderId == null || resource == null) {
+            logAuthFailure(oasysUserCode, "Null input", offenderId)
             return AuthorisationDto(offenderPermissionLevel = OffenderPermissionLevel.UNAUTHORISED)
         }
 
