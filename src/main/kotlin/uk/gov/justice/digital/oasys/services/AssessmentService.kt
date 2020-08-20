@@ -41,12 +41,13 @@ class AssessmentService constructor(
     fun getLatestAssessmentForOffender(identityType : String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto {
         val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
         val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId,filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus) ?:
-                throw EntityNotFoundException("Assessment for Oasys Offender ${offenderId}, not found!")
+                throw EntityNotFoundException("Assessment for Oasys Offender $offenderId, not found")
         log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for identity: ($identity, $identityType)")
         return populateAssessmentDto(assessment)
     }
 
     fun getAssessment(oasysSetId: Long?): AssessmentDto {
+        if(oasysSetId == null) throw IllegalArgumentException("OasysSetPK cannot be null")
         val assessment = assessmentRepository.getAssessment(oasysSetId) ?:
                 throw EntityNotFoundException("Assessment for OasysSetId ${oasysSetId}, not found!")
         log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for oasysSetId: $oasysSetId")
@@ -74,6 +75,7 @@ class AssessmentService constructor(
         }
         val needsSections: Collection<Section> = sectionService.getSectionsForAssessment(oasysSetId, CriminogenicNeedMapping.getNeedsSectionHeadings())
         return needsSections.map { checkRiskAndThresholdLevels(it) }.filter(CriminogenicNeed::anyRiskFlagged)
+
     }
 
     private fun checkRiskAndThresholdLevels(section: Section?): CriminogenicNeed {
