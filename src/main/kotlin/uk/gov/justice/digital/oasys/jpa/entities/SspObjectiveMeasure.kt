@@ -11,12 +11,10 @@ data class SspObjectiveMeasure (
         @Column(name = "SSP_OBJECTIVE_MEASURE_PK")
         private var sspObjectiveMeasurePk: Long? = null,
 
-        @Column(name = "OBJECTIVE_STATUS_COMMENTS")
-        private val objectiveStatusComments: String? = null,
+        @Column(name = "OBJECTIVE_STATUS_COMMENTS") val objectiveStatusComments: String? = null,
 
         @ManyToOne
-        @JoinColumns(JoinColumn(name = "OBJECTIVE_STATUS_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OBJECTIVE_STATUS_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
-        private val objectiveStatus: RefElement? = null,
+        @JoinColumns(JoinColumn(name = "OBJECTIVE_STATUS_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OBJECTIVE_STATUS_ELM", referencedColumnName = "REF_ELEMENT_CODE")) val objectiveStatus: RefElement? = null,
 
         @Column(name = "SSP_OBJECTIVES_IN_SET_PK")
         private val sspObjectivesInSetPk: Long? = null

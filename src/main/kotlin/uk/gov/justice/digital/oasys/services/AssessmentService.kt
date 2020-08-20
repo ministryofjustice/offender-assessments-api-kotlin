@@ -74,7 +74,8 @@ class AssessmentService constructor(
             return emptySet()
         }
         val needsSections: Collection<Section> = sectionService.getSectionsForAssessment(oasysSetId, CriminogenicNeedMapping.getNeedsSectionHeadings())
-        return needsSections.map { checkRiskAndThresholdLevels(it) }.filter(CriminogenicNeed::anyRiskFlagged).orEmpty()
+        return needsSections.map { checkRiskAndThresholdLevels(it) }.filter(CriminogenicNeed::anyRiskFlagged)
+
     }
 
     private fun checkRiskAndThresholdLevels(section: Section?): CriminogenicNeed {

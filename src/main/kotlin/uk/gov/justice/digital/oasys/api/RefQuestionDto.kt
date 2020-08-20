@@ -13,7 +13,9 @@ data class RefQuestionDto (
         val refCtAreaEstCode: String? = null,
         val refAnswers: Collection<RefAnswerDto>? = null
 ) {
+
     companion object {
+
         fun from(refQuestions: Collection<RefQuestion?>?): Collection<RefQuestionDto> {
             return refQuestions?.filterNotNull()?.map { from(it) }.orEmpty()
         }

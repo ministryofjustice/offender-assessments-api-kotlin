@@ -8,17 +8,17 @@ class SspCrimNeedObjPivot (
 
         @Id
         @Column(name = "SSP_CRIM_NEED_OBJ_PIVOT_PK")
-        private var sspCrimNeedObjPivotPk: Long? = null,
+        var sspCrimNeedObjPivotPk: Long? = null,
 
         @ManyToOne
         @JoinColumns(JoinColumn(name = "CRIMINOGENIC_NEED_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "CRIMINOGENIC_NEED_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
-        private val criminogenicNeed: RefElement? = null,
+        val criminogenicNeed: RefElement? = null,
 
         @Column(name = "DISPLAY_SORT")
-        private val displaySort: Long? = null,
+        val displaySort: Long? = null,
 
         @Column(name = "SSP_OBJECTIVES_IN_SET_PK")
-        private val sspObjectivesInSetPk: Long? = null
+        val sspObjectivesInSetPk: Long? = null
 
         ) {
 

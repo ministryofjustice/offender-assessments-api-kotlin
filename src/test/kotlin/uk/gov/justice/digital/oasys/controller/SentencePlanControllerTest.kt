@@ -56,7 +56,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .consumeWith {
                     val sentencePlans = it.responseBody
                     assertThat(sentencePlans).hasSize(2)
-                    assertThat(sentencePlans.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
+                    assertThat(sentencePlans?.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
                 }
     }
 
@@ -95,7 +95,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .consumeWith {
                     val sentencePlans = it.responseBody
                     assertThat(sentencePlans).hasSize(2)
-                    assertThat(sentencePlans.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
+                    assertThat(sentencePlans?.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
                 }
     }
 
@@ -133,7 +133,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .consumeWith {
                     val sentencePlans = it.responseBody
                     assertThat(sentencePlans).hasSize(2)
-                    assertThat(sentencePlans.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
+                    assertThat(sentencePlans?.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
                 }
     }
 
@@ -171,7 +171,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .consumeWith {
                     val sentencePlans = it.responseBody
                     assertThat(sentencePlans).hasSize(2)
-                    assertThat(sentencePlans.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
+                    assertThat(sentencePlans?.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
                 }
     }
 
@@ -209,7 +209,7 @@ class SentencePlanControllerTest : IntegrationTest() {
                 .consumeWith {
                     val sentencePlans = it.responseBody
                     assertThat(sentencePlans).hasSize(2)
-                    assertThat(sentencePlans.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
+                    assertThat(sentencePlans?.map { s -> s.sentencePlanId }).containsExactlyInAnyOrder(100L, 300L)
                 }
     }
 

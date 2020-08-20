@@ -10,11 +10,9 @@ class SspWhoDoWorkPivot (
         private var sspWhoDoWorkPivotPk: Long? = null,
 
         @ManyToOne
-        @JoinColumns(JoinColumn(name = "WHO_WORK_OBJ_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "WHO_WORK_OBJ_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
-        private val whoDoWork: RefElement? = null,
+        @JoinColumns(JoinColumn(name = "WHO_WORK_OBJ_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "WHO_WORK_OBJ_ELM", referencedColumnName = "REF_ELEMENT_CODE")) val whoDoWork: RefElement? = null,
 
-        @Column(name = "COMMENTS")
-        private val comments: String? = null,
+        @Column(name = "COMMENTS") val comments: String? = null,
 
         @Column(name = "SSP_INTERVENTION_IN_SET_PK")
         private val sspInterventionInSetPk: Long? = null

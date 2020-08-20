@@ -13,7 +13,10 @@ data class RefAssessmentDto(
 
     companion object {
 
-        fun from(version: RefAssessmentVersion): RefAssessmentDto {
+        fun from(version: RefAssessmentVersion?): RefAssessmentDto? {
+            if (version == null){
+                return null
+            }
             return RefAssessmentDto(
                     version.refAssVersionUk,
                     version.refAssVersionCode,

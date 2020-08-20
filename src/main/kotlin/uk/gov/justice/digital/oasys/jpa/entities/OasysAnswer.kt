@@ -40,5 +40,4 @@ data class OasysAnswer(
         override fun hashCode(): Int {
                 return 31
         }
-
 }
