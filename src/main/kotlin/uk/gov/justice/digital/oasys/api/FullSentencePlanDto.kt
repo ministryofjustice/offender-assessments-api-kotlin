@@ -10,10 +10,12 @@ data class FullSentencePlanDto (
         var createdDate: LocalDateTime? = null,
         var completedDate: LocalDateTime? = null,
         var objectives: Set<ObjectiveDto?>? = null,
-        var questions: MutableMap<String?, QuestionDto?>? = null
+        var questions: Map<String?, QuestionDto?>? = null
 ) {
 
     companion object {
+
+
 
         fun from(assessment: Assessment?, section: Section?): FullSentencePlanDto? {
             if (assessment?.sspObjectivesInSets.isNullOrEmpty() && section == null) {
@@ -29,10 +31,8 @@ data class FullSentencePlanDto (
 
         private fun getSentencePlanFieldsFrom(section: Section?): MutableMap<String?, QuestionDto?> {
             val sentencePlanFields = getSentencePlanFieldsFrom(section?.oasysQuestions)
-            if (section?.refSection != null) {
-                section.refSection?.refQuestions?.forEach {refQuestion ->
+                section?.refSection?.refQuestions?.forEach {refQuestion ->
                     sentencePlanFields.putIfAbsent(refQuestion.refQuestionCode, QuestionDto.from(refQuestion)) }
-            }
             return sentencePlanFields
         }
 

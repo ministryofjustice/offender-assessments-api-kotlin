@@ -16,8 +16,8 @@ data class InterventionDto (
 
     companion object {
 
-        fun from(sspObjIntervenePivots: Set<SspObjIntervenePivot?>?): Set<InterventionDto?> {
-            return sspObjIntervenePivots?.mapNotNull{ from(it?.sspInterventionInSet) }?.toSet().orEmpty()
+        fun from(sspObjIntervenePivots: Set<SspObjIntervenePivot?>?): Set<InterventionDto> {
+            return sspObjIntervenePivots?.filterNotNull()?.mapNotNull{ from(it.sspInterventionInSet) }?.toSet().orEmpty()
         }
 
         private fun from(sspInterventionInSet: SspInterventionInSet?): InterventionDto?{

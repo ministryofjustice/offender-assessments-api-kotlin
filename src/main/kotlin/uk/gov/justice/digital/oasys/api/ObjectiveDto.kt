@@ -16,7 +16,7 @@ data class ObjectiveDto(
         val createdDate: LocalDateTime? = null
 ) {
     companion object {
-        fun from(sspObjectivesInSets: Set<SspObjectivesInSet?>?): Set<ObjectiveDto?>? {
+        fun from(sspObjectivesInSets: Set<SspObjectivesInSet?>?): Set<ObjectiveDto> {
             return if (sspObjectivesInSets.isNullOrEmpty()) {
                 emptySet()
             } else sspObjectivesInSets.mapNotNull { from(it) }.toSet()

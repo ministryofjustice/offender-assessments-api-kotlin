@@ -74,7 +74,7 @@ class SentencePlanController (private val sentencePlanService: SentencePlanServi
                                            @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
                                            @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
                                            @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
-                                           @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<FullSentencePlanSummaryDto?>? {
+                                           @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?): Collection<FullSentencePlanSummaryDto> {
         log.info("Retrieving Summary Sentence Plans for Identity {}, {}", identityType, identity)
         log.info("Found Summary Sentence Plans for Identity {}, {}", identityType, identity)
         return sentencePlanService.getFullSentencePlanSummariesForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
