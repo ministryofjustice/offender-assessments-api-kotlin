@@ -66,11 +66,11 @@ class RequestData(excludeUris: String?) : HandlerInterceptor {
         return if (userId.isNullOrEmpty()) null else userId
     }
 
-    fun getCorrelationId(): String? {
+    private fun getCorrelationId(): String? {
         return MDC.get(CORRELATION_ID_HEADER)
     }
 
-    fun getUsername(): String? {
+    private fun getUsername(): String? {
         return MDC.get(USERNAME_HEADER)
     }
 

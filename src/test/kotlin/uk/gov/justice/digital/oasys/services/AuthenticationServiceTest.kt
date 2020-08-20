@@ -50,13 +50,10 @@ class AuthenticationServiceTest {
 
     @Test
     fun `throws not found exception when no user returns`() {
-        val user = setupUser()
         val userCode = "TEST_USER"
-
         every { userRepository.findOasysUserByOasysUserCodeIgnoreCase(userCode) } returns null
         assertThrows<EntityNotFoundException> { service.getUserByUserId(userCode) }
     }
-
 
     @Test
     fun `returns true when user is authenticated`() {
@@ -68,18 +65,18 @@ class AuthenticationServiceTest {
 
     @Test
     fun `throws exception when user is not authenticated`() {
-        every { authenticationRepository.validateCredentials("TEST_USER", "BADBASSWORD") } returns """{STATE: "FAILED"}"""
-        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials("TEST_USER", "BADBASSWORD") }
+        every { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") } returns """{STATE: "FAILED"}"""
+        val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials("TEST_USER", "BADPASSWORD") }
         assertThat(exception.message).isEqualTo("Invalid username or password")
-        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADBASSWORD") }
+        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") }
     }
 
     @Test
     fun `throws exception when function returns invalid JSON`() {
-        every { authenticationRepository.validateCredentials("TEST_USER", "BADBASSWORD") } returns ""
-        val exception = assertThrows<UserNotAuthorisedException> { service.validateUserCredentials("TEST_USER", "BADBASSWORD") }
+        every { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") } returns ""
+        val exception = assertThrows<UserNotAuthorisedException> { service.validateUserCredentials("TEST_USER", "BADPASSWORD") }
         assertThat(exception.message).isEqualTo("Failed to parse authentication check result from OASys")
-        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADBASSWORD") }
+        verify(exactly = 1) { authenticationRepository.validateCredentials("TEST_USER", "BADPASSWORD") }
     }
 
     @Test
@@ -97,7 +94,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    fun `throws exception when username and apssword are null`() {
+    fun `throws exception when username and password are null`() {
         val exception = assertThrows<UserNotAuthorisedException> {service.validateUserCredentials(null, null) }
         assertThat(exception.message).isEqualTo("User credentials cannot be empty")
         verify(exactly = 0) { authenticationRepository.validateCredentials(any(), any()) }
@@ -155,7 +152,7 @@ class AuthenticationServiceTest {
         verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession("TEST_USER", 1, 123456) }
     }
 
-    fun setupUser(): OasysUser {
+    private fun setupUser(): OasysUser {
         return OasysUser(
                 "TEST_USER",
                 1L,
@@ -168,8 +165,4 @@ class AuthenticationServiceTest {
                 CtAreaEst(1L),
                 listOf(AreaEstUserRole(ctAreaEstCode = "1234")))
     }
-
-
-
-
 }

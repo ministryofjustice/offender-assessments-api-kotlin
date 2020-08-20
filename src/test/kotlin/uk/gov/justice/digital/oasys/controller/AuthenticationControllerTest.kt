@@ -9,7 +9,10 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
-import uk.gov.justice.digital.oasys.api.*
+import uk.gov.justice.digital.oasys.api.AuthenticationDto
+import uk.gov.justice.digital.oasys.api.ErrorResponse
+import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
+import uk.gov.justice.digital.oasys.api.ValidateUserRequest
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 
 @SqlGroup(
@@ -75,7 +78,7 @@ class AuthenticationControllerTest : IntegrationTest() {
                 .expectStatus().isOk
                 .expectBody<AuthenticationDto>()
                 .consumeWith {
-                    assertThat(it.responseBody.authenticated).isTrue()
+                    assertThat(it.responseBody?.authenticated).isTrue()
                 }
     }
 
@@ -92,8 +95,8 @@ class AuthenticationControllerTest : IntegrationTest() {
                 .expectStatus().isUnauthorized
                 .expectBody<ErrorResponse>()
                 .consumeWith {
-                    assertThat(it.responseBody.status).isEqualTo(401)
-                    assertThat(it.responseBody.developerMessage).isEqualTo("Invalid username or password")
+                    assertThat(it.responseBody?.status).isEqualTo(401)
+                    assertThat(it.responseBody?.developerMessage).isEqualTo("Invalid username or password")
                 }
     }
 
@@ -110,8 +113,8 @@ class AuthenticationControllerTest : IntegrationTest() {
                 .expectStatus().isUnauthorized
                 .expectBody<ErrorResponse>()
                 .consumeWith {
-                    assertThat(it.responseBody.status).isEqualTo(401)
-                    assertThat(it.responseBody.developerMessage).isEqualTo("No response from OASys authentication function for user, USER_CODE")
+                    assertThat(it.responseBody?.status).isEqualTo(401)
+                    assertThat(it.responseBody?.developerMessage).isEqualTo("No response from OASys authentication function for user, USER_CODE")
                 }
     }
 

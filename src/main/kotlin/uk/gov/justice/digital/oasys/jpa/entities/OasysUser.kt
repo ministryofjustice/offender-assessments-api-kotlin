@@ -29,7 +29,8 @@ data class OasysUser(
         val emailAddress: String? = null,
 
         @OneToOne
-        @JoinColumns(JoinColumn(name = "USER_STATUS_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "USER_STATUS_ELM", referencedColumnName = "REF_ELEMENT_CODE")) val userStatus: RefElement? = null,
+        @JoinColumns(JoinColumn(name = "USER_STATUS_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "USER_STATUS_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
+        val userStatus: RefElement? = null,
 
         @OneToOne
         @JoinColumn(name = "CT_AREA_EST_CODE")

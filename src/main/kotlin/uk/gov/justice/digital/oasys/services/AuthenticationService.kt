@@ -58,7 +58,7 @@ class AuthenticationService(
         val response = oasysAuthenticationRepository.validateCredentials(username, password)
 
         if (response != null) {
-            return try {
+            try {
                 val result: AuthenticationStatus = objectMapper.readValue(response)
                 logAuthResult(username, result.isAuthenticated())
                 if(!result.isAuthenticated()) throw UserNotAuthorisedException("Invalid username or password")
@@ -73,10 +73,9 @@ class AuthenticationService(
         throw UserNotAuthorisedException("No response from OASys authentication function for user, $username")
     }
 
-
     fun userCanAccessOffenderRecord(oasysUserCode: String?, offenderId: Long?, sessionId: Long?, resource: OffenderPermissionResource?): AuthorisationDto {
 
-        log.info("Attempting to authorise user user $oasysUserCode for offender $offenderId")
+        log.info("Attempting to authorise user $oasysUserCode for offender $offenderId")
 
         if (oasysUserCode.isNullOrEmpty() || offenderId == null || resource == null) {
             return AuthorisationDto(offenderPermissionLevel = OffenderPermissionLevel.UNAUTHORISED)
@@ -88,7 +87,7 @@ class AuthenticationService(
         val response = authoriseSentencePlan(oasysUserCode, offenderId, session)
 
         if (response != null) {
-            return try {
+            try {
                 val authStatus: AuthorisationStatus = objectMapper.readValue(response)
 
                 when (authStatus.state) {

@@ -43,7 +43,7 @@ class OAuthIntegrationTest : IntegrationTest() {
     }
 
     @Test
-    fun `access granted for authorisation endpoints with  role`() {
+    fun `access granted for authorisation endpoints with OASYS_READ_ONLY role`() {
         every { userRepository.findOasysUserByOasysUserCodeIgnoreCase("USER_CODE") } returns OasysUser()
 
         webTestClient.get().uri("/authentication/user/USER_CODE")

@@ -5,9 +5,10 @@ import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.web.reactive.server.expectBody
-import uk.gov.justice.digital.oasys.api.*
+import uk.gov.justice.digital.oasys.api.AuthorisationDto
+import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
+import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 
@@ -32,10 +33,10 @@ class AuthenticationControllerSentencePlanTest : IntegrationTest() {
                 .expectBody<AuthorisationDto>()
                 .consumeWith {
                     val response = it.responseBody
-                    assertThat(response.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.WRITE)
-                    assertThat(response.oasysUserCode).isEqualTo("USER_CODE")
-                    assertThat(response.oasysOffenderId).isEqualTo(1L)
-                    assertThat(response.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
+                    assertThat(response?.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.WRITE)
+                    assertThat(response?.oasysUserCode).isEqualTo("USER_CODE")
+                    assertThat(response?.oasysOffenderId).isEqualTo(1L)
+                    assertThat(response?.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
                 }
     }
 
@@ -51,10 +52,10 @@ class AuthenticationControllerSentencePlanTest : IntegrationTest() {
                 .expectBody<AuthorisationDto>()
                 .consumeWith {
                     val response = it.responseBody
-                    assertThat(response.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.UNAUTHORISED)
-                    assertThat(response.oasysUserCode).isEqualTo("USER_CODE")
-                    assertThat(response.oasysOffenderId).isEqualTo(1L)
-                    assertThat(response.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
+                    assertThat(response?.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.UNAUTHORISED)
+                    assertThat(response?.oasysUserCode).isEqualTo("USER_CODE")
+                    assertThat(response?.oasysOffenderId).isEqualTo(1L)
+                    assertThat(response?.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
                 }
     }
 
@@ -71,10 +72,10 @@ class AuthenticationControllerSentencePlanTest : IntegrationTest() {
                 .expectBody<AuthorisationDto>()
                 .consumeWith {
                     val response = it.responseBody
-                    assertThat(response.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.WRITE)
-                    assertThat(response.oasysUserCode).isEqualTo("USER_CODE")
-                    assertThat(response.oasysOffenderId).isEqualTo(1L)
-                    assertThat(response.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
+                    assertThat(response?.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.WRITE)
+                    assertThat(response?.oasysUserCode).isEqualTo("USER_CODE")
+                    assertThat(response?.oasysOffenderId).isEqualTo(1L)
+                    assertThat(response?.offenderPermissionResource).isEqualTo(OffenderPermissionResource.SENTENCE_PLAN)
                 }
     }
 }
