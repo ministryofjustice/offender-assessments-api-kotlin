@@ -17,8 +17,7 @@ data class SspObjIntervenePivot (
         private val deletedInd: String? = null,
 
         @OneToOne
-        @JoinColumn(name = "SSP_INTERVENTION_IN_SET_PK", referencedColumnName = "SSP_INTERVENTION_IN_SET_PK")
-        private val sspInterventionInSet: SspInterventionInSet? = null
+        @JoinColumn(name = "SSP_INTERVENTION_IN_SET_PK", referencedColumnName = "SSP_INTERVENTION_IN_SET_PK") val sspInterventionInSet: SspInterventionInSet? = null
 
 ) {
 

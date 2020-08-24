@@ -24,5 +24,4 @@ class SectionService (private val sectionRepository: SectionRepository) {
         log.info("Found ${sections?.size} Sections for oasysSetId: $oasysSetId")
         return sections.orEmpty()
     }
-
 }

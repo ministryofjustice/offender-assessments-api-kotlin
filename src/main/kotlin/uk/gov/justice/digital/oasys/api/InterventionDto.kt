@@ -1,5 +1,9 @@
 package uk.gov.justice.digital.oasys.api
 
+import uk.gov.justice.digital.oasys.api.DtoUtils.ynToBoolean
+import uk.gov.justice.digital.oasys.jpa.entities.SspInterventionInSet
+import uk.gov.justice.digital.oasys.jpa.entities.SspObjIntervenePivot
+
 data class InterventionDto (
         val copiedForward: Boolean? = null,
         val interventionComment: String? = null,
@@ -10,4 +14,21 @@ data class InterventionDto (
         val interventionMeasure: InterventionMeasureDto? = null
 ) {
 
+    companion object {
+
+        fun from(sspObjIntervenePivots: Set<SspObjIntervenePivot?>?): Set<InterventionDto> {
+            return sspObjIntervenePivots?.filterNotNull()?.mapNotNull{ from(it.sspInterventionInSet) }?.toSet().orEmpty()
+        }
+
+        private fun from(sspInterventionInSet: SspInterventionInSet?): InterventionDto?{
+            return InterventionDto(
+                    sspInterventionInSet?.copiedForwardIndicator.ynToBoolean(),
+                    sspInterventionInSet?.interventionComment,
+                    RefElementDto.from(sspInterventionInSet?.timescaleForIntervention),
+                    sspInterventionInSet?.intervention?.refElementCode,
+                    sspInterventionInSet?.intervention?.refElementDesc,
+                    WhoDoingWorkDto.from(sspInterventionInSet?.sspWhoDoWorkPivot),
+                    InterventionMeasureDto.from(sspInterventionInSet?.sspInterventionMeasure))
+        }
+    }
 }

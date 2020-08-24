@@ -8,17 +8,17 @@ import javax.persistence.*
 data class Objective (
         @Id
         @Column(name = "OBJECTIVE_CODE")
-        private val objectiveCode: String? = null,
+        val objectiveCode: String? = null,
 
         @Column(name = "OBJECTIVE_UK")
         private var objectiveUk: Long? = null,
 
         @Column(name = "OBJECTIVE_DESC")
-        private val objectiveDesc: String? = null,
+        val objectiveDesc: String? = null,
 
         @OneToOne
         @JoinColumns(JoinColumn(name = "OBJECTIVE_HEADING_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OBJECTIVE_HEADING_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
-        private val objectiveHeading: RefElement? = null,
+        val objectiveHeading: RefElement? = null,
 
         @Column(name = "START_DATE")
         private val startDate: Time? = null,

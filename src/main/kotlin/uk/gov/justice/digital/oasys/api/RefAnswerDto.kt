@@ -7,15 +7,18 @@ data class RefAnswerDto (
         val refAnswerCode: String? = null,
         val refDisplaySort: Long? = null
 ) {
+
     companion object {
+
         fun from(refAnswers: Collection<RefAnswer?>?): Collection<RefAnswerDto> {
-            return refAnswers?.filterNotNull()?.map { from(it)}.orEmpty()
+            return refAnswers?.filterNotNull()?.map { from(it) }.orEmpty()
         }
 
         private fun from(refAnswer: RefAnswer): RefAnswerDto {
-            return RefAnswerDto(refAnswerCode = refAnswer.refAnswerCode,
-                                refAnswerId = refAnswer.refAnswerUk,
-                                refDisplaySort = refAnswer.displaySort)
+            return RefAnswerDto(
+                    refAnswerCode = refAnswer.refAnswerCode,
+                    refAnswerId = refAnswer.refAnswerUk,
+                    refDisplaySort = refAnswer.displaySort)
         }
     }
 }

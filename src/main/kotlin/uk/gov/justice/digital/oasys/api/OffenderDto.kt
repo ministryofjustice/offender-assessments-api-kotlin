@@ -55,28 +55,27 @@ data class OffenderDto(
         val mergedOasysOffenderId: Long? = null) {
 
     companion object {
-    fun from(offender: Offender?): OffenderDto {
-        return OffenderDto(
-                offender?.offenderPk,
-                offender?.limitedAccessOffender.ynToBoolean(),
-                offender?.familyName,
-                offender?.forename1,
-                offender?.forename2,
-                offender?.forename3,
-                offender?.riskToOthers,
-                offender?.riskToSelf,
-                offender?.pnc,
-                offender?.cmsProbNumber,
-                offender?.cmsPrisNumber,
-                offender?.legacyCmsProbNumber,
-                offender?.croNumber,
-                offender?.prisonNumber,
-                offender?.mergePncNumber,
-                offender?.mergedOffenderPK
+        fun from(offender: Offender?): OffenderDto {
+            return OffenderDto(
+                    offender?.offenderPk,
+                    offender?.limitedAccessOffender.ynToBoolean(),
+                    offender?.familyName,
+                    offender?.forename1,
+                    offender?.forename2,
+                    offender?.forename3,
+                    offender?.riskToOthers,
+                    offender?.riskToSelf,
+                    offender?.pnc,
+                    offender?.cmsProbNumber,
+                    offender?.cmsPrisNumber,
+                    offender?.legacyCmsProbNumber,
+                    offender?.croNumber,
+                    offender?.prisonNumber,
+                    offender?.mergePncNumber,
+                    offender?.mergedOffenderPK
             )
         }
     }
-
 
 
 }
