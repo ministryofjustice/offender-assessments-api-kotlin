@@ -6,7 +6,7 @@ The source for this service can be found on [GitHub](https://github.com/ministry
   
   
 ## Continuous Integration  
-https://circleci.com/gh/ministryofjustice/offender-assessments-api/  
+https://circleci.com/gh/ministryofjustice/offender-assessments-api-kotlin/  
   
 ## Running locally  
   
