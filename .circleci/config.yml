@@ -1,89 +1,20 @@
 version: 2.1
-commands:
-  setup:
-    description: "Install tools and configure kubectl"
-    steps:
-      - aws-cli/install
-      - kubernetes/install
-      - helm/install-helm-client:
-          version: v3.0.2
-      - run:
-          name: Setup kubectl
-          command: |
-            echo -n "${AKS_ENV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
-            kubectl config set-cluster "${AKS_ENV_NAMESPACE}" \
-              --certificate-authority="/tmp/cluster_ca.crt" \
-              --server="${AKS_API_URL}"
-            kubectl config set-credentials circleci \
-              --token="${AKS_ENV_TOKEN}"
-            kubectl config set-context circleci \
-              --cluster="${AKS_ENV_NAMESPACE}" \
-              --user="circleci" \
-              --namespace="${AKS_ENV_NAMESPACE}"
-            # confirm setup is ok
-            kubectl config use-context circleci
-  deploy_to_env:
-    parameters:
-      env:
-        type: string
-    steps:
-      - setup
-      - checkout:
-          path: ~/git
-      - attach_workspace:
-          at: ~/app
-      - deploy:
-          name: Deploy to << parameters.env >>
-          command: |
-            APP_VERSION=$(cat ~/app/app_version.txt)
-            sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/offender-assessments-api/Chart.yaml
-            aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id ${AKS_ENV_NAMESPACE} | jq -r .SecretString | \
-            helm upgrade offender-assessments-api ~/git/helm_deploy/offender-assessments-api/. \
-            --install --wait --reset-values --timeout 5m --history-max 10 \
-              --namespace=${AKS_ENV_NAMESPACE} \
-              --values ~/git/helm_deploy/values-<< parameters.env >>.yaml \
-              --values - \
-              --set image.tag="${APP_VERSION}"
-executors:
-  deployer:
-    docker:
-      - image: circleci/python:3
-    working_directory: ~/app
-  builder:
-    docker:
-      - image: circleci/openjdk:11-jdk-browsers
-    working_directory: ~/app
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.18
-  kubernetes: circleci/kubernetes@0.10.1
-  helm: circleci/helm@0.2.3
-  snyk: snyk/snyk@0.0.10
+  owasp: entur/owasp@0.0.10
+  hmpps: ministryofjustice/hmpps@1.0.0
 
 jobs:
-  build:
-    executor: builder
+  validate:
+    executor: hmpps/java
     steps:
       - checkout
       - restore_cache:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
-      - run: ./gradlew build
       - run:
-          name: Record the Application Version
-          command: |
-            jar xvf build/libs/offender-assessments-api-*.jar BOOT-INF/classes/META-INF/build-info.properties
-            APP_VERSION=$(grep 'build.version=' BOOT-INF/classes/META-INF/build-info.properties | awk -F= '{print $2}')
-            rm BOOT-INF/classes/META-INF/build-info.properties
-
-            # make up a good version name
-            TAG=${APP_VERSION}.${CIRCLE_BRANCH}
-            if [[ "${CIRCLE_BRANCH}" == "main" ]]; then
-              TAG=${APP_VERSION}
-            fi
-            echo $TAG > ./app_version.txt
-
+          command: ./gradlew test
       - save_cache:
           paths:
             - ~/.gradle
@@ -96,124 +27,68 @@ jobs:
           root: .
           paths:
             - build/libs
-            - build.gradle
-            - app_version.txt
-
-  build_docker:
-    executor: deployer
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/app
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Build container and publish to docker hub
-          command: |
-            APP_VERSION=$(cat ./app_version.txt)
-            docker build --rm=false . \
-               --tag "mojdigitalstudio/offender-assessments-api:$APP_VERSION" \
-               --label "maintainer=stuart.whitlam@digital.justice.gov.uk" \
-               --label "app.version=$APP_VERSION" \
-               --label "build.version=$APP_VERSION" \
-               --label "build.number=$CIRCLE_BUILD_NUM" \
-               --label "build.url=$CIRCLE_BUILD_URL" \
-               --label "build.gitref=$CIRCLE_SHA1"
-
-            if [[ "${CIRCLE_BRANCH}" == "main" ]]; then
-              # publish to docker hub as the tag
-             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-             docker tag mojdigitalstudio/offender-assessments-api:$APP_VERSION mojdigitalstudio/offender-assessments-api:latest
-             docker push mojdigitalstudio/offender-assessments-api:$APP_VERSION
-             docker push mojdigitalstudio/offender-assessments-api:latest
-            fi
-
-  app-scan:
-    executor: builder
-    steps:
-      - checkout
-      - snyk/scan:
-          fail-on-issues: false
-          monitor-on-build: true
-          additional-arguments: "--configuration-matching='^((?!test).)*$'"
-          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}'
-          organization: 'digital-probation-services'
-
-  image-scan:
-    executor: deployer
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - snyk/scan:
-          docker-image-name: 'mojdigitalstudio/offender-assessments-api:latest'
-          target-file: 'Dockerfile'
-          fail-on-issues: false
-          monitor-on-build: true
-          project: '${CIRCLE_PROJECT_REPONAME}/latest'
-          organization: 'digital-probation-services'
-
-  deploy_dev:
-    executor: deployer
-    steps:
-      - deploy_to_env:
-          env: "development"
-  deploy_preprod:
-    executor: deployer
-    steps:
-      - deploy_to_env:
-          env: "preprod"
-  deploy_prod:
-    executor: deployer
-    steps:
-      - deploy_to_env:
-          env: "prod"
+            - build.gradle.kts
 
 workflows:
   version: 2
-#  scheduled:
-#    triggers:
-#      - schedule:
-#          cron: "0 7 * * 1-5"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - build:
-#          filters:
-#            tags:
-#              ignore: /.*/
-#      - app-scan
-#      - image-scan
   build-test-and-deploy:
     jobs:
-      - build:
+      - validate:
           filters:
             tags:
               ignore: /.*/
-#      - build_docker:
-#          requires:
-#            - build
-#          filters:
-#            branches:
-#              only: main
-#      - deploy_dev:
-#          requires:
-#            - build_docker
-#      - request-preprod-approval:
-#          type: approval
-#          requires:
-#            - deploy_dev
-#      - deploy_preprod:
-#          context: offender-assessments-api-preprod
-#          requires:
-#            - request-preprod-approval
+      - hmpps/helm_lint:
+          name: helm_lint
+          chart_name: offender-assessments-api
+          env: "development"
+      - hmpps/build_docker:
+          name: build_docker
+          image_name: quay.io/hmpps/offender-assessments-api
+          filters:
+            branches:
+              only:
+                - main
+      - hmpps/deploy_env:
+          name: deploy_dev
+          chart_name: offender-assessments-api
+          env: "development"
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - validate
+            - helm_lint
+            - build_docker
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: "preprod"
+          context: offender-assessments-api-preprod
+          requires:
+            - request-preprod-approval
 #      - request-prod-approval:
 #          type: approval
 #          requires:
 #            - deploy_preprod
-#      - deploy_prod:
+#      - hmpps/deploy_env:
+#          name: deploy_prod
+#          env: "prod"
 #          context: offender-assessments-api-prod
 #          requires:
 #            - request-prod-approval
+
+  scheduled:
+    triggers:
+      - schedule:
+          cron: "0 7 * * 1-5"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - owasp/gradle_owasp_dependency_check:
+          executor: hmpps/java
