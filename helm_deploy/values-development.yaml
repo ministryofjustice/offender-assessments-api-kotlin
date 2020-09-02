@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/mojdigitalstudio/offender-assessments-api
+  repository: quay.io/hmpps/offender-assessments-api
   tag: latest
   port: 8080
 
