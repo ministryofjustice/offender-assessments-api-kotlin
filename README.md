@@ -18,7 +18,7 @@ https://circleci.com/gh/ministryofjustice/offender-assessments-api-kotlin/
 * OAuth  [(running in a container)](#oauth-security)
   
 #### OAuth security  
-In order to run the service locally, [Nomis OAuth Service](https://github.com/ministryofjustice/nomis-oauth2-server/) is required. This can be run locally using the [docker-compose.yml](docker-compose.yml) file which will pull down the latest version.  From the command line run:
+In order to run the service locally, [Nomis OAuth Service](https://github.com/ministryofjustice/nomis-oauth2-server/) is required. This can be run locally using the [docker-compose.yaml](docker-compose.yaml) file which will pull down the latest version.  From the command line run:
   
 ```
  docker-compose up 
