@@ -35,7 +35,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isNull()
+            assertThat(assessmentDto.childSafeguardingIndicated).isNull()
         }
 
         @Test
@@ -49,7 +49,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isNull()
+            assertThat(assessmentDto.childSafeguardingIndicated).isNull()
         }
 
         @Test
@@ -64,7 +64,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isTrue()
+            assertThat(assessmentDto.childSafeguardingIndicated).isTrue()
         }
 
         @Test
@@ -79,7 +79,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isTrue()
+            assertThat(assessmentDto.childSafeguardingIndicated).isTrue()
         }
 
         @Test
@@ -109,7 +109,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isTrue()
+            assertThat(assessmentDto.childSafeguardingIndicated).isTrue()
         }
 
         @Test
@@ -124,7 +124,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isFalse()
+            assertThat(assessmentDto.childSafeguardingIndicated).isFalse()
         }
 
         @Test
@@ -139,7 +139,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isFalse()
+            assertThat(assessmentDto.childSafeguardingIndicated).isFalse()
         }
     }
 
@@ -157,7 +157,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).isEmpty()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
         }
 
         @Test
@@ -169,7 +169,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionForAssessment(oasysSetPk, "ROSH") } returns null
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).isEmpty()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
             verify(exactly = 0) { sectionService.getSectionsForAssessment(oasysSetPk, any()) }
 
         }
@@ -193,8 +193,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isTrue()
             assertThat(needDto?.riskOfReoffending).isFalse()
             assertThat(needDto?.flaggedAsNeed).isFalse()
@@ -222,8 +222,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isFalse()
             assertThat(needDto?.riskOfReoffending).isTrue()
             assertThat(needDto?.flaggedAsNeed).isFalse()
@@ -249,8 +249,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isFalse()
             assertThat(needDto?.riskOfReoffending).isFalse()
             assertThat(needDto?.flaggedAsNeed).isTrue()
@@ -276,7 +276,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).isEmpty()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
         }
 
         @Test
@@ -297,8 +297,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isFalse()
             assertThat(needDto?.riskOfReoffending).isFalse()
             assertThat(needDto?.flaggedAsNeed).isFalse()
@@ -347,8 +347,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.overThreshold).isTrue()
 
         }
@@ -438,7 +438,7 @@ class AssessmentServiceRisksAndNeedsTest {
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
             assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isFalse()
             assertThat(needDto?.riskOfReoffending).isFalse()
             assertThat(needDto?.flaggedAsNeed).isFalse()
