@@ -72,7 +72,7 @@ class AssessmentControllerTest : IntegrationTest() {
                 .consumeWith {
                     val assessment = it.responseBody
                     assertThat(assessment?.assessmentId).isEqualTo(5434L)
-                    assertThat(assessment?.createdDateTime).isEqualToIgnoringSeconds(LocalDateTime.of(2018,5,22,23,0))
+                    assertThat(assessment?.created).isEqualToIgnoringSeconds(LocalDateTime.of(2018,5,22,23,0))
                 }
     }
 
@@ -88,9 +88,9 @@ class AssessmentControllerTest : IntegrationTest() {
         assertThat(assessment.historicStatus).isEqualTo("CURRENT")
         assertThat(assessment.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(3L)
         assertThat(assessment.assessorName).isEqualTo("Probation Test")
-        assertThat(assessment.createdDateTime).isEqualTo(LocalDateTime.of(2018, 5, 21, 23, 0, 9))
-        assertThat(assessment.completedDateTime).isEqualTo(LocalDateTime.of(2018, 6, 20, 23, 0, 9))
-        assertThat(assessment.voidedDateTime).isNull()
+        assertThat(assessment.created).isEqualTo(LocalDateTime.of(2018, 5, 21, 23, 0, 9))
+        assertThat(assessment.completed).isEqualTo(LocalDateTime.of(2018, 6, 20, 23, 0, 9))
+        assertThat(assessment.voided).isNull()
 
         //Sections check
         assertThat(assessment.sections).hasSize(17)

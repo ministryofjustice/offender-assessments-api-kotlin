@@ -204,7 +204,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                     assertThat(summaries).hasSize(1)
                     assertThat(summaries.map{ a -> a.assessmentId})
                             .containsExactlyInAnyOrderElementsOf(setOf(voidedAssessmentId))
-                    assertThat(summaries.map {a -> a.voidedDateTime}).doesNotContainNull()
+                    assertThat(summaries.map {a -> a.voided}).doesNotContainNull()
 
                 }
     }
@@ -223,7 +223,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
                     assertThat(summaries).hasSize(4)
                     assertThat(summaries.map{ a -> a.assessmentId})
                             .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, layerOneAssessmentId))
-                    assertThat(summaries.map {a -> a.voidedDateTime}).containsOnlyNulls()
+                    assertThat(summaries.map {a -> a.voided}).containsOnlyNulls()
                 }
     }
 
@@ -331,9 +331,9 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
         assertThat(assessmentSummary.historicStatus).isEqualTo("CURRENT")
         assertThat(assessmentSummary.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(3L)
         assertThat(assessmentSummary.assessorName).isEqualTo("Probation Test")
-        assertThat(assessmentSummary.createdDateTime).isEqualTo(LocalDateTime.of(2018, 5, 21, 23, 0, 9))
-        assertThat(assessmentSummary.completedDateTime).isEqualTo(LocalDateTime.of(2018, 6, 20, 23, 0, 9))
-        assertThat(assessmentSummary.voidedDateTime).isNull()
+        assertThat(assessmentSummary.created).isEqualTo(LocalDateTime.of(2018, 5, 21, 23, 0, 9))
+        assertThat(assessmentSummary.completed).isEqualTo(LocalDateTime.of(2018, 6, 20, 23, 0, 9))
+        assertThat(assessmentSummary.voided).isNull()
     }
 
 
