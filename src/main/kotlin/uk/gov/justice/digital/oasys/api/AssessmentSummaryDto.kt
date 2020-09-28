@@ -34,13 +34,13 @@ data class AssessmentSummaryDto(
         val assessorName: String? = null,
 
         @ApiModelProperty(value = "Created Date", example = "2020-01-02T16:00:00")
-        val createdDateTime: LocalDateTime? = null,
+        val created: LocalDateTime? = null,
 
         @ApiModelProperty(value = "Completed Date", example = "2020-01-02T16:00:00")
-        val completedDateTime: LocalDateTime? = null,
+        val completed: LocalDateTime? = null,
 
         @ApiModelProperty(value = "Voided Date", example = "2020-01-02T16:00:00")
-        val voidedDateTime: LocalDateTime? = null
+        val voided: LocalDateTime? = null
 
 ) {
 
