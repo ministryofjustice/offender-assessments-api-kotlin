@@ -24,13 +24,13 @@ class AssessmentSummaryDtoTest {
         assertThat(assessmentDto.assessmentType).isEqualTo(assessment.assessmentType)
         assertThat(assessmentDto.historicStatus).isEqualTo(assessment.group?.historicStatus)
         assertThat(assessmentDto.assessmentStatus).isEqualTo(assessment.assessmentStatus)
-        assertThat(assessmentDto.createdDateTime).isEqualTo(assessment.createDate)
+        assertThat(assessmentDto.created).isEqualTo(assessment.createDate)
         assertThat(assessmentDto.refAssessmentId).isEqualTo(assessment.assessmentVersion?.refAssVersionUk)
         assertThat(assessmentDto.refAssessmentVersionCode).isEqualTo(assessment.assessmentVersion?.refAssVersionCode)
         assertThat(assessmentDto.refAssessmentVersionNumber).isEqualTo(assessment.assessmentVersion?.versionNumber)
         assertThat(assessmentDto.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(assessment.assessmentVersion?.oasysScoringAlgVersion)
-        assertThat(assessmentDto.completedDateTime).isEqualTo(assessment.dateCompleted)
-        assertThat(assessmentDto.voidedDateTime).isEqualTo(assessment.assessmentVoidedDate)
+        assertThat(assessmentDto.completed).isEqualTo(assessment.dateCompleted)
+        assertThat(assessmentDto.voided).isEqualTo(assessment.assessmentVoidedDate)
     }
 
     @Test
