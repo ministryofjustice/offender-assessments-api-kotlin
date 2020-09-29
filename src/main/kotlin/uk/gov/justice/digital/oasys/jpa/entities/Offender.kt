@@ -61,10 +61,10 @@ data class Offender (
     var mergedOffenderPK: Long? = null
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is Offender) return false
-        return offenderPk == o.offenderPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Offender) return false
+        return offenderPk == other.offenderPk
     }
 
     override fun hashCode(): Int {

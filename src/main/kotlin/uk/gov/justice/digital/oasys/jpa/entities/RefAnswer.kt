@@ -63,14 +63,14 @@ data class RefAnswer(
         @Column(name = "LASTUPD_USER")
         val lastupdUser: String? = null
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefAnswer) return false
-        return refAssVersionCode == o.refAssVersionCode &&
-                versionNumber == o.versionNumber &&
-                refSectionCode == o.refSectionCode &&
-                refQuestionCode == o.refQuestionCode &&
-                refAnswerCode == o.refAnswerCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefAnswer) return false
+        return refAssVersionCode == other.refAssVersionCode &&
+                versionNumber == other.versionNumber &&
+                refSectionCode == other.refSectionCode &&
+                refQuestionCode == other.refQuestionCode &&
+                refAnswerCode == other.refAnswerCode
     }
 
     override fun hashCode(): Int {

@@ -14,11 +14,11 @@ class RefAssessmentVersionPK (
         val versionNumber: String? = null
 ) : Serializable
 {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefAssessmentVersionPK) return false
-        return refAssVersionCode == o.refAssVersionCode &&
-                versionNumber == o.versionNumber
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefAssessmentVersionPK) return false
+        return refAssVersionCode == other.refAssVersionCode &&
+                versionNumber == other.versionNumber
     }
 
     override fun hashCode(): Int {

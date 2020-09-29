@@ -78,10 +78,10 @@ data class OffenceBlock (
     val sentence: Sentence? = null
 
 ) : Serializable {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is OffenceBlock) return false
-        return offenceBlockPk == o.offenceBlockPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OffenceBlock) return false
+        return offenceBlockPk == other.offenceBlockPk
     }
 
     override fun hashCode(): Int {

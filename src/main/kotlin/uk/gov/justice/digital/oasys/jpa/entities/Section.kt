@@ -54,10 +54,10 @@ data class Section(
                 ?.map { it.refQuestion?.refQuestionCode to it.oasysAnswer?.refAnswer?.refAnswerCode }?.toMap()
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is Section) return false
-        val other: Section = o
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Section) return false
+        val other: Section = other
         return oasysSectionPk == other.oasysSectionPk
     }
 

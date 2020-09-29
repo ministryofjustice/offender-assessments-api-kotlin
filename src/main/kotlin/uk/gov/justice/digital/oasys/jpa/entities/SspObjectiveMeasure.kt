@@ -21,10 +21,10 @@ data class SspObjectiveMeasure (
 
 ) : Serializable {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is SspObjectiveMeasure) return false
-        return sspObjectiveMeasurePk == o.sspObjectiveMeasurePk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SspObjectiveMeasure) return false
+        return sspObjectiveMeasurePk == other.sspObjectiveMeasurePk
     }
 
     override fun hashCode(): Int {

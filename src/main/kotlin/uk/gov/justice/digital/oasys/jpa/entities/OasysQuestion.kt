@@ -49,10 +49,10 @@ data class OasysQuestion(
 
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is OasysQuestion) return false
-        return oasysQuestionPk == o.oasysQuestionPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OasysQuestion) return false
+        return oasysQuestionPk == other.oasysQuestionPk
     }
 
     override fun hashCode(): Int {

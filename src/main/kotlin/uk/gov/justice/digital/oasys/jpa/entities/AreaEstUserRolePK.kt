@@ -20,13 +20,12 @@ class AreaEstUserRolePK(
 
 ) : Serializable {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is AreaEstUserRolePK) return false
-        val that: AreaEstUserRolePK = o
-        return oasysUserCode == that.oasysUserCode &&
-                refRoleCode == that.refRoleCode &&
-                ctAreaEstCode == that.ctAreaEstCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AreaEstUserRolePK) return false
+        return oasysUserCode == other.oasysUserCode &&
+                refRoleCode == other.refRoleCode &&
+                ctAreaEstCode == other.ctAreaEstCode
     }
 
     override fun hashCode(): Int {

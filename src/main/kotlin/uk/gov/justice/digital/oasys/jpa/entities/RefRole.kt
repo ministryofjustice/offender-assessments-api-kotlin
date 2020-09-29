@@ -45,10 +45,10 @@ data class RefRole(
         private val lastupdUser: String? = null
 
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefRole) return false
-        return refRoleCode == o.refRoleCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefRole) return false
+        return refRoleCode == other.refRoleCode
     }
 
     override fun hashCode(): Int {

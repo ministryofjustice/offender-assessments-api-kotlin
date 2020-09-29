@@ -29,10 +29,10 @@ data class Court(
 
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is Court) return false
-        return courtPk == o.courtPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Court) return false
+        return courtPk == other.courtPk
     }
 
     override fun hashCode(): Int {

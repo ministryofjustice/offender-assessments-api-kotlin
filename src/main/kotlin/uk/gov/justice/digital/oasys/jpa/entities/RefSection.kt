@@ -46,12 +46,12 @@ data class RefSection(
         return sectionType != null
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefSection) return false
-        return refAssVersionCode == o.refAssVersionCode &&
-                versionNumber == o.versionNumber &&
-                refSectionCode == o.refSectionCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefSection) return false
+        return refAssVersionCode == other.refAssVersionCode &&
+                versionNumber == other.versionNumber &&
+                refSectionCode == other.refSectionCode
     }
 
     override fun hashCode(): Int {
