@@ -38,10 +38,10 @@ class OffenceSentenceDetail(
         val offenceBlock: OffenceBlock? = null
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is OffenceSentenceDetail) return false
-        return offenceSentenceDetailPk == o.offenceSentenceDetailPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OffenceSentenceDetail) return false
+        return offenceSentenceDetailPk == other.offenceSentenceDetailPk
     }
 
     override fun hashCode(): Int {

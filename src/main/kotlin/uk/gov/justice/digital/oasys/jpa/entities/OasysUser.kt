@@ -40,10 +40,10 @@ data class OasysUser(
         @JoinColumn(name = "OASYS_USER_CODE", referencedColumnName = "OASYS_USER_CODE")
         val roles: List<AreaEstUserRole>? = null
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is OasysUser) return false
-        return oasysUserCode == o.oasysUserCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OasysUser) return false
+        return oasysUserCode == other.oasysUserCode
     }
 
     override fun hashCode(): Int {

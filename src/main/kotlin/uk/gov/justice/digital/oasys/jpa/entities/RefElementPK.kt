@@ -14,11 +14,11 @@ data class RefElementPK (
     private val refElementCode: String? = null
 )  : Serializable {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefElementPK) return false
-        return  refCategoryCode == o.refCategoryCode &&
-                refElementCode == o.refElementCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefElementPK) return false
+        return  refCategoryCode == other.refCategoryCode &&
+                refElementCode == other.refElementCode
     }
 
     override fun hashCode(): Int {

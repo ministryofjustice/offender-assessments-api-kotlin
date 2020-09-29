@@ -18,10 +18,10 @@ class SspWhoDoWorkPivot (
         private val sspInterventionInSetPk: Long? = null
 )
 {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is SspWhoDoWorkPivot) return false
-        return sspWhoDoWorkPivotPk == o.sspWhoDoWorkPivotPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SspWhoDoWorkPivot) return false
+        return sspWhoDoWorkPivotPk == other.sspWhoDoWorkPivotPk
     }
 
     override fun hashCode(): Int {

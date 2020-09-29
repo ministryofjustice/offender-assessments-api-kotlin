@@ -36,11 +36,11 @@ data class RefElement (
     @Column(name = "END_DATE")
     val endDate: LocalDateTime? = null
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is RefElement) return false
-        return refCategoryCode == o.refCategoryCode &&
-                refElementCode == o.refElementCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RefElement) return false
+        return refCategoryCode == other.refCategoryCode &&
+                refElementCode == other.refElementCode
     }
 
     override fun hashCode(): Int {

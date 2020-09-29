@@ -22,10 +22,10 @@ data class SspObjective (
 
 ) : Serializable {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is SspObjective) return false
-        return sspObjectivePk == o.sspObjectivePk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SspObjective) return false
+        return sspObjectivePk == other.sspObjectivePk
     }
 
     override fun hashCode(): Int {

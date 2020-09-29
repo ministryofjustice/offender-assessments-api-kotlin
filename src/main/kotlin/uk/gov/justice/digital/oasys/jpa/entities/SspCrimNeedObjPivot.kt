@@ -22,10 +22,10 @@ class SspCrimNeedObjPivot (
 
         ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is SspCrimNeedObjPivot) return false
-        return sspCrimNeedObjPivotPk == o.sspCrimNeedObjPivotPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SspCrimNeedObjPivot) return false
+        return sspCrimNeedObjPivotPk == other.sspCrimNeedObjPivotPk
     }
 
     override fun hashCode(): Int {

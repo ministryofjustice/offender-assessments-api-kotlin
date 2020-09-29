@@ -88,10 +88,10 @@ data class CtAreaEst(
 ) {
 
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is CtAreaEst) return false
-        return ctAreaEstCode == o.ctAreaEstCode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CtAreaEst) return false
+        return ctAreaEstCode == other.ctAreaEstCode
     }
 
     override fun hashCode(): Int {

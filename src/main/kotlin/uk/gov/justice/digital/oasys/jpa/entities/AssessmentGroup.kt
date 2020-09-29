@@ -24,10 +24,10 @@ data class AssessmentGroup (
     val assessments: Set<Assessment>? = null
 
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is AssessmentGroup) return false
-        return oasysAssessmentGroupPk == o.oasysAssessmentGroupPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AssessmentGroup) return false
+        return oasysAssessmentGroupPk == other.oasysAssessmentGroupPk
     }
 
     override fun hashCode(): Int {

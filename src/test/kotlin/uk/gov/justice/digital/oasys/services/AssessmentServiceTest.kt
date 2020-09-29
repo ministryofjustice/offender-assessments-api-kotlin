@@ -40,7 +40,7 @@ class AssessmentServiceTest {
 
     @Test
     fun `throws not found exception when null assessment returned`() {
-        val assessment = setupAssessment()
+        setupAssessment()
         val oasysSetPk = 1234L
         every { assessmentRepository.getAssessment(oasysSetPk) } returns null
         every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null

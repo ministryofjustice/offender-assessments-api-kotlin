@@ -94,7 +94,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.childSafeguardingIndicated).isTrue()
+            assertThat(assessmentDto.childSafeguardingIndicated).isTrue()
         }
 
         @Test
@@ -323,8 +323,8 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
-            val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
+            val needDto = assessmentDto.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.overThreshold).isTrue()
 
         }
@@ -371,7 +371,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(section)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).isEmpty()
+            assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
         }
 
         @Test
@@ -403,7 +403,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(accommodationSection, drugsSection)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(2)
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(2)
         }
 
 
@@ -437,7 +437,7 @@ class AssessmentServiceRisksAndNeedsTest {
             every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns setOf(accommodationSection, relationshipsSection)
 
             val assessmentDto = assessmentsService.getAssessment(oasysSetPk)
-            assertThat(assessmentDto?.layer3SentencePlanNeeds).hasSize(1)
+            assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(1)
             val needDto = assessmentDto?.layer3SentencePlanNeeds?.first()
             assertThat(needDto?.riskOfHarm).isFalse()
             assertThat(needDto?.riskOfReoffending).isFalse()

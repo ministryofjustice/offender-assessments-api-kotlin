@@ -34,7 +34,7 @@ class OffenderService(private val offenderRepository: OffenderRepository,
 
     private fun checkForOffenderMerge(offender : Offender) : Offender {
         if(offender.mergeIndicated.equals("Y")) {
-            val linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(offender?.offenderPk)
+            val linkedOffender = offenderLinkRepository.findMergedOffenderOrNull(offender.offenderPk)
             if (linkedOffender != null) {
                 val mergedOffenderPK = findMergedOffenderPK(linkedOffender)
                 val mergedOffender = getOffenderFromRepository("oasysOffenderId", mergedOffenderPK.toString())

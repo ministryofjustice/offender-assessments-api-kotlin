@@ -17,7 +17,7 @@ class AssessmentSummaryDtoTest {
 
     @Test
     fun `Builds valid Assessment Summary DTO from Entity `() {
-        val assessmentDto = AssessmentSummaryDto.from(setOf(assessment))?.first()
+        val assessmentDto = AssessmentSummaryDto.from(setOf(assessment)).first()
 
         assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
         assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)

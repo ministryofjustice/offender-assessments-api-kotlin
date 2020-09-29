@@ -36,10 +36,10 @@ data class SspInterventionInSet(
         @JoinColumn(name = "SSP_INTERVENTION_IN_SET_PK", referencedColumnName = "SSP_INTERVENTION_IN_SET_PK", insertable = false, updatable = false) val sspInterventionMeasure: SspInterventionMeasure? = null
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is SspInterventionInSet) return false
-        return sspInterventionInSetPk == o.sspInterventionInSetPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SspInterventionInSet) return false
+        return sspInterventionInSetPk == other.sspInterventionInSetPk
     }
 
     override fun hashCode(): Int {

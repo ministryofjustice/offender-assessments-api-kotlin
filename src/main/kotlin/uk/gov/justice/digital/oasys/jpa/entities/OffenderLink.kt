@@ -42,10 +42,10 @@ data class OffenderLink (
     val linkType: RefElement? = null
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is OffenderLink) return false
-        return offenderLinkPk == o.offenderLinkPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OffenderLink) return false
+        return offenderLinkPk == other.offenderLinkPk
     }
 
     override fun hashCode(): Int {

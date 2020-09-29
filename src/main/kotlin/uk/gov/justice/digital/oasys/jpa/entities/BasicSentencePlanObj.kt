@@ -69,10 +69,10 @@ data class BasicSentencePlanObj(
         val cfOrigBcsInt: Long? = null
 ) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is BasicSentencePlanObj) return false
-        return basicSentPlanObjPk == o.basicSentPlanObjPk
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BasicSentencePlanObj) return false
+        return basicSentPlanObjPk == other.basicSentPlanObjPk
     }
 
     override fun hashCode(): Int {
