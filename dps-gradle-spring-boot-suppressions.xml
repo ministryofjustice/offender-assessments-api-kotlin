@@ -54,4 +54,193 @@
     </packageUrl>
     <cve>CVE-2018-1258</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-compiler-embeddable-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-compiler\-embeddable@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-daemon-embeddable-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-daemon\-embeddable@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-reflect-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-reflect@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-script-runtime-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-script\-runtime@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-scripting-common-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-scripting\-common@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-scripting-compiler-embeddable-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-scripting\-compiler\-embeddable@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-scripting-compiler-impl-embeddable-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-scripting\-compiler\-impl\-embeddable@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-scripting-jvm-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-scripting\-jvm@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-stdlib-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-stdlib-common-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib\-common@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-stdlib-jdk7-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib\-jdk7@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-stdlib-jdk8-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib\-jdk8@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-allopen-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-allopen@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-gradle-plugin-api-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-gradle\-plugin\-api@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-gradle-plugin-model-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-gradle\-plugin\-model@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-native-utils-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-native\-utils@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-noarg-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-noarg@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-util-io-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-util\-io@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: kotlin-klib-commonizer-embeddable-1.4.10.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-klib\-commonizer\-embeddable@.*$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: accessors-smart-1.2.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/net\.minidev/accessors\-smart@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: json-path-2.4.0.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.jayway\.jsonpath/json\-path@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: json-smart-2.3.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/net\.minidev/json\-smart@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-boot-starter-json-2.3.4.RELEASE.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.springframework\.boot/spring\-boot\-starter\-json@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jjwt-0.9.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/io\.jsonwebtoken/jjwt@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jose4j-0.6.5.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.bitbucket\.b_c/jose4j@.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: oauth2-oidc-sdk-7.1.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.nimbusds/oauth2\-oidc\-sdk@.*$</packageUrl>
+    <cve>CVE-2007-1652</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: oauth2-oidc-sdk-7.1.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.nimbusds/oauth2\-oidc\-sdk@.*$</packageUrl>
+    <cve>CVE-2007-1651</cve>
+  </suppress>
 </suppressions>
