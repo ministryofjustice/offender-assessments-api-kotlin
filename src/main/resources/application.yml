@@ -18,7 +18,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        show_sql: false
+        show_sql: true
 
 server:
   port: 8080

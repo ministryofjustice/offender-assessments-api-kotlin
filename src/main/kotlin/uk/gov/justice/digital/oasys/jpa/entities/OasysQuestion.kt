@@ -13,8 +13,9 @@ data class OasysQuestion(
         @Column(name = "ADDITIONAL_NOTE")
         val additionalNote: String? = null,
 
-        @Column(name = "OASYS_SECTION_PK")
-        val oasysSectionPk: Long? = null,
+        @ManyToOne
+        @JoinColumns(JoinColumn(name = "OASYS_SECTION_PK", referencedColumnName = "OASYS_SECTION_PK"))
+        val section: Section? = null,
 
         @Column(name = "FREE_FORMAT_ANSWER")
         val freeFormatAnswer: String? = null,

@@ -20,7 +20,7 @@ import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 class AssessmentService constructor(
         private val assessmentRepository: AssessmentRepository,
         private val offenderService: OffenderService,
-        private val sectionService: SectionService
+        private val sectionService: SectionService,
 ) {
 
     private val LAYER_3 = "LAYER_3"
