@@ -40,16 +40,15 @@ class AnswersControllerTest : IntegrationTest() {
                     assertThat(answer.questionText).isEqualTo("Issues of emotional wellbeing linked to risk of serious harm, risks to the individual and other risks")
                     assertThat(answer.refQuestionId).isEqualTo(1762)
 
-                    assertThat(answer.answer?.displayOrder).isEqualTo(5)
-                    assertThat(answer.answer?.freeFormText).isNull()
-                    assertThat(answer.answer?.oasysAnswerId).isEqualTo(2343784)
-                    assertThat(answer.answer?.ogpScore).isNull()
-                    assertThat(answer.answer?.ovpScore).isNull()
-                    assertThat(answer.answer?.qaRawScore).isNull()
-                    assertThat(answer.answer?.staticText).isEqualTo("Yes")
-                    assertThat(answer.answer?.refAnswerCode).isEqualTo("YES")
-                    assertThat(answer.answer?.refAnswerId).isEqualTo(1995)
-
+                    assertThat(answer.answers.toList()[0].displayOrder).isEqualTo(5)
+                    assertThat(answer.answers.toList()[0].freeFormText).isNull()
+                    assertThat(answer.answers.toList()[0].oasysAnswerId).isEqualTo(5343777L)
+                    assertThat(answer.answers.toList()[0].ogpScore).isNull()
+                    assertThat(answer.answers.toList()[0].ovpScore).isNull()
+                    assertThat(answer.answers.toList()[0].qaRawScore).isNull()
+                    assertThat(answer.answers.toList()[0].staticText).isEqualTo("Yes")
+                    assertThat(answer.answers.toList()[0].refAnswerCode).isEqualTo("YES")
+                    assertThat(answer.answers.toList()[0].refAnswerId).isEqualTo(1995)
                 }
     }
 

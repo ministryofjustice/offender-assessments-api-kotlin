@@ -66,7 +66,7 @@ class AssessmentService constructor(
         if (answers.isNullOrEmpty()) {
             return null
         }
-        return anyAnswersArePositive(answers.values)
+        return anySingleAnswersArePositive(answers.values)
     }
 
     private fun calculateNeeds(assessmentType: String?, oasysSetId: Long?): Collection<CriminogenicNeed> {
@@ -87,8 +87,8 @@ class AssessmentService constructor(
         val answers = section?.getRefAnswers(setOf(CriminogenicNeedMapping.getHarmQuestion(sectionCode),
                 CriminogenicNeedMapping.getReoffendingQuestion(sectionCode)))
 
-        val riskHarm = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getHarmQuestion(sectionCode)))
-        val riskReoffending = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getReoffendingQuestion(sectionCode)))
+        val riskHarm = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getHarmQuestion(sectionCode))?.getOrNull(0))
+        val riskReoffending = isPositiveAnswer(answers?.get(CriminogenicNeedMapping.getReoffendingQuestion(sectionCode))?.getOrNull(0))
         val overThreshold = sectionIsOverThreshold(section)
         val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd)
 
@@ -106,8 +106,8 @@ class AssessmentService constructor(
         return rawScore >= threshold
     }
 
-    private fun anyAnswersArePositive(answers: Collection<String?>?): Boolean {
-        return POSITIVE_ANSWERS.any{ answers?.contains(it) ?: false }
+    private fun anySingleAnswersArePositive(answers: Collection<List<String>?>?): Boolean {
+        return POSITIVE_ANSWERS.any{ answers?.map { a -> a?.getOrNull(0) }?.contains(it)   ?: false }
     }
 
 }

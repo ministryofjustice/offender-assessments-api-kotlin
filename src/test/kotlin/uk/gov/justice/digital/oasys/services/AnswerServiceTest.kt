@@ -29,7 +29,7 @@ class AnswerServiceTest
         val oasysSetId: Long = 1
         val questions = setOf("1.1")
 
-        val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
+
         val oasysAnswer = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
@@ -38,8 +38,8 @@ class AnswerServiceTest
                         ovpScore = 2L,
                         qaRawScore = 3L,
                         refSectionAnswer = "No"))
-
-        oasysQuestion.oasysAnswer = oasysAnswer
+        val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
+        oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)
         oasysAnswer.oasysQuestion = oasysQuestion
 
         every { questionRepository.getQuestionAnswersFromQuestionCodes(oasysSetId, questions) } returns listOf(oasysQuestion)
@@ -50,12 +50,12 @@ class AnswerServiceTest
         assertThat(assessmentQuestionDto.questionAnswers).hasSize(1)
         val questionDto = assessmentQuestionDto.questionAnswers.first()
         assertThat(questionDto.refQuestionCode).isEqualTo("1.1")
-        assertThat(questionDto.answer?.staticText).isEqualTo("No")
-        assertThat(questionDto.answer?.freeFormText).isNull()
-        assertThat(questionDto.answer?.refAnswerCode).isEqualTo("NO")
-        assertThat(questionDto.answer?.ogpScore).isEqualTo(1L)
-        assertThat(questionDto.answer?.ovpScore).isEqualTo(2L)
-        assertThat(questionDto.answer?.qaRawScore).isEqualTo(3L)
+        assertThat(questionDto.answers.toList()[0].staticText).isEqualTo("No")
+        assertThat(questionDto.answers.toList()[0].freeFormText).isNull()
+        assertThat(questionDto.answers.toList()[0].refAnswerCode).isEqualTo("NO")
+        assertThat(questionDto.answers.toList()[0].ogpScore).isEqualTo(1L)
+        assertThat(questionDto.answers.toList()[0].ovpScore).isEqualTo(2L)
+        assertThat(questionDto.answers.toList()[0].qaRawScore).isEqualTo(3L)
 
 
         verify(exactly = 1) { questionRepository.getQuestionAnswersFromQuestionCodes(oasysSetId, questions)  }

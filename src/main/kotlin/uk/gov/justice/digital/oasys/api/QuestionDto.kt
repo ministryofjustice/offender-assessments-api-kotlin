@@ -25,7 +25,7 @@ data class QuestionDto(
         val questionText: String? = null,
 
         @ApiModelProperty(value = "Question Answer")
-        val answer: AnswerDto? = null
+        val answers: Collection<AnswerDto> = emptySet()
 ) {
 
     companion object {
