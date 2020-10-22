@@ -42,7 +42,7 @@ class AnswersControllerTest : IntegrationTest() {
 
                     assertThat(answer.answers.toList()[0].displayOrder).isEqualTo(5)
                     assertThat(answer.answers.toList()[0].freeFormText).isNull()
-                    assertThat(answer.answers.toList()[0].oasysAnswerId).isEqualTo(2343784)
+                    assertThat(answer.answers.toList()[0].oasysAnswerId).isEqualTo(5343777L)
                     assertThat(answer.answers.toList()[0].ogpScore).isNull()
                     assertThat(answer.answers.toList()[0].ovpScore).isNull()
                     assertThat(answer.answers.toList()[0].qaRawScore).isNull()

@@ -18,14 +18,14 @@ class AssessmentAnswersDtoTest {
         val oasysAnswer1 = OasysAnswer(
                 refAnswer = RefAnswer(refAnswerCode = "1"))
 
-        oasysQuestion1.oasysAnswers = setOf(oasysAnswer1)
+        oasysQuestion1.oasysAnswers = mutableSetOf(oasysAnswer1)
         oasysAnswer1.oasysQuestion = oasysQuestion1
 
         val oasysQuestion2 = OasysQuestion(oasysQuestionPk = 2)
         val oasysAnswer2 = OasysAnswer(
                 refAnswer = RefAnswer(refAnswerCode = "2"))
 
-        oasysQuestion2.oasysAnswers = setOf(oasysAnswer2)
+        oasysQuestion2.oasysAnswers = mutableSetOf(oasysAnswer2)
         oasysAnswer2.oasysQuestion = oasysQuestion2
 
         val answers = AssessmentAnswersDto.from(oasysSetPk, setOf(oasysQuestion1, oasysQuestion2))

@@ -11,7 +11,7 @@ data class OasysAnswer(
         @Column(name = "OASYS_ANSWER_PK")
         val oasysAnswerPk: Long? = null,
 
-        @OneToOne
+        @ManyToOne
         @JoinColumn(name = "OASYS_QUESTION_PK")
         var oasysQuestion: OasysQuestion? = null,
 

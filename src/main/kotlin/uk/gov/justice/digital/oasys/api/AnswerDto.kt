@@ -40,7 +40,7 @@ data class AnswerDto(
             val oasysAnswers: Set<OasysAnswer?> = question?.oasysAnswers
                     ?: return setOf(AnswerDto(freeFormText = question?.freeFormatAnswer))
 
-            return oasysAnswers.mapNotNull { from(it) }
+            return oasysAnswers.mapNotNull { from(it) }.toSet()
         }
 
         fun from(oasysAnswer: OasysAnswer?): AnswerDto? {

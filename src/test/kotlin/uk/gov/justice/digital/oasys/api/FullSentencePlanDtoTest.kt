@@ -106,7 +106,7 @@ class FullSentencePlanDtoTest {
                 refQuestion = RefQuestion(
                         displaySort = 1L,
                         refQuestionCode = "IP.1"),
-                oasysAnswers = setOf(OasysAnswer(
+                oasysAnswers = mutableSetOf(OasysAnswer(
                         refAnswer = (RefAnswer(
                                 refAnswerCode = ("YES"),
                                 refSectionAnswer = ("Yes")))))))

@@ -29,7 +29,7 @@ class AnswerServiceTest
         val oasysSetId: Long = 1
         val questions = setOf("1.1")
 
-        val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
+
         val oasysAnswer = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
@@ -38,8 +38,8 @@ class AnswerServiceTest
                         ovpScore = 2L,
                         qaRawScore = 3L,
                         refSectionAnswer = "No"))
-
-        oasysQuestion.oasysAnswers = setOf(oasysAnswer)
+        val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
+        oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)
         oasysAnswer.oasysQuestion = oasysQuestion
 
         every { questionRepository.getQuestionAnswersFromQuestionCodes(oasysSetId, questions) } returns listOf(oasysQuestion)

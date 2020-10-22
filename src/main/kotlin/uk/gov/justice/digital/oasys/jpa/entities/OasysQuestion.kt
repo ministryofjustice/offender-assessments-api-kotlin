@@ -33,9 +33,9 @@ data class OasysQuestion(
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "REF_QUESTION_CODE", referencedColumnName = "REF_QUESTION_CODE"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"))
         val refQuestion: RefQuestion? = null,
 
-        @OneToMany
+        @OneToMany(fetch = FetchType.EAGER)
         @JoinColumn(name = "OASYS_QUESTION_PK", referencedColumnName = "OASYS_QUESTION_PK")
-        var oasysAnswers: Set<OasysAnswer>? = emptySet(),
+        var oasysAnswers: MutableSet<OasysAnswer>? = null,
 
         @Column(name = "CREATE_DATE")
         val createDate: Time? = null,

@@ -94,7 +94,7 @@ class QuestionDtoTest {
                         displaySort = 1L,
                         refSectionAnswer ="Yes"))
 
-        question1098.oasysAnswers = setOf(answer1098)
+        question1098.oasysAnswers = mutableSetOf(answer1098)
         answer1098.oasysQuestion = question1098
 
         return question1098
@@ -122,7 +122,7 @@ class QuestionDtoTest {
                         refSectionAnswer ="No"))
 
 
-        question1099.oasysAnswers = setOf(answer1099)
+        question1099.oasysAnswers = mutableSetOf(answer1099)
         answer1099.oasysQuestion = question1099
 
         return question1099
