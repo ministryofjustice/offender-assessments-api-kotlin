@@ -9,7 +9,7 @@ data class OasysAnswer(
 
         @Id
         @Column(name = "OASYS_ANSWER_PK")
-        var oasysAnswerPk: Long? = null,
+        val oasysAnswerPk: Long? = null,
 
         @OneToOne
         @JoinColumn(name = "OASYS_QUESTION_PK")
@@ -17,19 +17,19 @@ data class OasysAnswer(
 
         @OneToOne
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"), JoinColumn(name = "REF_QUESTION_CODE", referencedColumnName = "REF_QUESTION_CODE"), JoinColumn(name = "REF_ANSWER_CODE", referencedColumnName = "REF_ANSWER_CODE"))
-        var refAnswer: RefAnswer? = null,
+        val refAnswer: RefAnswer? = null,
 
         @Column(name = "CREATE_DATE")
-        private var createDate: Time? = null,
+        var createDate: Time? = null,
 
         @Column(name = "CREATE_USER")
-        private val createUser: String? = null,
+        val createUser: String? = null,
 
         @Column(name = "LASTUPD_DATE")
-        private val lastupdDate: Time? = null,
+        val lastupdDate: Time? = null,
 
         @Column(name = "LASTUPD_USER")
-        private val lastupdUser: String? = null
+        val lastupdUser: String? = null
 ) {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true

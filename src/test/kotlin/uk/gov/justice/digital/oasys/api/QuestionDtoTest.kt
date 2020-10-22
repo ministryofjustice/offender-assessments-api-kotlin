@@ -16,7 +16,7 @@ class QuestionDtoTest {
         val oasysQuestions = setOf(setupQuestion1098(), setupQuestion1099(), setupFreeFormQuestion())
         val validQuestions = setOf("10.98", "10.99", "IP.1")
         val questionDtos = QuestionDto.from(oasysQuestions)
-        assertThat(questionDtos?.map { q -> q?.refQuestionCode }).containsExactlyInAnyOrderElementsOf(validQuestions)
+        assertThat(questionDtos.map { q -> q.refQuestionCode }).containsExactlyInAnyOrderElementsOf(validQuestions)
     }
 
 
@@ -38,31 +38,31 @@ class QuestionDtoTest {
     fun `Builds Question DTO with free form text if present`() {
         val oasysQuestions = setOf(setupFreeFormQuestion())
         val questionDto = QuestionDto.from(oasysQuestions)?.first()
-        assertThat(questionDto?.answer?.freeFormText).isEqualTo("Free form answer")
+        assertThat(questionDto.answers.toList()[0].freeFormText).isEqualTo("Free form answer")
     }
 
     @Test
     fun `Builds Question DTO with values`() {
         val oasysQuestions = setOf(setupQuestion1098())
         val questionDto = QuestionDto.from(oasysQuestions)?.first()
-        assertThat(questionDto?.refQuestionId).isEqualTo(1L)
-        assertThat(questionDto?.refQuestionCode).isEqualTo("10.98")
-        assertThat(questionDto?.displayOrder).isEqualTo(1L)
-        assertThat(questionDto?.questionText).isEqualTo("Question 10.98")
-        assertThat(questionDto?.displayScore).isEqualTo(1L)
+        assertThat(questionDto.refQuestionId).isEqualTo(1L)
+        assertThat(questionDto.refQuestionCode).isEqualTo("10.98")
+        assertThat(questionDto.displayOrder).isEqualTo(1L)
+        assertThat(questionDto.questionText).isEqualTo("Question 10.98")
+        assertThat(questionDto.displayScore).isEqualTo(1L)
     }
 
     @Test
     fun `Builds Question DTO with Answer if present`() {
         val oasysQuestions = setOf(setupQuestion1099())
         val questionDto = QuestionDto.from(oasysQuestions)?.first()
-        assertThat(questionDto?.answer?.staticText).isEqualTo("No")
-        assertThat(questionDto?.answer?.freeFormText).isNull()
-        assertThat(questionDto?.answer?.refAnswerCode).isEqualTo("NO")
-        assertThat(questionDto?.answer?.ogpScore).isEqualTo(1L)
-        assertThat(questionDto?.answer?.ovpScore).isEqualTo(2L)
-        assertThat(questionDto?.answer?.qaRawScore).isEqualTo(3L)
-        assertThat(questionDto?.answer?.displayOrder).isEqualTo(2L)
+        assertThat(questionDto.answers.toList()[0].staticText).isEqualTo("No")
+        assertThat(questionDto.answers.toList()[0].freeFormText).isNull()
+        assertThat(questionDto.answers.toList()[0].refAnswerCode).isEqualTo("NO")
+        assertThat(questionDto.answers.toList()[0].ogpScore).isEqualTo(1L)
+        assertThat(questionDto.answers.toList()[0].ovpScore).isEqualTo(2L)
+        assertThat(questionDto.answers.toList()[0].qaRawScore).isEqualTo(3L)
+        assertThat(questionDto.answers.toList()[0].displayOrder).isEqualTo(2L)
     }
 
     @Test
@@ -94,7 +94,7 @@ class QuestionDtoTest {
                         displaySort = 1L,
                         refSectionAnswer ="Yes"))
 
-        question1098.oasysAnswer = answer1098
+        question1098.oasysAnswers = setOf(answer1098)
         answer1098.oasysQuestion = question1098
 
         return question1098
@@ -122,7 +122,7 @@ class QuestionDtoTest {
                         refSectionAnswer ="No"))
 
 
-        question1099.oasysAnswer = answer1099
+        question1099.oasysAnswers = setOf(answer1099)
         answer1099.oasysQuestion = question1099
 
         return question1099

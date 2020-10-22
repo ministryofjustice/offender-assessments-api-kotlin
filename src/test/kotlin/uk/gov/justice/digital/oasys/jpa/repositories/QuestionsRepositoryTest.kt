@@ -27,7 +27,15 @@ class QuestionsRepositoryTest(@Autowired
         val answers = questionRepository.getQuestionAnswersFromQuestionCodes(assessmentId, setOf("10.98", "9.99"))
         assertThat(answers.map{ a -> a.refQuestion?.refQuestionCode})
                 .containsExactlyInAnyOrderElementsOf(setOf("10.98", "9.99"))
-        assertThat(answers.map {a -> a.oasysAnswer?.oasysAnswerPk}).containsExactlyInAnyOrderElementsOf(setOf(2343784, 2343776))
+        assertThat(answers.map {a -> a.oasysAnswers?.first()?.oasysAnswerPk}).containsExactlyInAnyOrderElementsOf(setOf(2343784, 2343776))
+    }
+
+    @Test
+    fun `returns multiple answers`() {
+        val answers = questionRepository.getQuestionAnswersFromQuestionCodes(assessmentId, setOf("10.98", "9.99"))
+        assertThat(answers.map{ a -> a.refQuestion?.refQuestionCode})
+                .containsExactlyInAnyOrderElementsOf(setOf("10.98", "9.99"))
+
     }
 
     @Test

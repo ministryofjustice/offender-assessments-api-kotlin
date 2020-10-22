@@ -35,11 +35,15 @@ data class AnswerDto(
 ) {
 
     companion object {
-        fun from(question: OasysQuestion?): AnswerDto? {
+        fun from(question: OasysQuestion?): Collection<AnswerDto> {
 
-            val oasysAnswer: OasysAnswer? = question?.oasysAnswer
-                    ?: return AnswerDto(freeFormText = question?.freeFormatAnswer)
+            val oasysAnswers: Set<OasysAnswer?> = question?.oasysAnswers
+                    ?: return setOf(AnswerDto(freeFormText = question?.freeFormatAnswer))
 
+            return oasysAnswers.mapNotNull { from(it) }
+        }
+
+        fun from(oasysAnswer: OasysAnswer?): AnswerDto? {
             val refAnswer = oasysAnswer?.refAnswer
 
             return AnswerDto(

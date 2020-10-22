@@ -33,20 +33,21 @@ data class OasysQuestion(
         @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "REF_QUESTION_CODE", referencedColumnName = "REF_QUESTION_CODE"), JoinColumn(name = "REF_SECTION_CODE", referencedColumnName = "REF_SECTION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"))
         val refQuestion: RefQuestion? = null,
 
-        @OneToOne(mappedBy = "oasysQuestion")
-        var oasysAnswer: OasysAnswer? = null,
+        @OneToMany
+        @JoinColumn(name = "OASYS_QUESTION_PK", referencedColumnName = "OASYS_QUESTION_PK")
+        var oasysAnswers: Set<OasysAnswer>? = emptySet(),
 
         @Column(name = "CREATE_DATE")
-        private var createDate: Time? = null,
+        val createDate: Time? = null,
 
         @Column(name = "CREATE_USER")
-        private val createUser: String? = null,
+        val createUser: String? = null,
 
         @Column(name = "LASTUPD_DATE")
-        private val lastupdDate: Time? = null,
+        val lastupdDate: Time? = null,
 
         @Column(name = "LASTUPD_USER")
-        private val lastupdUser: String? = null
+        val lastupdUser: String? = null
 
 ) {
 

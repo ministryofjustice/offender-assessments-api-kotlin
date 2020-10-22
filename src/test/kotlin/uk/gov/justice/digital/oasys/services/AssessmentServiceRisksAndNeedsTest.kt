@@ -454,8 +454,8 @@ class AssessmentServiceRisksAndNeedsTest {
                 oasysQuestionPk = index.toLong(),
                 refQuestion = RefQuestion(
                         refQuestionCode = question.key),
-                oasysAnswer = OasysAnswer(
-                        refAnswer = RefAnswer(refAnswerCode = question.value))) }
+                oasysAnswers = setOf(OasysAnswer(
+                        refAnswer = RefAnswer(refAnswerCode = question.value)))) }
                 .toSet()
     }
 

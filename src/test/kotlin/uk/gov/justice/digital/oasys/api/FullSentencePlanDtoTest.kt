@@ -67,9 +67,9 @@ class FullSentencePlanDtoTest {
                                 refQuestionCode = "IP.1",
                                 oasysQuestionId = 1,
                                 displayOrder = 1,
-                                answer = AnswerDto(
+                                answers = setOf(AnswerDto(
                                         refAnswerCode = "YES",
-                                        staticText = "Yes"))))
+                                        staticText = "Yes")))))
         assertThat(sentencePlan).isEqualTo(validDto)
     }
 
@@ -106,10 +106,10 @@ class FullSentencePlanDtoTest {
                 refQuestion = RefQuestion(
                         displaySort = 1L,
                         refQuestionCode = "IP.1"),
-                oasysAnswer = OasysAnswer(
+                oasysAnswers = setOf(OasysAnswer(
                         refAnswer = (RefAnswer(
                                 refAnswerCode = ("YES"),
-                                refSectionAnswer = ("Yes"))))))
+                                refSectionAnswer = ("Yes")))))))
     }
 
     private fun setupAssessment():Assessment{
@@ -132,9 +132,9 @@ class FullSentencePlanDtoTest {
                             refQuestionCode = "IP.1",
                             oasysQuestionId = 1,
                             displayOrder = 1,
-                            answer = AnswerDto(
+                            answers = setOf(AnswerDto(
                                     refAnswerCode = "YES",
-                                    staticText = "Yes")),
+                                    staticText = "Yes"))),
                         "IP.2" to QuestionDto(
                                 refQuestionCode = "IP.2",
                                 displayOrder = 1)))

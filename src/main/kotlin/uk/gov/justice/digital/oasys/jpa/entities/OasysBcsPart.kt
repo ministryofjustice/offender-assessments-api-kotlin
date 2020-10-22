@@ -33,57 +33,57 @@ data class OasysBcsPart (
     val part1CheckedDate: LocalDateTime? = null,
 
     @Column(name = "BCS_PART_USER_AREA")
-    private val bcsPartUserArea: String? = null,
+    val bcsPartUserArea: String? = null,
 
     @Column(name = "BCS_PART_USER_POSITION")
-    private val bcsPartUserPosition: String? = null,
+    val bcsPartUserPosition: String? = null,
 
     @Column(name = "BCS_PART_COMP_DATE")
-    private val bcsPartCompDate: LocalDateTime? = null,
+    val bcsPartCompDate: LocalDateTime? = null,
 
     @Column(name = "OASYS_SET_PK")
-    private val oasysSetPk: Long? = null,
+    val oasysSetPk: Long? = null,
 
     @Column(name = "CHECKSUM")
-    private val checksum: String? = null,
+    val checksum: String? = null,
 
     @Column(name = "CREATE_DATE")
-    private val createDate: LocalDateTime? = null,
+    val createDate: LocalDateTime? = null,
 
     @Column(name = "LASTUPD_DATE")
-    private val lastupdDate: LocalDateTime? = null,
+    val lastupdDate: LocalDateTime? = null,
 
     @Column(name = "CREATE_USER")
-    private val createUser: String? = null,
+    val createUser: String? = null,
 
     @Column(name = "LASTUPD_USER")
-    private val lastupdUser: String? = null,
+    val lastupdUser: String? = null,
 
     @Column(name = "PRA_COMPLETE")
-    private val praComplete: String? = null,
+    val praComplete: String? = null,
 
     @Column(name = "PRA_COMP_USER")
-    private val praCompUser: String? = null,
+    val praCompUser: String? = null,
 
     @Column(name = "PRA_COMP_DATE")
-    private val praCompDate: LocalDateTime? = null,
+    val praCompDate: LocalDateTime? = null,
 
     @Column(name = "LOCK_INCOMPLETE_REASON_CAT")
-    private val lockIncompleteReasonCat: String? = null,
+    val lockIncompleteReasonCat: String? = null,
 
     @Column(name = "LOCK_INCOMPLETE_REASON_ELM")
-    private val lockIncompleteReason: String? = null,
+    val lockIncompleteReason: String? = null,
 
     @Column(name = "LOCK_INCOMPLETE_OTHER_TEXT")
-    private val lockIncompleteOtherText: String? = null,
+    val lockIncompleteOtherText: String? = null,
 
     @OneToOne
     @JoinColumn(name = "PART1_CHECKED_USER", referencedColumnName = "OASYS_USER_CODE")
-    private val part1CheckedUser: OasysUser? = null,
+    val part1CheckedUser: OasysUser? = null,
 
     @OneToOne
     @JoinColumn(name = "BCS_PART_USER", referencedColumnName = "OASYS_USER_CODE")
-    private val bcsPartUser: OasysUser? = null
+    val bcsPartUser: OasysUser? = null
 
     ) {
 

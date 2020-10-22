@@ -192,7 +192,7 @@ class SentencePlanServiceTest {
                                 refQuestionCode = "IP.1"),
                         "IP.2" to QuestionDto(
                                 refQuestionCode = "IP.2",
-                                answer = AnswerDto())))
+                                answers = setOf(AnswerDto()))))
     }
 
     private fun setupValidFullSentencePlanSummaryDto():FullSentencePlanSummaryDto {
