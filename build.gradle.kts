@@ -1,6 +1,6 @@
 
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.0.6"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.0.7"
     kotlin("plugin.spring") version "1.4.10"
     kotlin("plugin.jpa") version "1.4.10"
     kotlin("plugin.allopen") version "1.4.10"
@@ -49,7 +49,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:3.4.5")
 
     implementation( "com.google.code.gson:gson:2.8.6")
-    implementation("com.google.guava:guava:29.0-jre")
+    implementation("com.google.guava:guava:30.0-jre")
 
     implementation(files("lib/ojdbc8-12.2.0.1.jar"))
     implementation("org.apache.commons:commons-lang3:3.11")
