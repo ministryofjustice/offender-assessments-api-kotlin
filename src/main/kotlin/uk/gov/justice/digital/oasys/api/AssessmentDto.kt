@@ -52,7 +52,7 @@ data class AssessmentDto(
         @ApiModelProperty(value = "Child Safeguarding flat", example = "true")
         val childSafeguardingIndicated: Boolean? = null,
 
-        @ApiModelProperty(value = "Criminogenic Needs")
+        @ApiModelProperty(value = "Identified Layer 3 Criminogenic Needs")
         val layer3SentencePlanNeeds: Collection<AssessmentNeedDto?>? = null
 
 ) {

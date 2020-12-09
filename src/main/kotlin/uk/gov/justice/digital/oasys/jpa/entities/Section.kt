@@ -49,7 +49,7 @@ data class Section(
 
 ) {
 
-    fun getRefAnswers(questionKeys: Set<String?>): Map<String?, List<String>?>? {
+    fun getRefAnswers(questionKeys: Set<String>): Map<String?, List<String>?>? {
         return oasysQuestions?.filter { q -> questionKeys.contains(q.refQuestion?.refQuestionCode) }
                 ?.map { it.refQuestion?.refQuestionCode to it.oasysAnswers?.mapNotNull { a -> a.refAnswer?.refAnswerCode }?.toList() }?.toMap()
     }

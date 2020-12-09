@@ -12,6 +12,7 @@ import uk.gov.justice.digital.oasys.api.FullSentencePlanSummaryDto
 import uk.gov.justice.digital.oasys.api.QuestionDto
 import uk.gov.justice.digital.oasys.jpa.entities.*
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,7 +27,7 @@ class SentencePlanServiceTest {
 
     private val oasysSetId = 1234L
     private val oasysType = "OASYS"
-    private val sectionIds = setOf("ISP", "RSP")
+    private val sectionIds = setOf(SectionHeader.INITIAL_SENTENCE_PLAN, SectionHeader.REVIEW_SENTENCE_PLAN)
     private val identity = "1"
     private val offenderId = 1L
     private val dateCreated = LocalDateTime.of(2020,1,1,14,0)

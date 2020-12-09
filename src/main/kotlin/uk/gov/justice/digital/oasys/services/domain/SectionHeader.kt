@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.oasys.services.domain
 
-enum class SectionHeader(private val value: String) {
+enum class SectionHeader(val value: String) {
     OFFENDING_INFO("1"),
     ANALYSIS_OF_OFFENCES("2"),
     ACCOMMODATION("3"),
@@ -13,7 +13,9 @@ enum class SectionHeader(private val value: String) {
     EMOTIONAL_WELL_BEING("10"),
     THINKING_AND_BEHAVIOUR("11"),
     ATTITUDES("12"),
-    HEATH_AND_OTHER_CONSIDERATIONS("13");
+    HEATH_AND_OTHER_CONSIDERATIONS("13"),
+    INITIAL_SENTENCE_PLAN("ISP"),
+    REVIEW_SENTENCE_PLAN("RSP");
 
     companion object {
         fun findByValue(value: String?): SectionHeader? {

@@ -31,7 +31,7 @@ class SectionRepository  (
         return query.fetchFirst()
     }
 
-    fun getSectionsForAssessment(oasysSetId: Long?, sectionCodes: Set<String>?): Collection<Section>? {
+    fun getSectionsForAssessment(oasysSetId: Long?, sectionCodes: List<String>): Collection<Section>? {
         val query = queryFactory.selectFrom(section)
         query.where(section.oasysSetPk.eq(oasysSetId))
         query.where(section.refSection.refSectionCode.`in`(sectionCodes))
