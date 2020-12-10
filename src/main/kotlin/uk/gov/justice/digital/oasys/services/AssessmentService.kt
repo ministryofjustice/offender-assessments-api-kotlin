@@ -99,9 +99,15 @@ class AssessmentService constructor(
     }
 
     private fun calculateNeedSeverity(answers: Map<String?, List<String>?>?, needConfig: NeedConfiguration?): NeedSeverity {
-        return NeedSeverity.NO_NEED
-    }
+        val sumOfAnswers = answers?.filter { needConfig?.severityQuestions?.contains( it.key) == true }
+                ?.mapNotNull { it.value?.getOrNull(0)?.toInt()}?.sum() ?:0
 
+        return when {
+            sumOfAnswers >= needConfig?.severeSeverityThreshold ?: 0 -> NeedSeverity.SEVERE
+            sumOfAnswers >= needConfig?.standardSeverityThreshold ?:0 -> NeedSeverity.STANDARD
+            else -> NeedSeverity.NO_NEED
+        }
+    }
 
     private fun isPositiveAnswer(answer: String?): Boolean {
         return POSITIVE_ANSWERS.contains(answer?.toUpperCase())

@@ -76,7 +76,19 @@ class AssessmentControllerTest : IntegrationTest() {
                 }
     }
 
+    @Test
+    fun `oasys assessment PK returns all assessment needs`() {
 
+        webTestClient.get().uri("/assessments/oasysSetId/${validOasysSetId}/needs")
+                .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
+                .exchange()
+                .expectStatus().isOk
+                .expectBody<Collection<AssessmentNeedDto>>()
+                .consumeWith {
+                    val needs = it.responseBody
+                    assertThat(needs).hasSize(10)
+                }
+    }
 
     fun validateAssessment(assessment: AssessmentDto) {
         assertThat(assessment.assessmentId).isEqualTo(validOasysSetId)

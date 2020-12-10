@@ -18,6 +18,7 @@ class CriminogenicNeedMapping {
                             3,
                             7,
                             setOf("4.2", "4.3", "4.4", "4.5")),
+                    // Financial is not a proper Criminogenic Need and so does not have a severity score
                     SectionHeader.FINANCIAL_MANAGEMENT_AND_INCOME to NeedConfiguration(
                             "5.98",
                             "5.99",
@@ -48,6 +49,7 @@ class CriminogenicNeedMapping {
                             1,
                             4,
                             setOf("9.1", "9.2", "9.3", "9.5")),
+                    // Emotional Wellbeing is not a proper Criminogenic Need and so does not have a severity score
                     SectionHeader.EMOTIONAL_WELL_BEING to NeedConfiguration(
                             "10.98",
                             "10.99",

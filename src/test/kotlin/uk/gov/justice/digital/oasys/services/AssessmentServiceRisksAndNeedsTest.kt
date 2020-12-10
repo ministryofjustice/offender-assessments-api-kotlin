@@ -408,7 +408,7 @@ class AssessmentServiceRisksAndNeedsTest {
 
 
         @Test
-        fun `should not return needs for sections without indicators`() {
+        fun `assessment should not return needs for sections without indicators`() {
             val assessment = setupAssessment("LAYER_3")
             val oasysSetPk = 1234L
             val accommodationRefSection = RefSection(
