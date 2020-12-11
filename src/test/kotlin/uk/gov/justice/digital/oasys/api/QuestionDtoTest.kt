@@ -90,7 +90,7 @@ class QuestionDtoTest {
         val answer1098 = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "YES",
-                        defaultDisplayScore = 1L,
+                        defaultDisplayScore = 1,
                         displaySort = 1L,
                         refSectionAnswer ="Yes"))
 
@@ -114,10 +114,10 @@ class QuestionDtoTest {
         val answer1099 = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
-                        ogpScore = 1L,
-                        ovpScore = 2L,
-                        qaRawScore = 3L,
-                        defaultDisplayScore = 2L,
+                        ogpScore = 1,
+                        ovpScore = 2,
+                        qaRawScore = 3,
+                        defaultDisplayScore = 2,
                         displaySort = 2L,
                         refSectionAnswer ="No"))
 

@@ -49,9 +49,14 @@ data class Section(
 
 ) {
 
-    fun getRefAnswers(questionKeys: Set<String>): Map<String?, List<String>?>? {
+    fun getRefAnswersValues(questionKeys: Set<String>): Map<String?, List<String>?>? {
         return oasysQuestions?.filter { q -> questionKeys.contains(q.refQuestion?.refQuestionCode) }
                 ?.map { it.refQuestion?.refQuestionCode to it.oasysAnswers?.mapNotNull { a -> a.refAnswer?.refAnswerCode }?.toList() }?.toMap()
+    }
+
+    fun getRefAnswersScores(questionKeys: Set<String>): Map<String?, List<Int>?>? {
+        return oasysQuestions?.filter { q -> questionKeys.contains(q.refQuestion?.refQuestionCode) }
+                ?.map { it.refQuestion?.refQuestionCode to it.oasysAnswers?.mapNotNull { a -> a.refAnswer?.defaultDisplayScore }?.toList() }?.toMap()
     }
 
     override fun equals(other: Any?): Boolean {

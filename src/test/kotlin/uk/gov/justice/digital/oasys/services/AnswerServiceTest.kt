@@ -33,10 +33,10 @@ class AnswerServiceTest
         val oasysAnswer = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
-                        displaySort = 5L,
-                        ogpScore = 1L,
-                        ovpScore = 2L,
-                        qaRawScore = 3L,
+                        displaySort = 5,
+                        ogpScore = 1,
+                        ovpScore = 2,
+                        qaRawScore = 3,
                         refSectionAnswer = "No"))
         val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
         oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)

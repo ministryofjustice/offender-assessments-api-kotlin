@@ -25,13 +25,13 @@ data class AnswerDto(
         val freeFormText: String? = null,
 
         @ApiModelProperty(value = "OGP score ", example = "1")
-        val ogpScore: Long? = null,
+        val ogpScore: Int? = null,
 
         @ApiModelProperty(value = "OVP score", example = "1")
-        val ovpScore: Long? = null,
+        val ovpScore: Int? = null,
 
         @ApiModelProperty(value = "QA raw score", example = "2")
-        val qaRawScore: Long? = null
+        val qaRawScore: Int? = null
 ) {
 
     companion object {

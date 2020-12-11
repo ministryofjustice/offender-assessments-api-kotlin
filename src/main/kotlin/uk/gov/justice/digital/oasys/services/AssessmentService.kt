@@ -62,7 +62,7 @@ class AssessmentService constructor(
 
     private fun calculateChildSafeguardingIndicated(oasysSetId: Long?) : Boolean? {
         val roshSection = sectionService.getSectionForAssessment(oasysSetId, ROSH_SECTION)
-        val answers = roshSection?.getRefAnswers(setOf("R2.1", "R2.2"))
+        val answers = roshSection?.getRefAnswersValues(setOf("R2.1", "R2.2"))
         if (answers.isNullOrEmpty()) {
             return null
         }
@@ -85,22 +85,22 @@ class AssessmentService constructor(
         val sectionName = SectionHeader.findByValue(sectionCode)
         val needConfig = CriminogenicNeedMapping.needs()[sectionName]
 
-
-        val answers = section?.getRefAnswers(needConfig?.allQuestionCodes() ?: emptySet())
+        val answers = section?.getRefAnswersValues(needConfig?.allQuestionCodes() ?: emptySet())
 
         val riskHarm = isPositiveAnswer(answers?.get(needConfig?.harmQuestion)?.getOrNull(0))
         val riskReoffending = isPositiveAnswer(answers?.get(needConfig?.reoffendingQuestion)?.getOrNull(0))
         val overThreshold = sectionIsOverThreshold(section)
         val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd)
-        val severity = calculateNeedSeverity(answers, needConfig)
-
+        val severity = calculateNeedSeverity(section, needConfig)
 
         return CriminogenicNeed(sectionName, shortDescription, riskHarm, riskReoffending, overThreshold, flaggedAsNeed, severity)
     }
 
-    private fun calculateNeedSeverity(answers: Map<String?, List<String>?>?, needConfig: NeedConfiguration?): NeedSeverity {
+    private fun calculateNeedSeverity(section: Section?, needConfig: NeedConfiguration?): NeedSeverity {
+        val answers = section?.getRefAnswersScores(needConfig?.allQuestionCodes() ?: emptySet())
+
         val sumOfAnswers = answers?.filter { needConfig?.severityQuestions?.contains( it.key) == true }
-                ?.mapNotNull { it.value?.getOrNull(0)?.toInt()}?.sum() ?:0
+                ?.mapNotNull { it.value?.getOrElse(0) { 0 } }?.sum() ?:0
 
         return when {
             sumOfAnswers >= needConfig?.severeSeverityThreshold ?: 0 -> NeedSeverity.SEVERE
