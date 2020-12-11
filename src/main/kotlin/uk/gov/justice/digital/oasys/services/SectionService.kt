@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.SectionRepository
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @Service
 class SectionService (private val sectionRepository: SectionRepository) {
@@ -19,8 +20,8 @@ class SectionService (private val sectionRepository: SectionRepository) {
         return section
     }
 
-    fun getSectionsForAssessment(oasysSetId: Long?, sectionIds: Set<String>?): Collection<Section> {
-        val sections = sectionRepository.getSectionsForAssessment(oasysSetId, sectionIds)
+    fun getSectionsForAssessment(oasysSetId: Long?, sectionIds: Set<SectionHeader>): Collection<Section> {
+        val sections = sectionRepository.getSectionsForAssessment(oasysSetId, sectionIds.map { it.value })
         log.info("Found ${sections?.size} Sections for oasysSetId: $oasysSetId")
         return sections.orEmpty()
     }

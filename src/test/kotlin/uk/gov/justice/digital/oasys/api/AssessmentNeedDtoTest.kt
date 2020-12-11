@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.NeedSeverity
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @DisplayName("Assessment DTO Tests")
@@ -20,6 +21,7 @@ class AssessmentNeedDtoTest {
         assertThat(assessmentNeedDto.riskOfHarm).isEqualTo(assessmentNeed.riskOfHarm)
         assertThat(assessmentNeedDto.riskOfReoffending).isEqualTo(assessmentNeed.riskOfReoffending)
         assertThat(assessmentNeedDto.flaggedAsNeed).isEqualTo(assessmentNeed.flaggedAsNeed)
+        assertThat(assessmentNeedDto.severity).isEqualTo(assessmentNeed.severity)
     }
 
     @Test
@@ -47,6 +49,7 @@ class AssessmentNeedDtoTest {
                 false,
                 true,
                 true,
-                true)
+                true,
+                NeedSeverity.SEVERE)
     }
 }
