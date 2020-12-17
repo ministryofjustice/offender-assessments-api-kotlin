@@ -8,22 +8,23 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 @DisplayName("Ref Element DTO Tests")
 class RefElementDtoTest {
 
-    @Test
-    fun `Builds Valid RefElement DTO from Entity`() {
+  @Test
+  fun `Builds Valid RefElement DTO from Entity`() {
 
-        val refElement = RefElement(
-            refElementCode = "ELEMENT_CODE",
-            refElementShortDesc = "short description",
-            refElementDesc = "long description")
+    val refElement = RefElement(
+      refElementCode = "ELEMENT_CODE",
+      refElementShortDesc = "short description",
+      refElementDesc = "long description"
+    )
 
-        val refElementDto = RefElementDto.from(refElement)
-       assertThat(refElementDto?.description).isEqualTo(refElement.refElementDesc)
-       assertThat(refElementDto?.shortDescription).isEqualTo(refElement.refElementShortDesc)
-    }
+    val refElementDto = RefElementDto.from(refElement)
+    assertThat(refElementDto?.description).isEqualTo(refElement.refElementDesc)
+    assertThat(refElementDto?.shortDescription).isEqualTo(refElement.refElementShortDesc)
+  }
 
-    @Test
-    fun `Builds valid RefElement DTO Null`() {
-        val refElementDto = RefElementDto.from(null)
-        assertThat(refElementDto).isNull()
-    }
+  @Test
+  fun `Builds valid RefElement DTO Null`() {
+    val refElementDto = RefElementDto.from(null)
+    assertThat(refElementDto).isNull()
+  }
 }

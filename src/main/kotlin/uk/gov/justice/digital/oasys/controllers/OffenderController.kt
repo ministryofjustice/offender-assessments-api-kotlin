@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.oasys.api.OffenderDto
 import uk.gov.justice.digital.oasys.services.OffenderService
 
-
 @RestController
 @Api(value = "Offender ", tags = ["Offenders"])
-class OffenderController (private val offenderService: OffenderService) {
+class OffenderController(private val offenderService: OffenderService) {
 
-    @GetMapping(path = ["/offenders/{identityType}/{identity}"])
-    @ApiOperation(value = "Gets an offender by its identity")
-    @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
-    fun getOffenderByPk(@PathVariable("identityType") identityType: String, @PathVariable("identity") identity: String): OffenderDto {
-        return offenderService.getOffender(identityType, identity)
-    }
+  @GetMapping(path = ["/offenders/{identityType}/{identity}"])
+  @ApiOperation(value = "Gets an offender by its identity")
+  @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
+  fun getOffenderByPk(@PathVariable("identityType") identityType: String, @PathVariable("identity") identity: String): OffenderDto {
+    return offenderService.getOffender(identityType, identity)
+  }
 }

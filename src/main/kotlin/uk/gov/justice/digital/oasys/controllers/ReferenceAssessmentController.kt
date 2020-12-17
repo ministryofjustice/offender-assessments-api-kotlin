@@ -11,12 +11,14 @@ import uk.gov.justice.digital.oasys.services.ReferenceAssessmentService
 
 @RestController
 @Api(description = "Reference assessment resources", tags = ["Reference Assessment"])
-class ReferenceAssessmentController (private val refAssessmentService: ReferenceAssessmentService) {
+class ReferenceAssessmentController(private val refAssessmentService: ReferenceAssessmentService) {
 
-    @GetMapping(path = ["/referenceassessments/type/{versionCode}/revision/{versionNumber}"])
-    @ApiResponses(ApiResponse(code = 404, message = "Assessment not found"), ApiResponse(code = 200, message = "OK"))
-    fun getReferenceAssessmentOf(@PathVariable("versionCode") versionCode: String?,
-                                 @PathVariable("versionNumber") versionNumber: String?): RefAssessmentDto? {
-        return refAssessmentService.getReferenceAssessmentOf(versionCode, versionNumber)
-    }
+  @GetMapping(path = ["/referenceassessments/type/{versionCode}/revision/{versionNumber}"])
+  @ApiResponses(ApiResponse(code = 404, message = "Assessment not found"), ApiResponse(code = 200, message = "OK"))
+  fun getReferenceAssessmentOf(
+    @PathVariable("versionCode") versionCode: String?,
+    @PathVariable("versionNumber") versionNumber: String?
+  ): RefAssessmentDto? {
+    return refAssessmentService.getReferenceAssessmentOf(versionCode, versionNumber)
+  }
 }

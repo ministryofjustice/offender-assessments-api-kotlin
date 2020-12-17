@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class OffenderAssessmentApiApplication
 
 fun main(args: Array<String>) {
-    runApplication<OffenderAssessmentApiApplication>(*args)
+  runApplication<OffenderAssessmentApiApplication>(*args)
 }

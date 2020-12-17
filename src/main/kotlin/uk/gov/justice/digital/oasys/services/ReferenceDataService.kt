@@ -11,17 +11,17 @@ import java.time.LocalDateTime
 @Service
 class ReferenceDataService(private val referenceDataRepository: ReferenceDataRepository) {
 
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(this::class.java)
-    }
+  companion object {
+    val log: Logger = LoggerFactory.getLogger(this::class.java)
+  }
 
-    fun getActiveReferenceDataOfCategory(categoryCode: String?): Collection<RefElementDto?>? {
-        log.info("Retrieving reference data of category: $categoryCode")
-        val referenceData = referenceDataRepository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(categoryCode, LocalDateTime.now())
-        if (referenceData.isNullOrEmpty()) {
-            throw EntityNotFoundException("Category $categoryCode, not found")
-        }
-        log.info("Found reference data of category: $categoryCode")
-        return referenceData.map {RefElementDto.from(it)}
+  fun getActiveReferenceDataOfCategory(categoryCode: String?): Collection<RefElementDto?>? {
+    log.info("Retrieving reference data of category: $categoryCode")
+    val referenceData = referenceDataRepository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(categoryCode, LocalDateTime.now())
+    if (referenceData.isNullOrEmpty()) {
+      throw EntityNotFoundException("Category $categoryCode, not found")
     }
+    log.info("Found reference data of category: $categoryCode")
+    return referenceData.map { RefElementDto.from(it) }
+  }
 }
