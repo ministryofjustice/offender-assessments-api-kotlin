@@ -12,12 +12,12 @@ import uk.gov.justice.digital.oasys.services.ReferenceDataService
 
 @RestController
 @Api(description = "Reference resources", tags = ["Reference Data"])
-class ReferenceDataController( private val referenceDataService: ReferenceDataService) {
+class ReferenceDataController(private val referenceDataService: ReferenceDataService) {
 
-    @GetMapping(path = ["/referencedata/{category}"])
-    @ApiOperation(value = "Gets reference data for a category")
-    @ApiResponses(ApiResponse(code = 200, message = "OK"))
-    fun getReferenceDataByCategoryCode(@PathVariable("category") refDataCategoryCode: String?): Collection<RefElementDto?>? {
-        return referenceDataService.getActiveReferenceDataOfCategory(refDataCategoryCode)
-    }
+  @GetMapping(path = ["/referencedata/{category}"])
+  @ApiOperation(value = "Gets reference data for a category")
+  @ApiResponses(ApiResponse(code = 200, message = "OK"))
+  fun getReferenceDataByCategoryCode(@PathVariable("category") refDataCategoryCode: String?): Collection<RefElementDto?>? {
+    return referenceDataService.getActiveReferenceDataOfCategory(refDataCategoryCode)
+  }
 }

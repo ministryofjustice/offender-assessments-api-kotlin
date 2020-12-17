@@ -9,18 +9,18 @@ import uk.gov.justice.digital.oasys.controllers.PingController
 @AutoConfigureWebTestClient
 class PingControllerTest : IntegrationTest() {
 
-    @Test
-    fun ping() {
-        assertThat(PingController().ping()).isEqualTo("pong")
-    }
+  @Test
+  fun ping() {
+    assertThat(PingController().ping()).isEqualTo("pong")
+  }
 
-    @Test
-    fun `ping integration`() {
-        webTestClient.get().uri("ping")
-                .headers(setAuthorisation(roles=listOf("ROLE_OASYS_READ_ONLY")))
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<String>()
-                .consumeWith { (assertThat(it.responseBody).isEqualTo("pong")) }
-    }
+  @Test
+  fun `ping integration`() {
+    webTestClient.get().uri("ping")
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<String>()
+      .consumeWith { (assertThat(it.responseBody).isEqualTo("pong")) }
+  }
 }

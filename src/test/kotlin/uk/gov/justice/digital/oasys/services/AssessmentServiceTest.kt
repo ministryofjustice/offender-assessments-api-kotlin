@@ -21,119 +21,119 @@ import java.time.LocalDateTime
 @DisplayName("Assessment Service Tests")
 class AssessmentServiceTest {
 
-    private val assessmentRepository: AssessmentRepository = mockk()
-    private val offenderService: OffenderService = mockk()
-    private val sectionService: SectionService = mockk()
-    private val assessmentsService = AssessmentService(assessmentRepository, offenderService, sectionService)
+  private val assessmentRepository: AssessmentRepository = mockk()
+  private val offenderService: OffenderService = mockk()
+  private val sectionService: SectionService = mockk()
+  private val assessmentsService = AssessmentService(assessmentRepository, offenderService, sectionService)
 
-    @Test
-    fun `return assessment for OASys Set ID`() {
-        val assessment = setupAssessment()
-        val oasysSetPk = 1234L
-        every { assessmentRepository.getAssessment(oasysSetPk) } returns assessment
-        every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
-        every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
+  @Test
+  fun `return assessment for OASys Set ID`() {
+    val assessment = setupAssessment()
+    val oasysSetPk = 1234L
+    every { assessmentRepository.getAssessment(oasysSetPk) } returns assessment
+    every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
+    every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
-        assessmentsService.getAssessment(oasysSetPk)
-        verify(exactly = 1) { assessmentRepository.getAssessment(oasysSetPk)  }
-    }
+    assessmentsService.getAssessment(oasysSetPk)
+    verify(exactly = 1) { assessmentRepository.getAssessment(oasysSetPk) }
+  }
 
-    @Test
-    fun `throws not found exception when null assessment returned`() {
-        setupAssessment()
-        val oasysSetPk = 1234L
-        every { assessmentRepository.getAssessment(oasysSetPk) } returns null
-        every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
-        every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
+  @Test
+  fun `throws not found exception when null assessment returned`() {
+    setupAssessment()
+    val oasysSetPk = 1234L
+    every { assessmentRepository.getAssessment(oasysSetPk) } returns null
+    every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
+    every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
-        assertThrows<EntityNotFoundException> { assessmentsService.getAssessment(oasysSetPk) }
+    assertThrows<EntityNotFoundException> { assessmentsService.getAssessment(oasysSetPk) }
 
-        verify(exactly = 1) { assessmentRepository.getAssessment(oasysSetPk)  }
-        verify(exactly = 0) { sectionService.getSectionForAssessment(oasysSetPk, any()) }
-        verify(exactly = 0) { sectionService.getSectionsForAssessment(oasysSetPk, any())}
-    }
+    verify(exactly = 1) { assessmentRepository.getAssessment(oasysSetPk) }
+    verify(exactly = 0) { sectionService.getSectionForAssessment(oasysSetPk, any()) }
+    verify(exactly = 0) { sectionService.getSectionsForAssessment(oasysSetPk, any()) }
+  }
 
-    @Test
-    fun `return assessments for OASys Offender ID`() {
-        val assessment = setupAssessment()
-        val oasysOffenderPk = 1L
-        every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-        every { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) } returns setOf(assessment)
+  @Test
+  fun `return assessments for OASys Offender ID`() {
+    val assessment = setupAssessment()
+    val oasysOffenderPk = 1L
+    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
+    every { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) } returns setOf(assessment)
 
-        val assessments = assessmentsService.getAssessmentsForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
+    val assessments = assessmentsService.getAssessmentsForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
 
-        assertThat(assessments).hasSize(1)
-        verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString())  }
-        verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null)  }
-    }
+    assertThat(assessments).hasSize(1)
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
+    verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) }
+  }
 
-    @Test
-    fun `return empty collection of assessments for OASys Offender ID`() {
-        val oasysOffenderPk = 1L
-        every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-        every { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) } returns emptySet()
+  @Test
+  fun `return empty collection of assessments for OASys Offender ID`() {
+    val oasysOffenderPk = 1L
+    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
+    every { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) } returns emptySet()
 
-        val assessments = assessmentsService.getAssessmentsForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
+    val assessments = assessmentsService.getAssessmentsForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
 
-        assertThat(assessments).hasSize(0)
-        verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString())  }
-        verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null)  }
-    }
+    assertThat(assessments).hasSize(0)
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
+    verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) }
+  }
 
-    @Test
-    fun `return latest assessment for OASys Offender ID`() {
-        val assessment = setupAssessment()
-        val oasysOffenderPk = 1L
-        val oasysSetPk = 1234L
+  @Test
+  fun `return latest assessment for OASys Offender ID`() {
+    val assessment = setupAssessment()
+    val oasysOffenderPk = 1L
+    val oasysSetPk = 1234L
 
-        every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-        every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns assessment
-        every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
-        every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
+    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
+    every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns assessment
+    every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
+    every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
 
-        assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
+    assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
 
-        verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString())  }
-        verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null)  }
-    }
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
+    verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) }
+  }
 
-    @Test
-    fun `throws not found exception when no latest assessment returned`() {
-        val oasysOffenderPk = 1L
-        every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-        every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns null
+  @Test
+  fun `throws not found exception when no latest assessment returned`() {
+    val oasysOffenderPk = 1L
+    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
+    every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns null
 
-        assertThrows<EntityNotFoundException> { assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null) }
+    assertThrows<EntityNotFoundException> { assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null) }
 
-        verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString())  }
-        verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null)  }
-    }
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
+    verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) }
+  }
 
-    private fun setupAssessmentGroup() : AssessmentGroup {
-       return AssessmentGroup(historicStatus = "Current")
-    }
+  private fun setupAssessmentGroup(): AssessmentGroup {
+    return AssessmentGroup(historicStatus = "Current")
+  }
 
-    private fun setupVersion(): RefAssessmentVersion {
-        return RefAssessmentVersion(refAssVersionUk = 1L, versionNumber = "Any Version", refAssVersionCode = "Any Ref Version Code", oasysScoringAlgVersion = 2L)
-    }
+  private fun setupVersion(): RefAssessmentVersion {
+    return RefAssessmentVersion(refAssVersionUk = 1L, versionNumber = "Any Version", refAssVersionCode = "Any Ref Version Code", oasysScoringAlgVersion = 2L)
+  }
 
-    private fun setupAssessment(): Assessment {
-        val created = LocalDateTime.now()
-        val completed = created.plusMonths(3)
-        val voided = created.plusMonths(4)
+  private fun setupAssessment(): Assessment {
+    val created = LocalDateTime.now()
+    val completed = created.plusMonths(3)
+    val voided = created.plusMonths(4)
 
-        return Assessment(oasysSetPk = 1234L,
-                assessorName = "Any Name",
-                assessmentStatus = "STATUS",
-                assessmentType = "LAYER_3",
-                createDate = created,
-                dateCompleted = completed,
-                assessmentVoidedDate = voided,
-                assessmentVersion = setupVersion(),
-                oasysSections = emptySet(),
-                oasysBcsParts = emptySet(),
-                group = setupAssessmentGroup()
-        )
-    }
-
+    return Assessment(
+      oasysSetPk = 1234L,
+      assessorName = "Any Name",
+      assessmentStatus = "STATUS",
+      assessmentType = "LAYER_3",
+      createDate = created,
+      dateCompleted = completed,
+      assessmentVoidedDate = voided,
+      assessmentVersion = setupVersion(),
+      oasysSections = emptySet(),
+      oasysBcsParts = emptySet(),
+      group = setupAssessmentGroup()
+    )
+  }
 }

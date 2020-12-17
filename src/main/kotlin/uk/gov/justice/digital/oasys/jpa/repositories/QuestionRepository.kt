@@ -11,21 +11,22 @@ import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import javax.persistence.EntityManager
 
 @Repository
-class QuestionRepository  (
-        entityManager: EntityManager,
-        private val queryFactory: JPAQueryFactory = JPAQueryFactory(entityManager)) {
+class QuestionRepository(
+  entityManager: EntityManager,
+  private val queryFactory: JPAQueryFactory = JPAQueryFactory(entityManager)
+) {
 
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(this::class.java)
-    }
+  companion object {
+    val log: Logger = LoggerFactory.getLogger(this::class.java)
+  }
 
-    fun getQuestionAnswersFromQuestionCodes(oasysSetId: Long, questionCodes: Collection<String>): List<OasysQuestion> {
-        val answers =  queryFactory.selectFrom(oasysQuestion)
-                .innerJoin(oasysQuestion.section, section)
-                .where(section.oasysSetPk.eq(oasysSetId))
-                .where(oasysQuestion.refQuestion.refQuestionCode.`in`(questionCodes)).fetch()
+  fun getQuestionAnswersFromQuestionCodes(oasysSetId: Long, questionCodes: Collection<String>): List<OasysQuestion> {
+    val answers = queryFactory.selectFrom(oasysQuestion)
+      .innerJoin(oasysQuestion.section, section)
+      .where(section.oasysSetPk.eq(oasysSetId))
+      .where(oasysQuestion.refQuestion.refQuestionCode.`in`(questionCodes)).fetch()
 
-        if (answers.isNullOrEmpty()) throw EntityNotFoundException("Assessment or question codes not found for assessment $oasysSetId")
-        return answers
-    }
+    if (answers.isNullOrEmpty()) throw EntityNotFoundException("Assessment or question codes not found for assessment $oasysSetId")
+    return answers
+  }
 }

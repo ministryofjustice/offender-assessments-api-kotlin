@@ -13,10 +13,12 @@ import uk.gov.justice.digital.oasys.services.PredictorsService
 @Api(value = "Offender OGP, OGRs and OVP score resources", tags = ["Offender OGP, OGRs, OVP Predictors"])
 class PredictorsController(private val predictorsService: PredictorsService) {
 
-    @GetMapping(path = ["/offenders/{identityType}/{identity}/predictors"])
-    @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
-    fun getPredictorScoresForOasysOffenderId(@PathVariable("identityType") identityType: String,
-                                             @PathVariable("identity") identity: String): Collection<PredictorDto>? {
-        return predictorsService.getAllPredictorsForOffender(identityType, identity)
-    }
+  @GetMapping(path = ["/offenders/{identityType}/{identity}/predictors"])
+  @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
+  fun getPredictorScoresForOasysOffenderId(
+    @PathVariable("identityType") identityType: String,
+    @PathVariable("identity") identity: String
+  ): Collection<PredictorDto>? {
+    return predictorsService.getAllPredictorsForOffender(identityType, identity)
+  }
 }

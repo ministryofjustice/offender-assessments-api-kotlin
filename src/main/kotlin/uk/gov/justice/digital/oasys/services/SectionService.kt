@@ -8,21 +8,21 @@ import uk.gov.justice.digital.oasys.jpa.repositories.SectionRepository
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @Service
-class SectionService (private val sectionRepository: SectionRepository) {
+class SectionService(private val sectionRepository: SectionRepository) {
 
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(this::class.java)
-    }
+  companion object {
+    val log: Logger = LoggerFactory.getLogger(this::class.java)
+  }
 
-    fun getSectionForAssessment(oasysSetId: Long?, sectionId: String): Section? {
-        val section = sectionRepository.getSectionForAssessment(oasysSetId,sectionId)
-        log.info("Found Section id: $sectionId for oasysSetId:$ {oasysSetId}")
-        return section
-    }
+  fun getSectionForAssessment(oasysSetId: Long?, sectionId: String): Section? {
+    val section = sectionRepository.getSectionForAssessment(oasysSetId, sectionId)
+    log.info("Found Section id: $sectionId for oasysSetId:$ {oasysSetId}")
+    return section
+  }
 
-    fun getSectionsForAssessment(oasysSetId: Long?, sectionIds: Set<SectionHeader>): Collection<Section> {
-        val sections = sectionRepository.getSectionsForAssessment(oasysSetId, sectionIds.map { it.value })
-        log.info("Found ${sections?.size} Sections for oasysSetId: $oasysSetId")
-        return sections.orEmpty()
-    }
+  fun getSectionsForAssessment(oasysSetId: Long?, sectionIds: Set<SectionHeader>): Collection<Section> {
+    val sections = sectionRepository.getSectionsForAssessment(oasysSetId, sectionIds.map { it.value })
+    log.info("Found ${sections?.size} Sections for oasysSetId: $oasysSetId")
+    return sections.orEmpty()
+  }
 }
