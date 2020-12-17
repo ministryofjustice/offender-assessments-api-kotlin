@@ -2,6 +2,7 @@ package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
+import uk.gov.justice.digital.oasys.services.domain.NeedSeverity
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 data class AssessmentNeedDto (
@@ -22,7 +23,10 @@ data class AssessmentNeedDto (
         val riskOfReoffending: Boolean? = null,
 
         @ApiModelProperty(value = "Low scoring are flagged", example = "true")
-        val flaggedAsNeed: Boolean? = null
+        val flaggedAsNeed: Boolean? = null,
+
+        @ApiModelProperty(value = "Need severity", example = "true")
+        val severity: NeedSeverity? = null
 
 ) {
     companion object {
@@ -37,7 +41,8 @@ data class AssessmentNeedDto (
                     need?.overThreshold,
                     need?.riskOfHarm,
                     need?.riskOfReoffending,
-                    need?.flaggedAsNeed)
+                    need?.flaggedAsNeed,
+                    need?.severity)
         }
     }
 }

@@ -9,6 +9,7 @@ import uk.gov.justice.digital.oasys.api.FullSentencePlanSummaryDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 @Service
@@ -86,7 +87,7 @@ class SentencePlanService (
     }
 
     private fun getFullSentencePlanSection(assessment: Assessment): Section? {
-        return sectionService.getSectionsForAssessment(assessment.oasysSetPk, setOf("ISP", "RSP")).firstOrNull()
+        return sectionService.getSectionsForAssessment(assessment.oasysSetPk, setOf(SectionHeader.INITIAL_SENTENCE_PLAN, SectionHeader.REVIEW_SENTENCE_PLAN)).firstOrNull()
     }
 
 }

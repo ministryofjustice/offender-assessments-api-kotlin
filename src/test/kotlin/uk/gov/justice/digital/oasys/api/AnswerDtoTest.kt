@@ -17,11 +17,11 @@ class AnswerDtoTest {
         val oasysAnswer = OasysAnswer(
                 refAnswer = RefAnswer(
                         refAnswerCode = "NO",
-                        defaultDisplayScore = 2L,
-                        displaySort = 5L,
-                        ogpScore = 1L,
-                        ovpScore = 2L,
-                        qaRawScore = 3L,
+                        defaultDisplayScore = 2,
+                        displaySort = 5,
+                        ogpScore = 1,
+                        ovpScore = 2,
+                        qaRawScore = 3,
                         refSectionAnswer = "No"))
 
         oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)

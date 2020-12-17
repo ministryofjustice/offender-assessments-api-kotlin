@@ -37,19 +37,19 @@ data class RefAnswer(
         val refSectionAnswer: String? = null,
 
         @Column(name = "DEFAULT_DISPLAY_SCORE")
-        val defaultDisplayScore: Long? = null,
+        val defaultDisplayScore: Int? = null,
 
         @Column(name = "OGP_SCORE")
-        val ogpScore: Long? = null,
+        val ogpScore: Int? = null,
 
         @Column(name = "OVP_SCORE")
-        val ovpScore: Long? = null,
+        val ovpScore: Int? = null,
 
         @Column(name = "CHECKSUM")
         val checksum: String? = null,
 
         @Column(name = "QA_RAW_SCORE")
-        val qaRawScore: Long? = null,
+        val qaRawScore: Int? = null,
 
         @Column(name = "CREATE_DATE")
         val createDate: LocalDateTime? = null,
