@@ -14,6 +14,8 @@ import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.AuthorisationDto
 import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
+import uk.gov.justice.digital.oasys.api.UserDto
+import uk.gov.justice.digital.oasys.api.UserRequestByEmail
 import uk.gov.justice.digital.oasys.api.ValidateUserRequest
 import uk.gov.justice.digital.oasys.services.AuthenticationService
 
@@ -45,5 +47,12 @@ class AuthenticationController(private val authenticationService: Authentication
   @ApiResponses(ApiResponse(code = 401, message = "Incorrect Credentials"), ApiResponse(code = 200, message = "OK"))
   fun validateUser(@RequestBody request: ValidateUserRequest): AuthenticationDto {
     return authenticationService.validateUserCredentials(request.user, request.password)
+  }
+
+  @RequestMapping(path = ["/authentication/user/email"], method = [RequestMethod.POST])
+  @ApiOperation(value = "Gets a OASYS user code by its email address")
+  @ApiResponses(ApiResponse(code = 200, message = "OK"))
+  fun getUserCodeByEmail(@RequestBody email: UserRequestByEmail): UserDto {
+    return authenticationService.getUserCodeByEmail(email.email)
   }
 }

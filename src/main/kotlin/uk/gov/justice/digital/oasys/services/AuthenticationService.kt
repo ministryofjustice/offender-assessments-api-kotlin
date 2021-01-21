@@ -15,6 +15,7 @@ import uk.gov.justice.digital.oasys.api.AuthorisationDto
 import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
+import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
@@ -155,5 +156,13 @@ class AuthenticationService(
       ),
       null
     )
+  }
+
+  fun getUserCodeByEmail(email: String?): UserDto {
+    if (email.isNullOrEmpty()) throw IllegalArgumentException("Email cannot be blank")
+    val user = oasysUserRepository.findOasysUserByEmailAddressIgnoreCase(email)
+      ?: throw EntityNotFoundException("User for email $email, not found")
+    log.info("Found user with email $email")
+    return UserDto.from(user)
   }
 }

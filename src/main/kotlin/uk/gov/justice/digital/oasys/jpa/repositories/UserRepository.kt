@@ -23,4 +23,6 @@ interface UserRepository : CrudRepository<OasysUser?, String?> {
   )
 
   fun findCurrentUserSessionForOffender(oasysOffenderId: Long, userCode: String): Long?
+
+  fun findOasysUserByEmailAddressIgnoreCase(emailAddress: String): OasysUser?
 }
