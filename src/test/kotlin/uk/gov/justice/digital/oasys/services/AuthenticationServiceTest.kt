@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import uk.gov.justice.digital.oasys.api.AccountStatus
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.jpa.entities.AreaEstUserRole
@@ -155,6 +156,41 @@ class AuthenticationServiceTest {
     assertThat(result.offenderPermissionLevel).isEqualTo(OffenderPermissionLevel.READ_ONLY)
     verify(exactly = 0) { userRepository.findCurrentUserSessionForOffender(offenderId, username) }
     verify(exactly = 1) { authenticationRepository.validateUserSentencePlanAccessWithSession(username, offenderId, sessionId) }
+  }
+
+  @Test
+  fun `return User for email`() {
+    val user = setupUser()
+    val email = "test@test.com"
+
+    every { userRepository.findOasysUserByEmailAddressIgnoreCase(email) } returns user
+
+    val userDto = service.getUserCodeByEmail(email)
+    assertThat(userDto.userForename1).isEqualTo("Name 1")
+    assertThat(userDto.userForename2).isEqualTo("Name 2")
+    assertThat(userDto.userForename3).isEqualTo("Name 3")
+    assertThat(userDto.userFamilyName).isEqualTo("Last Name")
+    assertThat(userDto.accountStatus).isEqualTo(AccountStatus.ACTIVE)
+    assertThat(userDto.email).isEqualTo("test@test.com")
+    assertThat(userDto.oasysUserCode).isEqualTo("TEST_USER")
+
+    verify(exactly = 1) { userRepository.findOasysUserByEmailAddressIgnoreCase(email) }
+  }
+
+  @Test
+  fun `throws exception when email is null`() {
+    val exception = assertThrows<IllegalArgumentException> { service.getUserCodeByEmail(null) }
+    assertThat(exception.message).isEqualTo("Email cannot be blank")
+    verify(exactly = 0) { userRepository.findOasysUserByEmailAddressIgnoreCase(any()) }
+  }
+
+  @Test
+  fun `throws exception when email does not exist`() {
+    val email = "notfound@test.com"
+    every { userRepository.findOasysUserByEmailAddressIgnoreCase(email) } returns null
+
+    val exception = assertThrows<EntityNotFoundException> { service.getUserCodeByEmail(email) }
+    assertThat(exception.message).isEqualTo("User for email $email, not found")
   }
 
   private fun setupUser(): OasysUser {
