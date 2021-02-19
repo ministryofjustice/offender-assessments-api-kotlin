@@ -67,7 +67,6 @@ data class Section(
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is Section) return false
-    val other: Section = other
     return oasysSectionPk == other.oasysSectionPk
   }
 
