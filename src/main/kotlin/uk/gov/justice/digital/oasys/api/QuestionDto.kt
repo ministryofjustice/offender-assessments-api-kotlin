@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
+import uk.gov.justice.digital.oasys.api.DtoUtils.ynToBoolean
 import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.RefQuestion
 
@@ -24,6 +25,12 @@ data class QuestionDto(
   @ApiModelProperty(value = "Question Text", example = "123456")
   val questionText: String? = null,
 
+  @ApiModelProperty(value = "Currently Hidden")
+  val currentlyHidden: Boolean? = null,
+
+  @ApiModelProperty(value = "Disclosed")
+  val disclosed: Boolean? = null,
+
   @ApiModelProperty(value = "Question Answer")
   val answers: Collection<AnswerDto> = emptySet()
 ) {
@@ -44,6 +51,8 @@ data class QuestionDto(
         refQuestion?.displaySort,
         question.displayScore,
         refQuestion?.refSectionQuestion,
+        question.currentlyHiddenInd.ynToBoolean(),
+        question.disclosedInd.ynToBoolean(),
         AnswerDto.from(question)
       )
     }

@@ -18,7 +18,7 @@ class AnswerController(private val answerService: AnswerService) {
   @PostMapping(path = ["/assessments/oasysSetId/{oasysSetId}/answers"])
   @ApiOperation(value = "Gets a list of answers for a given list of question codes")
   @ApiResponses(ApiResponse(code = 404, message = "Assessment not found"), ApiResponse(code = 200, message = "OK"))
-  fun getAssessment(@PathVariable("oasysSetId") oasysSetId: Long, @RequestBody questionCodes: Collection<String>): AssessmentAnswersDto {
+  fun getAssessment(@PathVariable("oasysSetId") oasysSetId: Long, @RequestBody questionCodes: Map<String, Collection<String>>): AssessmentAnswersDto {
     return answerService.getAnswersForQuestions(oasysSetId, questionCodes)
   }
 }

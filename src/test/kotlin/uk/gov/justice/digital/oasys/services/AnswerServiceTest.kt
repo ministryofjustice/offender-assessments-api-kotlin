@@ -24,7 +24,7 @@ class AnswerServiceTest {
   @Test
   fun `returns Assessment Answers from repository`() {
     val oasysSetId: Long = 1
-    val questions = setOf("1.1")
+    val questions = mapOf("1" to setOf("1.1"))
 
     val oasysAnswer = OasysAnswer(
       refAnswer = RefAnswer(
@@ -40,7 +40,12 @@ class AnswerServiceTest {
     oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)
     oasysAnswer.oasysQuestion = oasysQuestion
 
-    every { questionRepository.getQuestionAnswersFromQuestionCodes(oasysSetId, questions) } returns listOf(oasysQuestion)
+    every {
+      questionRepository.getQuestionAnswersFromQuestionCodes(
+        oasysSetId,
+        questions
+      )
+    } returns listOf(oasysQuestion)
 
     val assessmentQuestionDto = service.getAnswersForQuestions(oasysSetId, questions)
 

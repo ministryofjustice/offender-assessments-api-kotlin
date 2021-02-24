@@ -13,7 +13,7 @@ class AnswerService(private val questionRepository: QuestionRepository) {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun getAnswersForQuestions(oasysSetPk: Long, questionCodes: Collection<String>): AssessmentAnswersDto {
+  fun getAnswersForQuestions(oasysSetPk: Long, questionCodes: Map<String, Collection<String>>): AssessmentAnswersDto {
     val questionAnswers = questionRepository.getQuestionAnswersFromQuestionCodes(oasysSetPk, questionCodes)
     log.info("Found ${questionAnswers.size} answers for oasys assessment: $oasysSetPk")
     return AssessmentAnswersDto.from(oasysSetPk, questionAnswers)

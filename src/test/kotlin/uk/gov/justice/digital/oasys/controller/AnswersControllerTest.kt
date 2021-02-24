@@ -10,8 +10,15 @@ import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
 
 @SqlGroup(
-  Sql(scripts = ["classpath:assessments/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:assessments/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:assessments/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:assessments/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient(timeout = "36000")
 class AnswersControllerTest : IntegrationTest() {
@@ -22,7 +29,7 @@ class AnswersControllerTest : IntegrationTest() {
   fun `valid oasys assessment Id returns list of answers`() {
 
     webTestClient.post().uri("/assessments/oasysSetId/$assessmentId/answers")
-      .bodyValue(setOf("10.98", "9.99"))
+      .bodyValue(mapOf("10" to setOf("10.98"), "9" to setOf("9.99")))
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -40,15 +47,16 @@ class AnswersControllerTest : IntegrationTest() {
         assertThat(answer.questionText).isEqualTo("Issues of emotional wellbeing linked to risk of serious harm, risks to the individual and other risks")
         assertThat(answer.refQuestionId).isEqualTo(1762)
 
-        assertThat(answer.answers.toList()[0].displayOrder).isEqualTo(5)
-        assertThat(answer.answers.toList()[0].freeFormText).isNull()
-        assertThat(answer.answers.toList()[0].oasysAnswerId).isEqualTo(5343777L)
-        assertThat(answer.answers.toList()[0].ogpScore).isNull()
-        assertThat(answer.answers.toList()[0].ovpScore).isNull()
-        assertThat(answer.answers.toList()[0].qaRawScore).isNull()
-        assertThat(answer.answers.toList()[0].staticText).isEqualTo("Yes")
-        assertThat(answer.answers.toList()[0].refAnswerCode).isEqualTo("YES")
-        assertThat(answer.answers.toList()[0].refAnswerId).isEqualTo(1995)
+        val questionAnswers = answer.answers.toList()[0]
+        assertThat(questionAnswers.displayOrder).isEqualTo(5)
+        assertThat(questionAnswers.freeFormText).isNull()
+        assertThat(questionAnswers.oasysAnswerId).isEqualTo(5343777L)
+        assertThat(questionAnswers.ogpScore).isNull()
+        assertThat(questionAnswers.ovpScore).isNull()
+        assertThat(questionAnswers.qaRawScore).isNull()
+        assertThat(questionAnswers.staticText).isEqualTo("Yes")
+        assertThat(questionAnswers.refAnswerCode).isEqualTo("YES")
+        assertThat(questionAnswers.refAnswerId).isEqualTo(1995)
       }
   }
 
@@ -56,7 +64,7 @@ class AnswersControllerTest : IntegrationTest() {
   fun `unknown OasysSetPK returns not found`() {
 
     webTestClient.post().uri("/assessments/oasysSetId/12345/answers")
-      .bodyValue(setOf("10.98", "9.99"))
+      .bodyValue(mapOf("10" to setOf("10.98"), "9" to setOf("9.99")))
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isNotFound

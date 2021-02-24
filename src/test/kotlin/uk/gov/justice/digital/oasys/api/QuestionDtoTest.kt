@@ -36,8 +36,15 @@ class QuestionDtoTest {
   @Test
   fun `Builds Question DTO with free form text if present`() {
     val oasysQuestions = setOf(setupFreeFormQuestion())
-    val questionDto = QuestionDto.from(oasysQuestions)?.first()
+    val questionDto = QuestionDto.from(oasysQuestions).first()
     assertThat(questionDto.answers.toList()[0].freeFormText).isEqualTo("Free form answer")
+  }
+
+  @Test
+  fun `Builds Question DTO with additional text if present`() {
+    val oasysQuestions = setOf(setupFreeFormQuestion("Additional text"))
+    val questionDto = QuestionDto.from(oasysQuestions).first()
+    assertThat(questionDto.answers.toList()[0].freeFormText).isEqualTo("Additional text")
   }
 
   @Test
@@ -49,6 +56,8 @@ class QuestionDtoTest {
     assertThat(questionDto.displayOrder).isEqualTo(1L)
     assertThat(questionDto.questionText).isEqualTo("Question 10.98")
     assertThat(questionDto.displayScore).isEqualTo(1L)
+    assertThat(questionDto.currentlyHidden).isEqualTo(true)
+    assertThat(questionDto.disclosed).isEqualTo(true)
   }
 
   @Test
@@ -80,11 +89,13 @@ class QuestionDtoTest {
     val question1098 = OasysQuestion(
       oasysQuestionPk = 1L,
       displayScore = 1L,
+      currentlyHiddenInd = "Y",
+      disclosedInd = "Y",
       refQuestion = RefQuestion(
         refQuestionUk = 1L,
         displaySort = 1L,
         refSectionQuestion = "Question 10.98",
-        refQuestionCode = "10.98"
+        refQuestionCode = "10.98",
       )
     )
 
@@ -108,6 +119,8 @@ class QuestionDtoTest {
     val question1099 = OasysQuestion(
       oasysQuestionPk = 2L,
       displayScore = 2L,
+      currentlyHiddenInd = "Y",
+      disclosedInd = "Y",
       refQuestion = RefQuestion(
         refQuestionUk = 2L,
         refSectionQuestion = "Question 10.99",
@@ -133,12 +146,12 @@ class QuestionDtoTest {
     return question1099
   }
 
-  private fun setupFreeFormQuestion(): OasysQuestion {
+  private fun setupFreeFormQuestion(additionalNote: String? = null): OasysQuestion {
     return OasysQuestion(
       oasysQuestionPk = 3L,
       displayScore = 3L,
       freeFormatAnswer = "Free form answer",
-      additionalNote = "additional note",
+      additionalNote = additionalNote,
       refQuestion = RefQuestion(
         refQuestionUk = 3L,
         refSectionQuestion = "Question IP.1",

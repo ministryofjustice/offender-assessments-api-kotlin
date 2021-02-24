@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.oasys.jpa.repositories
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,11 +21,26 @@ class QuestionRepository(
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun getQuestionAnswersFromQuestionCodes(oasysSetId: Long, questionCodes: Collection<String>): List<OasysQuestion> {
-    val answers = queryFactory.selectFrom(oasysQuestion)
+  fun getQuestionAnswersFromQuestionCodes(
+    oasysSetId: Long,
+    questionCodes: Map<String, Collection<String>>
+  ): List<OasysQuestion> {
+
+    val where = BooleanBuilder()
+
+    for (questionCode in questionCodes) {
+      where.or(
+        oasysQuestion.refQuestion.refQuestionCode.`in`(questionCode.value)
+          .and(section.refSection.refSectionCode.eq(questionCode.key))
+      )
+    }
+
+    val query = queryFactory.selectFrom(oasysQuestion)
       .innerJoin(oasysQuestion.section, section)
       .where(section.oasysSetPk.eq(oasysSetId))
-      .where(oasysQuestion.refQuestion.refQuestionCode.`in`(questionCodes)).fetch()
+      .where(where)
+
+    val answers = query.fetch()
 
     if (answers.isNullOrEmpty()) throw EntityNotFoundException("Assessment or question codes not found for assessment $oasysSetId")
     return answers

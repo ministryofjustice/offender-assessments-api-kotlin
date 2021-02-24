@@ -12,8 +12,15 @@ import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import javax.persistence.EntityManager
 
 @SqlGroup(
-  Sql(scripts = ["classpath:assessments/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:assessments/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:assessments/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:assessments/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 class QuestionsRepositoryTest(
   @Autowired
@@ -25,22 +32,38 @@ class QuestionsRepositoryTest(
 
   @Test
   fun `returns only requested questions`() {
-    val answers = questionRepository.getQuestionAnswersFromQuestionCodes(assessmentId, setOf("10.98", "9.99"))
+    val answers = questionRepository.getQuestionAnswersFromQuestionCodes(
+      assessmentId,
+      mapOf("10" to setOf("10.98"), "9" to setOf("9.99"))
+    )
     assertThat(answers.map { a -> a.refQuestion?.refQuestionCode })
       .containsExactlyInAnyOrderElementsOf(setOf("10.98", "9.99"))
-    assertThat(answers.map { a -> a.oasysAnswers?.first()?.oasysAnswerPk }).containsExactlyInAnyOrderElementsOf(setOf(5343776, 5343777))
+    assertThat(answers.map { a -> a.oasysAnswers?.first()?.oasysAnswerPk }).containsExactlyInAnyOrderElementsOf(
+      setOf(
+        5343776,
+        5343777
+      )
+    )
   }
 
   @Test
   fun `returns multiple answers`() {
-    val answers = questionRepository.getQuestionAnswersFromQuestionCodes(assessmentId, setOf("10.98", "9.99"))
+    val answers = questionRepository.getQuestionAnswersFromQuestionCodes(
+      assessmentId,
+      mapOf("10" to setOf("10.98"), "9" to setOf("9.99"))
+    )
     assertThat(answers.map { a -> a.refQuestion?.refQuestionCode })
       .containsExactlyInAnyOrderElementsOf(setOf("10.98", "9.99"))
   }
 
   @Test
   fun `throws exception when assessment does not exist`() {
-    val exception = assertThrows<EntityNotFoundException> { questionRepository.getQuestionAnswersFromQuestionCodes(12345L, setOf("10.98")) }
+    val exception = assertThrows<EntityNotFoundException> {
+      questionRepository.getQuestionAnswersFromQuestionCodes(
+        12345L,
+        mapOf("10" to setOf("10.98"), "9" to setOf("9.99"))
+      )
+    }
     assertThat(exception.message).isEqualTo("Assessment or question codes not found for assessment 12345")
   }
 }
