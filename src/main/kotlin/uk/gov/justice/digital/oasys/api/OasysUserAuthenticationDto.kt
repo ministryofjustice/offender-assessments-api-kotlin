@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
-
+@Deprecated("Once HMPPS Auth is integrated, this is no longer needed. Use UserDto instead.")
 data class OasysUserAuthenticationDto(
   val userId: String? = null,
   val userName: String? = null,

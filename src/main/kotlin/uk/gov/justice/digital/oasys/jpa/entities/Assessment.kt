@@ -89,6 +89,24 @@ data class Assessment(
   @Column(name = "OVP_SEX_WESC")
   val ovpSexWesc: BigDecimal? = null,
 
+  @Column(name = "OSP_I_PERCENTAGE_SCORE")
+  val ospIndecentPercentageScore: BigDecimal? = null,
+
+  @Column(name = "OSP_C_PERCENTAGE_SCORE")
+  val ospContactPercentageScore: BigDecimal? = null,
+
+  @Column(name = "RSR_PERCENTAGE_SCORE")
+  val rsrPercentageScore: BigDecimal? = null,
+
+  @Column(name = "RSR_STATIC_OR_DYNAMIC")
+  val rsrStaticOrDynamic: String? = null,
+
+  @Column(name = "RSR_ALGORITHM_VERSION")
+  val rsrAlgorithmVersion: Long? = null,
+
+  @Column(name = "CREATED_EXTERNALLY_IND")
+  val createdExternally: String? = null,
+
   @OneToOne
   @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"))
   val assessmentVersion: RefAssessmentVersion? = null,
@@ -112,6 +130,18 @@ data class Assessment(
   @OneToOne
   @JoinColumns(JoinColumn(name = "OTHER_RISK_RECON_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OTHER_RISK_RECON_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
   val otherRiskRecon: RefElement? = null,
+
+  @OneToOne
+  @JoinColumns(JoinColumn(name = "OSP_I_RISK_RECON_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OSP_I_RISK_RECON_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
+  val ospIndecentRiskRecon: RefElement? = null,
+
+  @OneToOne
+  @JoinColumns(JoinColumn(name = "OSP_C_RISK_RECON_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "OSP_C_RISK_RECON_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
+  val ospContactRiskRecon: RefElement? = null,
+
+  @OneToOne
+  @JoinColumns(JoinColumn(name = "RSR_RISK_RECON_CAT", referencedColumnName = "REF_CATEGORY_CODE"), JoinColumn(name = "RSR_RISK_RECON_ELM", referencedColumnName = "REF_ELEMENT_CODE"))
+  val rsrRiskRecon: RefElement? = null,
 
   @ManyToOne
   @JoinColumn(name = "OASYS_ASSESSMENT_GROUP_PK")

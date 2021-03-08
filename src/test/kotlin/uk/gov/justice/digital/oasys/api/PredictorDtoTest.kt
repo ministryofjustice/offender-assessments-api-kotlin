@@ -26,14 +26,14 @@ class PredictorDtoTest {
   fun `should not be completed when completed date is null`() {
     val predictor = PredictorDto.from(Assessment())
     assertThat(predictor.completedDate).isNull()
-    assertThat(predictor.assessmentCompleted).isFalse()
+    assertThat(predictor.assessmentCompleted).isFalse
   }
 
   @Test
   fun `should be completed when completed date is not null`() {
     val predictor = PredictorDto.from(setupAssessment())
-    assertThat(predictor.completedDate).isNotNull()
-    assertThat(predictor.assessmentCompleted).isTrue()
+    assertThat(predictor.completedDate).isNotNull
+    assertThat(predictor.assessmentCompleted).isTrue
   }
 
   private fun setupVersion(): RefAssessmentVersion {
@@ -68,11 +68,14 @@ class PredictorDtoTest {
       refAssessmentId = 1L,
       completedDate = completed,
       assessmentCompleted = true,
+      assessmentStatus = "STATUS",
       voidedDateTime = voided,
       otherRisk = RefElementDto(description = "Low", code = "L"),
       ogp = OgpDto(),
       ovp = OvpDto(),
-      ogr3 = Ogrs3Dto()
+      ogr3 = Ogrs3Dto(),
+      osp = OspDto(),
+      rsr = RsrDto()
     )
   }
 }
