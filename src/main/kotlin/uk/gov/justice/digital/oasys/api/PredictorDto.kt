@@ -11,10 +11,14 @@ data class PredictorDto(
   val completedDate: LocalDateTime? = null,
   val voidedDateTime: LocalDateTime? = null,
   val assessmentCompleted: Boolean? = null,
+  val assessmentStatus: String? = null,
   val otherRisk: RefElementDto? = null,
   val ogr3: Ogrs3Dto? = null,
   val ovp: OvpDto? = null,
-  val ogp: OgpDto? = null
+  val ogp: OgpDto? = null,
+  val rsr: RsrDto? = null,
+  val osp: OspDto? = null
+
 ) {
   companion object {
 
@@ -32,10 +36,13 @@ data class PredictorDto(
         assessment?.dateCompleted,
         assessment?.assessmentVoidedDate,
         assessment?.dateCompleted != null,
+        assessment?.assessmentStatus,
         RefElementDto.from(assessment?.otherRiskRecon),
         Ogrs3Dto.from(assessment),
         OvpDto.from(assessment),
-        OgpDto.from(assessment)
+        OgpDto.from(assessment),
+        RsrDto.from(assessment),
+        OspDto.from(assessment)
       )
     }
   }

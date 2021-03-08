@@ -136,6 +136,8 @@ class PredictorsControllerTest : IntegrationTest() {
         assertThat(predictors?.map { a -> a.oasysSetId })
           .containsExactlyInAnyOrderElementsOf(setOf(oasysSetID1, oasysSetID2))
         validatePredictors(predictors)
+        validateRSR(predictors)
+        validateOSP(predictors)
       }
   }
 
@@ -227,5 +229,35 @@ class PredictorsControllerTest : IntegrationTest() {
     assertThat(predictor2?.ogr3?.ogrs3_2Year).isEqualTo(BigDecimal.valueOf(5))
     assertThat(predictor2?.ogr3?.reconvictionRisk?.description).isEqualTo("Low")
     assertThat(predictor2?.ogr3?.reconvictionRisk?.code).isEqualTo("L")
+  }
+
+  fun validateRSR(predictors: List<PredictorDto>?) {
+    val predictor1: PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
+    val predictor2: PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
+
+    assertThat(predictor1?.rsr?.rsrRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor1?.rsr?.rsrPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
+    assertThat(predictor1?.rsr?.rsrStaticOrDynamic).isEqualTo("STATIC")
+    assertThat(predictor1?.rsr?.rsrAlgorithmVersion).isEqualTo(11)
+
+    assertThat(predictor2?.rsr?.rsrRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor2?.rsr?.rsrPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
+    assertThat(predictor2?.rsr?.rsrStaticOrDynamic).isEqualTo("STATIC")
+    assertThat(predictor2?.rsr?.rsrAlgorithmVersion).isEqualTo(11)
+  }
+
+  fun validateOSP(predictors: List<PredictorDto>?) {
+    val predictor1: PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID1 }
+    val predictor2: PredictorDto? = predictors?.firstOrNull { it.oasysSetId == oasysSetID2 }
+
+    assertThat(predictor1?.osp?.ospContactRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor1?.osp?.ospContactPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
+    assertThat(predictor1?.osp?.ospIndecentRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor1?.osp?.ospIndecentPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
+
+    assertThat(predictor2?.osp?.ospContactRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor2?.osp?.ospContactPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
+    assertThat(predictor2?.osp?.ospIndecentRiskRecon?.code).isEqualTo("L")
+    assertThat(predictor2?.osp?.ospIndecentPercentageScore).isEqualTo(BigDecimal.valueOf(50.1234))
   }
 }
