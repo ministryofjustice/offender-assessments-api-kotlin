@@ -50,10 +50,10 @@ dependencies {
   implementation("com.google.code.gson:gson:2.8.6")
   implementation("com.google.guava:guava:30.0-jre")
 
-  implementation(files("lib/ojdbc8-12.2.0.1.jar"))
   implementation("org.apache.commons:commons-lang3:3.11")
   runtimeOnly("com.h2database:h2:1.4.200")
   runtimeOnly("org.flywaydb:flyway-core:7.3.1")
+  runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.10.0.0")
 
   testRuntimeOnly("com.h2database:h2:1.4.200")
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
