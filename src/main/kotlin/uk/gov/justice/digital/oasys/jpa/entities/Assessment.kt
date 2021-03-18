@@ -104,8 +104,9 @@ data class Assessment(
   @Column(name = "RSR_ALGORITHM_VERSION")
   val rsrAlgorithmVersion: Long? = null,
 
-  @Column(name = "CREATED_EXTERNALLY_IND")
-  val createdExternally: String? = null,
+  // removed until OASys 6.26 is released to prod
+  //  @Column(name = "CREATED_EXTERNALLY_IND")
+  //  val createdExternally: String? = null,
 
   @OneToOne
   @JoinColumns(JoinColumn(name = "REF_ASS_VERSION_CODE", referencedColumnName = "REF_ASS_VERSION_CODE"), JoinColumn(name = "VERSION_NUMBER", referencedColumnName = "VERSION_NUMBER"))
