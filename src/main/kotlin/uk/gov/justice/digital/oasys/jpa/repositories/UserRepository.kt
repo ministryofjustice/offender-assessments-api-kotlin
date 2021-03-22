@@ -12,7 +12,7 @@ interface UserRepository : CrudRepository<OasysUser?, String?> {
 
   @Query(
     value =
-      """SELECT SESSION_SNAPSHOT_PK 
+    """SELECT SESSION_SNAPSHOT_PK 
         FROM SESSION_SNAPSHOT 
         WHERE SESSION_STATE_KEY='OFFENDER_PK' AND SESSION_STATE_VALUE=?1 AND SESSION_SNAPSHOT_PK IN (
             SELECT SESSION_SNAPSHOT_PK from SESSION_SNAPSHOT 
