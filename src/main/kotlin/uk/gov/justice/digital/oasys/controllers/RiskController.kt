@@ -21,4 +21,12 @@ class RiskController(private val risksService: RisksService) {
   ): Collection<RiskDto>? {
     return risksService.getAllRisksForOffender(identityType, identity)
   }
+
+  @GetMapping(path = ["/offenders/risks/assessment/{assessmentId}"])
+  @ApiResponses(ApiResponse(code = 404, message = "Assessment not found"), ApiResponse(code = 200, message = "OK"))
+  fun getRisksForOasysOffenderIdAndAssessmentId(
+    @PathVariable("assessmentId") assessmentId: Long
+  ): RiskDto? {
+    return risksService.getRisksForOffenderByAssessmentId(assessmentId)
+  }
 }
