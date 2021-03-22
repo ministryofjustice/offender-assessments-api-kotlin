@@ -1,6 +1,6 @@
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "2.1.1"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.1"
   kotlin("plugin.spring") version "1.4.21"
   kotlin("plugin.jpa") version "1.4.21"
   kotlin("plugin.allopen") version "1.4.10"
@@ -40,20 +40,20 @@ dependencies {
   implementation("javax.activation:activation:1.1.1")
   implementation("com.sun.xml.bind:jaxb-impl:3.0.0")
   implementation("com.sun.xml.bind:jaxb-core:3.0.0")
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
-  implementation("io.springfox:springfox-swagger2:2.9.2")
-  implementation("io.springfox:springfox-swagger-ui:2.9.2")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.2")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+  implementation("io.springfox:springfox-swagger2:3.0.0")
+  implementation("io.springfox:springfox-swagger-ui:3.0.0")
   implementation("commons-io:commons-io:2.8.0")
-  implementation("com.zaxxer:HikariCP:3.4.5")
+  implementation("com.zaxxer:HikariCP:4.0.3")
 
   implementation("com.google.code.gson:gson:2.8.6")
-  implementation("com.google.guava:guava:30.0-jre")
+  implementation("com.google.guava:guava:30.1.1-jre")
 
   implementation(files("lib/ojdbc8-12.2.0.1.jar"))
-  implementation("org.apache.commons:commons-lang3:3.11")
+  implementation("org.apache.commons:commons-lang3:3.12.0")
   runtimeOnly("com.h2database:h2:1.4.200")
-  runtimeOnly("org.flywaydb:flyway-core:7.3.1")
+  runtimeOnly("org.flywaydb:flyway-core:7.7.0")
 
   testRuntimeOnly("com.h2database:h2:1.4.200")
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -62,8 +62,7 @@ dependencies {
     exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     exclude(module = "mockito-core")
   }
-  testImplementation("com.ninja-squad:springmockk:2.0.3")
+  testImplementation("com.ninja-squad:springmockk:3.0.1")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
-  implementation("com.nimbusds:nimbus-jose-jwt:9.1.5")
   testImplementation("com.github.tomakehurst:wiremock-standalone:2.27.2")
 }
