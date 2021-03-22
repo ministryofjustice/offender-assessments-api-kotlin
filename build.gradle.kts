@@ -64,6 +64,5 @@ dependencies {
   }
   testImplementation("com.ninja-squad:springmockk:3.0.1")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
-  implementation("com.nimbusds:nimbus-jose-jwt:9.7")
   testImplementation("com.github.tomakehurst:wiremock-standalone:2.27.2")
 }
