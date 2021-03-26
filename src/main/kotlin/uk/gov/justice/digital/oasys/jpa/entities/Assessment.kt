@@ -32,6 +32,9 @@ data class Assessment(
   @Column(name = "CREATE_DATE")
   val createDate: LocalDateTime? = null,
 
+  @Column(name = "DELETED_DATE")
+  val deletedDate: LocalDateTime? = null,
+
   @Column(name = "DATE_COMPLETED")
   val dateCompleted: LocalDateTime? = null,
 
