@@ -3,29 +3,34 @@ package uk.gov.justice.digital.oasys.api
 import io.swagger.annotations.ApiModelProperty
 
 data class RiskAssessmentAnswersDto(
+  @ApiModelProperty(value = "Assessment ID/Oasys Set ID for SARA risk answers")
+  val oasysSetId: Long? = null,
+
   @ApiModelProperty(value = "Risk Questions and Answers")
   val riskQuestions: List<RiskQuestionDto>? = null
 ) {
   companion object {
 
-    private var riskQuestionIds: Set<String>? = null
-
-    fun from(assessment: AssessmentAnswersDto, riskType: String):RiskAssessmentAnswersDto {
-
-      riskQuestionIds = when (riskType) {
-        "SARA" -> setOf("SR76.1.1", "SR77.1.1")
-        "ROSHA" -> setOf("SUM6.1.2", "SUM6.2.1", "SUM6.2.2", "SUM6.3.1", "SUM6.3.2", "SUM6.4.1", "SUM6.4.2", "SUM6.5.2", "FA31", "FA32")
-        else -> emptySet()
-      }
-      val riskQuestions = assessment.questionAnswers.filter{ riskQuestionIds!!.contains(it.refQuestionCode) }
+    fun fromRosha(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
+      val roshaQuestionIds: Set<String> = setOf("SUM6.1.2", "SUM6.2.1", "SUM6.2.2", "SUM6.3.1", "SUM6.3.2", "SUM6.4.1", "SUM6.4.2", "SUM6.5.2", "FA31", "FA32")
+      val riskQuestions = assessmentAnswers.questionAnswers.filter { roshaQuestionIds.contains(it.refQuestionCode) }
       return RiskAssessmentAnswersDto(
+        oasysSetId = assessmentAnswers.assessmentId,
+        riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
+      )
+    }
+    fun fromSara(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
+      val saraQuestionIds: Set<String> = setOf("SR76.1.1", "SR77.1.1")
+      val riskQuestions = assessmentAnswers.questionAnswers.filter { saraQuestionIds.contains(it.refQuestionCode) }
+      return RiskAssessmentAnswersDto(
+        oasysSetId = assessmentAnswers.assessmentId,
         riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
       )
     }
   }
 }
 
-class RiskQuestionDto(
+data class RiskQuestionDto(
 
   @ApiModelProperty(value = "Question Code", example = "10.98")
   val refQuestionCode: String? = null,
@@ -44,7 +49,7 @@ class RiskQuestionDto(
 ) {
 
   companion object {
-    fun from(question: QuestionDto): RiskQuestionDto{
+    fun from(question: QuestionDto): RiskQuestionDto {
       return RiskQuestionDto(
         refQuestionCode = question.refQuestionCode,
         questionText = question.questionText,
@@ -56,7 +61,7 @@ class RiskQuestionDto(
   }
 }
 
-class RiskAnswerDto(
+data class RiskAnswerDto(
   @ApiModelProperty(value = "Reference Answer Code", example = "NO")
   val refAnswerCode: String? = null,
 
@@ -64,8 +69,8 @@ class RiskAnswerDto(
   val staticText: String? = null,
 
 ) {
-  companion object{
-    fun from(answer: AnswerDto): RiskAnswerDto{
+  companion object {
+    fun from(answer: AnswerDto): RiskAnswerDto {
       return RiskAnswerDto(
         refAnswerCode = answer.refAnswerCode,
         staticText = answer.staticText

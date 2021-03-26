@@ -5,89 +5,128 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
-import uk.gov.justice.digital.oasys.api.AssessmentDto
-import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
 import uk.gov.justice.digital.oasys.api.QuestionDto
-import uk.gov.justice.digital.oasys.api.RefElementDto
 import uk.gov.justice.digital.oasys.api.RiskAssessmentAnswersDto
-import uk.gov.justice.digital.oasys.api.RiskDto
-import java.time.LocalDateTime
+import uk.gov.justice.digital.oasys.jpa.entities.Assessment
+import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("Predictor Service Tests")
+@DisplayName("Risks Service Tests")
 class RisksServiceTest {
 
   private val answerService = mockk<AnswerService>()
-  private val assessmentService: AssessmentService = mockk()
-  private val risksService = RisksService(answerService, assessmentService)
-  private val created = LocalDateTime.now()
-  private val completed = created.plusMonths(3)
-  private val voided = created.plusMonths(4)
-
-  private val assessment = setupAssessment()
-  private val assessmentSummary = setupAssessmentSummary()
-  private val answers = setupAnswers()
+  private val assessmentRepository: AssessmentRepository = mockk()
+  private val offenderService: OffenderService = mockk()
+  private val risksService = RisksService(answerService, assessmentRepository, offenderService)
 
   @Test
-  fun `should get all Risks For Offender`() {
-    every { assessmentService.getAssessmentsForOffender("OASYS", "1", null, null, null, null) } returns (listOf(assessmentSummary))
-    every { answerService.getAnswersForQuestions(1234L, RisksService.riskQuestions) } returns(answers)
+  fun `should get All Risks For Offender with ROSHA`() {
+    every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns(1111L)
+    every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(roshAssessment()))
+    every { answerService.getAnswersForQuestions(2222L, RisksService.riskQuestions) } returns(roshaAnswers())
 
     val risks = risksService.getAllRisksForOffender("OASYS", "1")
+    with(risks?.first()!!) {
+      assertThat(oasysSetId).isEqualTo(2222L)
+      assertThat(sara).isEqualTo(null)
+      assertThat(rosha).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 1111, riskQuestions = emptyList()))
+    }
 
-    validateRisks(risks?.first())
-
-    verify(exactly = 1) { assessmentService.getAssessmentsForOffender(any(), any(), null, null, null, null) }
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(any(), any()) }
+    verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(any()) }
     verify(exactly = 1) { answerService.getAnswersForQuestions(any(), any()) }
-
   }
 
-  private fun validateRisks(riskDto: RiskDto?) {
-      assertThat(riskDto?.oasysSetId).isEqualTo(1234L)
-      assertThat(riskDto?.refAssessmentVersionCode).isEqualTo("Any Ref Version Code")
-      assertThat(riskDto?.refAssessmentVersionNumber).isEqualTo("Any Version")
-      assertThat(riskDto?.refAssessmentId).isEqualTo(1L)
-      assertThat(riskDto?.assessmentCompleted).isEqualTo(true)
-      assertThat(riskDto?.sara).isEqualTo(RiskAssessmentAnswersDto())
-      assertThat(riskDto?.rosha).isEqualTo(null)
+  @Test
+  fun `should get All Risks For Offender with ROSHA and SARA`() {
+    every { offenderService.getOffenderIdByIdentifier("OASYS", "44") } returns(55)
+    every { assessmentRepository.getAssessmentsForOffender(55) } returns (listOf(assessment()))
+    every { answerService.getAnswersForQuestions(1111, RisksService.riskQuestions) } returns(roshaAnswers())
+    every { answerService.getAnswersForQuestions(3333, RisksService.riskQuestions) } returns(saraAnswers())
 
+    val risks = risksService.getAllRisksForOffender("OASYS", "44")
+    with(risks?.first()!!) {
+      assertThat(oasysSetId).isEqualTo(1111)
+      assertThat(rosha).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 1111, riskQuestions = emptyList()))
+      assertThat(sara).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 3333, riskQuestions = emptyList()))
+    }
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(any(), any()) }
+    verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(any()) }
+    verify(exactly = 2) { answerService.getAnswersForQuestions(any(), any()) }
   }
 
-  private fun setupAssessment(): AssessmentDto {
-    return AssessmentDto(
-      assessmentId = 1234L,
-      refAssessmentVersionCode = "Any Ref Version Code",
-      refAssessmentVersionNumber = "Any Version",
-      refAssessmentId = 1L,
-      completed = completed,
-      voided = voided,
-      assessmentStatus = "status",
+  @Test
+  fun `should get Risks For Assessment with SARA`() {
+    every { assessmentRepository.getAssessment(3333) } returns (saraAssessment())
+    every { answerService.getAnswersForQuestions(3333, RisksService.riskQuestions) } returns(saraAnswers())
+
+    val risks = risksService.getRisksForAssessmentId(3333L)
+    with(risks!!) {
+      assertThat(oasysSetId).isEqualTo(3333L)
+      assertThat(sara).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 3333, riskQuestions = emptyList()))
+      assertThat(rosha).isEqualTo(null)
+    }
+    verify(exactly = 1) { assessmentRepository.getAssessment(any()) }
+    verify(exactly = 1) { answerService.getAnswersForQuestions(any(), any()) }
+  }
+
+  @Test
+  fun `should get Risks for Assessment with SARA and ROSHA`() {
+    every { assessmentRepository.getAssessment(1111) } returns (assessment())
+    every { answerService.getAnswersForQuestions(1111, RisksService.riskQuestions) } returns(roshaAnswers())
+    every { answerService.getAnswersForQuestions(3333, RisksService.riskQuestions) } returns(saraAnswers())
+
+    val risks = risksService.getRisksForAssessmentId(1111)
+
+    with(risks!!) {
+      assertThat(oasysSetId).isEqualTo(1111)
+      assertThat(sara).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 3333, riskQuestions = emptyList()))
+      assertThat(rosha).isEqualTo(RiskAssessmentAnswersDto(oasysSetId = 1111, riskQuestions = emptyList()))
+    }
+    verify(exactly = 1) { assessmentRepository.getAssessment(any()) }
+    verify(exactly = 2) { answerService.getAnswersForQuestions(any(), any()) }
+  }
+
+  private fun assessment(): Assessment {
+    return Assessment(
+      oasysSetPk = 1111,
+      assessmentStatus = "COMPLETED",
+      assessmentType = "LAYER_3",
+      childAssessments = setOf(saraAssessment())
     )
   }
-  private fun setupAssessmentSummary(): AssessmentSummaryDto {
-    return AssessmentSummaryDto(
-      assessmentId = 1234L,
-      refAssessmentVersionCode = "Any Ref Version Code",
-      refAssessmentVersionNumber = "Any Version",
-      refAssessmentId = 1L,
-      completed = completed,
-      voided = voided,
-      assessmentStatus = "status",
+
+  private fun roshAssessment(): Assessment {
+    return Assessment(
+      oasysSetPk = 2222L,
+      assessmentStatus = "COMPLETED",
+      assessmentType = "LAYER_3"
     )
   }
-  private fun setupAnswers(): AssessmentAnswersDto {
+
+  private fun saraAssessment(): Assessment {
+    return Assessment(
+      oasysSetPk = 3333L,
+      assessmentStatus = "COMPLETED",
+      assessmentType = "SARA"
+    )
+  }
+
+  private fun roshaAnswers(): AssessmentAnswersDto {
     return AssessmentAnswersDto(
-      assessmentId = 1234L,
+      assessmentId = 1111,
       questionAnswers = listOf(QuestionDto())
     )
   }
 
-  private fun setupRiskAssessmentAnswers(): RiskAssessmentAnswersDto {
-    return RiskAssessmentAnswersDto()
+  private fun saraAnswers(): AssessmentAnswersDto {
+    return AssessmentAnswersDto(
+      assessmentId = 3333,
+      questionAnswers = listOf(QuestionDto())
+    )
   }
 }

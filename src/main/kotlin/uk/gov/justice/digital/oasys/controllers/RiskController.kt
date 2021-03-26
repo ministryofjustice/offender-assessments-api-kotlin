@@ -27,6 +27,6 @@ class RiskController(private val risksService: RisksService) {
   fun getRisksForOasysOffenderIdAndAssessmentId(
     @PathVariable("assessmentId") assessmentId: Long
   ): RiskDto? {
-    return risksService.getRisksForOffenderByAssessmentId(assessmentId)
+    return risksService.getRisksForAssessmentId(assessmentId)
   }
 }

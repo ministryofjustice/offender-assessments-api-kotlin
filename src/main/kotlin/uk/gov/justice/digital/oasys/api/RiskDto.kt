@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
+import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import java.time.LocalDateTime
 
 data class RiskDto(
@@ -34,40 +35,50 @@ data class RiskDto(
 
   @ApiModelProperty(value = "ROSHA risk answers")
   val rosha: RiskAssessmentAnswersDto? = null,
-
-  ) {
+) {
   companion object {
 
-    fun from(assessments: Collection<AssessmentDto?>?, answers: AssessmentAnswersDto): Collection<RiskDto> {
-      return assessments?.filterNotNull()?.map { from(it, answers) }?.toSet().orEmpty()
-    }
-
-    fun from(assessment: AssessmentDto?, answers: AssessmentAnswersDto): RiskDto {
+    fun fromSara(assessment: Assessment?, answers: AssessmentAnswersDto): RiskDto {
       return RiskDto(
-        oasysSetId = assessment?.assessmentId,
-        refAssessmentVersionCode = assessment?.refAssessmentVersionCode,
-        refAssessmentVersionNumber = assessment?.refAssessmentVersionNumber,
-        refAssessmentId = assessment?.refAssessmentId,
-        completedDate = assessment?.completed,
-        voidedDateTime =  assessment?.voided,
-        assessmentCompleted = assessment?.completed != null,
+        oasysSetId = assessment?.oasysSetPk,
+        refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
+        refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
+        completedDate = assessment?.dateCompleted,
+        voidedDateTime = assessment?.assessmentVoidedDate,
+        assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
-        sara = RiskAssessmentAnswersDto.from(answers, "SARA"),
-        rosha = RiskAssessmentAnswersDto.from(answers, "ROSHA"))
+        sara = RiskAssessmentAnswersDto.fromSara(answers)
+      )
     }
 
-    fun from(assessmentSummaryDto: AssessmentSummaryDto, answers: AssessmentAnswersDto): RiskDto {
+    fun fromRosha(assessment: Assessment?, answers: AssessmentAnswersDto): RiskDto {
       return RiskDto(
-        oasysSetId = assessmentSummaryDto.assessmentId,
-        refAssessmentVersionCode = assessmentSummaryDto.refAssessmentVersionCode,
-        refAssessmentVersionNumber = assessmentSummaryDto.refAssessmentVersionNumber,
-        refAssessmentId = assessmentSummaryDto.refAssessmentId,
-        completedDate = assessmentSummaryDto.completed,
-        voidedDateTime =  assessmentSummaryDto.voided,
-        assessmentCompleted = assessmentSummaryDto.completed != null,
-        assessmentStatus = assessmentSummaryDto.assessmentStatus,
-        sara = RiskAssessmentAnswersDto.from(answers, "SARA"),
-        rosha = RiskAssessmentAnswersDto.from(answers, "ROSHA"))
+        oasysSetId = assessment?.oasysSetPk,
+        refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
+        refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
+        completedDate = assessment?.dateCompleted,
+        voidedDateTime = assessment?.assessmentVoidedDate,
+        assessmentCompleted = assessment?.dateCompleted != null,
+        assessmentStatus = assessment?.assessmentStatus,
+        rosha = RiskAssessmentAnswersDto.fromRosha(answers)
+      )
+    }
+
+    fun fromRoshaWithSara(assessment: Assessment?, roshaAnswers: AssessmentAnswersDto, saraAnswers: AssessmentAnswersDto): RiskDto {
+      return RiskDto(
+        oasysSetId = assessment?.oasysSetPk,
+        refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
+        refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
+        completedDate = assessment?.dateCompleted,
+        voidedDateTime = assessment?.assessmentVoidedDate,
+        assessmentCompleted = assessment?.dateCompleted != null,
+        assessmentStatus = assessment?.assessmentStatus,
+        sara = RiskAssessmentAnswersDto.fromSara(saraAnswers),
+        rosha = RiskAssessmentAnswersDto.fromRosha(roshaAnswers)
+      )
     }
   }
 }
