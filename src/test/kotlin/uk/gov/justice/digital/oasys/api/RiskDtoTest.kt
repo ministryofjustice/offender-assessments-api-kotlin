@@ -64,7 +64,6 @@ class RiskDtoTest {
     assertThat(riskDto.assessmentStatus).isEqualTo("COMPLETED")
     assertThat(riskDto.sara?.riskQuestions).isEmpty()
     assertThat(riskDto.rosha?.riskQuestions).isNull()
-
   }
 
   private fun assessment(): Assessment {
@@ -113,8 +112,7 @@ class RiskDtoTest {
   private fun roshaAnswers(): AssessmentAnswersDto {
     return AssessmentAnswersDto(
       assessmentId = 1111,
-      questionAnswers = listOf(QuestionDto(
-      ))
+      questionAnswers = listOf(QuestionDto())
     )
   }
 
