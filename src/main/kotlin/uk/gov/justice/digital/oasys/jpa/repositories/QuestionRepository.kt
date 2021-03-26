@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.QOasysQuestion.oasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.QSection.section
-import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import javax.persistence.EntityManager
 
 @Repository
