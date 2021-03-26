@@ -72,7 +72,7 @@ class AssessmentRepositoryTest(
     val summaries = assessmentRepository.getAssessmentsForOffender(oasysOffenderId, null, null, null, null)
     assertThat(summaries?.map { a -> a.oasysSetPk })
       .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
-    assertThat(summaries?.map { a -> a.assessmentStatus }).containsOnly("COMPLETE")
+    assertThat(summaries?.map { a -> a.assessmentStatus }).containsOnly("COMPLETE", "COMPLETE", "COMPLETE", "OPEN", "OPEN")
   }
 
   @Test

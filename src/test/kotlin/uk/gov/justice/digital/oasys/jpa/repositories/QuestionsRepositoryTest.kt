@@ -29,6 +29,7 @@ class QuestionsRepositoryTest(
 
   private val questionRepository = QuestionRepository(entityManager)
   private val assessmentId = 5433L
+  private val assessmentIdNoQuestions = 5435L
 
   @Test
   fun `returns only requested questions`() {
@@ -57,13 +58,11 @@ class QuestionsRepositoryTest(
   }
 
   @Test
-  fun `throws exception when assessment does not exist`() {
-    val exception = assertThrows<EntityNotFoundException> {
-      questionRepository.getQuestionAnswersFromQuestionCodes(
-        12345L,
-        mapOf("10" to setOf("10.98"), "9" to setOf("9.99"))
-      )
-    }
-    assertThat(exception.message).isEqualTo("Assessment or question codes not found for assessment 12345")
+  fun `returns empty set when answers do not exist`() {
+    val answers = questionRepository.getQuestionAnswersFromQuestionCodes(
+      assessmentIdNoQuestions,
+      mapOf("10" to setOf("10.98"), "9" to setOf("9.99"))
+    )
+    assertThat(answers).isEmpty()
   }
 }

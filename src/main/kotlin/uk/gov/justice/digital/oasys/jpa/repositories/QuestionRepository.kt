@@ -40,9 +40,6 @@ class QuestionRepository(
       .where(section.oasysSetPk.eq(oasysSetId))
       .where(where)
 
-    val answers = query.fetch()
-
-    if (answers.isNullOrEmpty()) throw EntityNotFoundException("Assessment or question codes not found for assessment $oasysSetId")
-    return answers
+    return query.fetch()
   }
 }
