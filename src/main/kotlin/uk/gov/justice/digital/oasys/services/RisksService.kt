@@ -19,18 +19,19 @@ class RisksService(
   fun getAllRisksForOffender(identityType: String, identity: String): Collection<RiskDto>? {
     val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
     val assessments = assessmentRepository.getAssessmentsForOffender(offenderId)
-    log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
-    return assessments?.mapNotNull { risksByAssessment(it) }
+      ?: throw EntityNotFoundException("No Assessments found for Identity Type: $identityType, Identity: $identity ")
+    log.info("Found ${assessments.size} Assessments for identity: ($identity, $identityType)")
+    return assessments.map { getRisksForAssessment(it) }
   }
 
   fun getRisksForAssessmentId(assessmentId: Long): RiskDto? {
     val assessment = assessmentRepository.getAssessment(assessmentId)
       ?: throw EntityNotFoundException("Assessment for OasysSetId $assessmentId, not found")
     log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for oasysSetId: ${assessment.oasysSetPk}")
-    return risksByAssessment(assessment)
+    return getRisksForAssessment(assessment)
   }
 
-  fun risksByAssessment(assessment: Assessment): RiskDto? {
+  fun getRisksForAssessment(assessment: Assessment): RiskDto {
     val answers = getRiskAnswersByAssessmentId(assessment.oasysSetPk!!)
     if (assessment.assessmentType.equals("SARA")) {
       return RiskDto.fromSara(assessment, answers)
@@ -44,7 +45,7 @@ class RisksService(
 
   fun getRiskAnswersByAssessmentId(assessmentId: Long): AssessmentAnswersDto {
     return answerService.getAnswersForQuestions(assessmentId, riskQuestions).also {
-      log.info("Found Risks for assessment ID: ($assessmentId)")
+      log.info("Found ${it.questionAnswers.size} risk Answers for Assessment ID: $assessmentId")
     }
   }
 

@@ -35,7 +35,7 @@ class RiskDtoTest {
   }
 
   @Test
-  fun `build Risk DTO from Assessment with ROSHA`() {
+  fun `build Risk DTO from Assessment with ROSHA, no SARA`() {
 
     val riskDto = RiskDto.fromRosha(rosha, roshaAnswers())
     assertThat(riskDto.oasysSetId).isEqualTo(2222)
@@ -51,7 +51,7 @@ class RiskDtoTest {
   }
 
   @Test
-  fun `build Risk DTO from Assessment with SARA`() {
+  fun `build Risk DTO from SARA Assessment`() {
 
     val riskDto = RiskDto.fromSara(sara, saraAnswers())
     assertThat(riskDto.oasysSetId).isEqualTo(3333)

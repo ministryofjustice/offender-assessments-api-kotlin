@@ -7,12 +7,14 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
 import uk.gov.justice.digital.oasys.api.QuestionDto
 import uk.gov.justice.digital.oasys.api.RiskAssessmentAnswersDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("Risks Service Tests")
@@ -89,6 +91,28 @@ class RisksServiceTest {
     }
     verify(exactly = 1) { assessmentRepository.getAssessment(any()) }
     verify(exactly = 2) { answerService.getAnswersForQuestions(any(), any()) }
+  }
+
+  @Test
+  fun `throws not found exception when no Assessments found`() {
+    every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns(1111L)
+    every { assessmentRepository.getAssessmentsForOffender(1111) } returns (null)
+
+    assertThrows<EntityNotFoundException> { risksService.getAllRisksForOffender("OASYS", "1") }
+
+    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(any(), any()) }
+    verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(any()) }
+    verify(exactly = 0) { answerService.getAnswersForQuestions(any(), any()) }
+  }
+
+  @Test
+  fun `throws not found exception when Assessment ID not found`() {
+    every { assessmentRepository.getAssessment(1111) } returns (null)
+
+    assertThrows<EntityNotFoundException> { risksService.getRisksForAssessmentId(1111) }
+
+    verify(exactly = 1) { assessmentRepository.getAssessment(any()) }
+    verify(exactly = 0) { answerService.getAnswersForQuestions(any(), any()) }
   }
 
   private fun assessment(): Assessment {

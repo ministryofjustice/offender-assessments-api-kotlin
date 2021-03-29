@@ -45,7 +45,7 @@ data class RiskQuestionDto(
   val disclosed: Boolean? = null,
 
   @ApiModelProperty(value = "Question Answer")
-  val answers: Collection<RiskAnswerDto> = emptySet()
+  val answers: Collection<RiskAnswerDto> = emptyList()
 ) {
 
   companion object {
