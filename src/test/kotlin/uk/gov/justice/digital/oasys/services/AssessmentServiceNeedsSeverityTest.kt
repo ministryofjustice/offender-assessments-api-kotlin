@@ -206,7 +206,7 @@ class AssessmentServiceNeedsSeverityTest {
   inner class DrugMisuseTests {
     @Test
     fun `Drug Misuse should return SEVERE if over severe threshold`() {
-      setupAssessmentWithQuestions(mapOf("8.4" to 1, "8.5" to 1, "8.6" to 0, "8.8" to 0, "8.9" to 0), "8", "Drug Misuse")
+      setupAssessmentWithQuestions(mapOf("8.4" to 2, "8.5" to 2, "8.6" to 2, "8.8" to 1, "8.9" to 1), "8", "Drug Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.DRUG_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.SEVERE)
@@ -214,7 +214,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Drug Misuse should return STANDARD if over standard threshold but under severe`() {
-      setupAssessmentWithQuestions(mapOf("8.4" to 1, "8.5" to 0, "8.6" to 0, "8.8" to 0, "8.9" to 0), "8", "Drug Misuse")
+      setupAssessmentWithQuestions(mapOf("8.4" to 1, "8.5" to 1, "8.6" to 0, "8.8" to 0, "8.9" to 0), "8", "Drug Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.DRUG_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.STANDARD)
@@ -222,7 +222,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Drug Misuse should return NO_NEED if under standard threshold `() {
-      setupAssessmentWithQuestions(mapOf("8.4" to 0, "8.5" to 0, "8.6" to 0, "8.8" to 0, "8.9" to 0), "8", "Drug Misuse")
+      setupAssessmentWithQuestions(mapOf("8.4" to 1, "8.5" to 0, "8.6" to 0, "8.8" to 0, "8.9" to 0), "8", "Drug Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.DRUG_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.NO_NEED)
@@ -234,7 +234,7 @@ class AssessmentServiceNeedsSeverityTest {
   inner class AlcoholTests {
     @Test
     fun `Alcohol should return SEVERE if over severe threshold`() {
-      setupAssessmentWithQuestions(mapOf("9.1" to 1, "9.2" to 1, "9.3" to 1, "9.5" to 1), "9", "Alcohol Misuse")
+      setupAssessmentWithQuestions(mapOf("9.1" to 2, "9.2" to 2, "9.3" to 2, "9.5" to 1), "9", "Alcohol Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ALCOHOL_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.SEVERE)
@@ -242,7 +242,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Alcohol should return STANDARD if over standard threshold but under severe`() {
-      setupAssessmentWithQuestions(mapOf("9.1" to 1, "9.2" to 0, "9.3" to 0, "9.5" to 0), "9", "Alcohol Misuse")
+      setupAssessmentWithQuestions(mapOf("9.1" to 1, "9.2" to 1, "9.3" to 1, "9.5" to 1), "9", "Alcohol Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ALCOHOL_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.STANDARD)
@@ -250,7 +250,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Alcohol should return NO_NEED if under standard threshold `() {
-      setupAssessmentWithQuestions(mapOf("9.1" to 0, "9.2" to 0, "9.3" to 0, "9.5" to 0), "9", "Alcohol Misuse")
+      setupAssessmentWithQuestions(mapOf("9.1" to 1, "9.2" to 1, "9.3" to 1, "9.5" to 0), "9", "Alcohol Misuse")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ALCOHOL_MISUSE)
       assertThat(need.severity).isEqualTo(NeedSeverity.NO_NEED)
@@ -262,7 +262,7 @@ class AssessmentServiceNeedsSeverityTest {
   inner class AttitudesTests {
     @Test
     fun `Attitudes should return SEVERE if over severe threshold`() {
-      setupAssessmentWithQuestions(mapOf("12.1" to 1, "12.4" to 1, "12.5" to 1, "12.8" to 1), "12", "Attitudes")
+      setupAssessmentWithQuestions(mapOf("12.1" to 2, "12.4" to 2, "12.5" to 2, "12.8" to 1), "12", "Attitudes")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ATTITUDES)
       assertThat(need.severity).isEqualTo(NeedSeverity.SEVERE)
@@ -270,7 +270,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Attitudes should return STANDARD if over standard threshold but under severe`() {
-      setupAssessmentWithQuestions(mapOf("12.1" to 0, "12.4" to 0, "12.5" to 0, "12.8" to 1), "12", "Attitudes")
+      setupAssessmentWithQuestions(mapOf("12.1" to 0, "12.4" to 0, "12.5" to 2, "12.8" to 1), "12", "Attitudes")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ATTITUDES)
       assertThat(need.severity).isEqualTo(NeedSeverity.STANDARD)
@@ -278,7 +278,7 @@ class AssessmentServiceNeedsSeverityTest {
 
     @Test
     fun `Attitudes should return NO_NEED if under standard threshold `() {
-      setupAssessmentWithQuestions(mapOf("12.1" to 0, "12.4" to 0, "12.5" to 0, "12.8" to 0), "12", "Attitudes")
+      setupAssessmentWithQuestions(mapOf("12.1" to 1, "12.4" to 0, "12.5" to 0, "12.8" to 0), "12", "Attitudes")
       val need = assessmentsService.getAssessmentNeeds(oasysSetPk).toList()[0]
       assertThat(need.section).isEqualTo(SectionHeader.ATTITUDES)
       assertThat(need.severity).isEqualTo(NeedSeverity.NO_NEED)

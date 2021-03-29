@@ -44,15 +44,15 @@ class CriminogenicNeedMapping {
         SectionHeader.DRUG_MISUSE to NeedConfiguration(
           "8.98",
           "8.99",
-          1,
           2,
+          8,
           setOf("8.4", "8.5", "8.6", "8.8", "8.9")
         ),
         SectionHeader.ALCOHOL_MISUSE to NeedConfiguration(
           "9.98",
           "9.99",
-          1,
           4,
+          7,
           setOf("9.1", "9.2", "9.3", "9.5")
         ),
         // Emotional Wellbeing is not a proper Criminogenic Need and so does not have a severity score
@@ -73,8 +73,8 @@ class CriminogenicNeedMapping {
         SectionHeader.ATTITUDES to NeedConfiguration(
           "12.98",
           "12.99",
-          1,
-          4,
+          2,
+          7,
           setOf("12.1", "12.4", "12.5", "12.8")
         )
       )
