@@ -165,7 +165,14 @@ data class Assessment(
 
   @OneToMany
   @JoinColumn(name = "OASYS_SET_PK", referencedColumnName = "OASYS_SET_PK")
-  val offenceBlocks: Set<OffenceBlock?>? = mutableSetOf()
+  val offenceBlocks: Set<OffenceBlock?>? = mutableSetOf(),
+
+  @ManyToOne
+  @JoinColumn(name = "PARENT_OASYS_SET_PK")
+  val parentPk: Assessment? = null,
+
+  @OneToMany(mappedBy = "parentPk")
+  val childAssessments: Set<Assessment?> = mutableSetOf()
 
 ) {
 
