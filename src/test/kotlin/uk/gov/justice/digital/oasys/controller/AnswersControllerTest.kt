@@ -61,12 +61,18 @@ class AnswersControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `unknown OasysSetPK returns not found`() {
+  fun `OasysSetPK with no questions returns emptyset`() {
 
     webTestClient.post().uri("/assessments/oasysSetId/12345/answers")
       .bodyValue(mapOf("10" to setOf("10.98"), "9" to setOf("9.99")))
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
-      .expectStatus().isNotFound
+      .expectStatus().isOk
+      .expectBody<AssessmentAnswersDto>()
+      .consumeWith {
+        val answers = it.responseBody
+        assertThat(answers.assessmentId).isEqualTo(12345)
+        assertThat(answers.questionAnswers).isEmpty()
+      }
   }
 }

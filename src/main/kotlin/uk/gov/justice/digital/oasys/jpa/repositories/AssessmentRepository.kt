@@ -34,7 +34,7 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
 
   private fun getAssessmentsQueryForOffender(offenderId: Long?): JPAQuery<Assessment> {
     val query = queryFactory.selectFrom(assessment)
-    return query.where(assessment.group.offenderPk.eq(offenderId))
+    return query.where(assessment.group.offenderPk.eq(offenderId)).where(assessment.deletedDate.isNull)
   }
 
   private fun filterQuery(query: JPAQuery<Assessment>, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?) {

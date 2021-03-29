@@ -5,6 +5,10 @@ spring:
     cache-names: users
     caffeine:
       spec: expireAfterWrite=2m
+  profiles:
+    group:
+      test: stdout
+      oracle: logstash
   security:
     oauth2:
       resourceserver:

@@ -25,6 +25,7 @@ class AssessmentRepositoryTest(
   private val completeAssessmentId = 5432L
   private val voidedAssessmentId = 5431L
   private val historicAssessmentId = 5430L
+  private val deletedAssessmentId = 5435L
 
   @Test
   fun `return only voided assessments`() {
@@ -64,6 +65,15 @@ class AssessmentRepositoryTest(
     assertThat(summaries?.map { a -> a.oasysSetPk })
       .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, voidedAssessmentId, completeAssessmentId))
     assertThat(summaries?.map { a -> a.assessmentStatus }).containsOnly("COMPLETE")
+  }
+
+  @Test
+  fun `do not return deleted assessments`() {
+    val summaries = assessmentRepository.getAssessmentsForOffender(oasysOffenderId, null, null, null, null)
+    assertThat(summaries?.map { a -> a.oasysSetPk })
+      .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+    assertThat(summaries?.map { a -> a.assessmentStatus }).containsOnly("COMPLETE", "COMPLETE", "COMPLETE", "OPEN", "OPEN")
+    assertThat(summaries?.map { a -> a.deletedDate }).containsOnly(null)
   }
 
   @Test

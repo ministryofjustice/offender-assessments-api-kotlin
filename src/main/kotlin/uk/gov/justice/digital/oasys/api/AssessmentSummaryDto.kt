@@ -18,7 +18,7 @@ data class AssessmentSummaryDto(
   @ApiModelProperty(value = "Assessment Reference Version", example = "1")
   val refAssessmentId: Long? = null,
 
-  @ApiModelProperty(value = "Assessment Type", example = "LAYER_£")
+  @ApiModelProperty(value = "Assessment Type", example = "LAYER_3")
   val assessmentType: String? = null,
 
   @ApiModelProperty(value = "Assessment Status", example = "OPEN")
