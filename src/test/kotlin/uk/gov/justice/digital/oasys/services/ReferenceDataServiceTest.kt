@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import uk.gov.justice.digital.oasys.api.FilteredRefDataRequestDto
 import uk.gov.justice.digital.oasys.api.RefElementDto
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import uk.gov.justice.digital.oasys.jpa.repositories.ReferenceDataRepository
@@ -48,7 +49,97 @@ class ReferenceDataServiceTest {
     assertThat(exception.message).isEqualTo("Category $category, not found")
   }
 
-  private fun setupElements(): Collection<RefElement?>? {
+  @Test
+  fun `returns filtered reference data for `() {
+    every {
+      referenceDataRepository.findFilteredReferenceData(
+        username = "TEST_USER",
+        area = "WWS",
+        assessmentType = "SHORT_FORM_PSR",
+        fieldName = "ethnicity"
+      )
+    } returns """{"STATE":"SUCCESS",
+                  "DETAIL":{"ethnicity":[
+                  {
+                  "displayValue":"Chinese or other ethnic group"
+                  ,"returnValue":"O1"
+                  }
+                  ,{
+                  "displayValue":"White - British English Welsh Scottish Northern Irish"
+                  ,"returnValue":"W1"
+                  }
+                  ]
+                  }}"""
+
+    val result = referenceDataService.getFilteredReferenceData(
+      FilteredRefDataRequestDto(
+        oasysUserCode = "TEST_USER",
+        oasysAreaCode = "WWS",
+        assessmentType = "SHORT_FORM_PSR",
+        fieldName = "ethnicity"
+      )
+    )
+
+    assertThat(result["ethnicity"]).containsExactlyInAnyOrder(
+      RefElementDto("O1", null, "Chinese or other ethnic group"),
+      RefElementDto("W1", null, "White - British English Welsh Scottish Northern Irish")
+    )
+  }
+
+  @Test
+  fun `throws exception when invalid state returned from OASys filtered reference data`() {
+    every {
+      referenceDataRepository.findFilteredReferenceData(
+        username = "TEST_USER",
+        area = "WWS",
+        assessmentType = "SHORT_FORM_PSR",
+        fieldName = "ethnicity"
+      )
+    } returns """{"STATE":"MAPPING_ERROR","DETAIL":
+      |{"Failures":[{"sectionCode":"ASSESSMENT","errors":
+      |[{"failureType":"PARAMETER_CHECK","questionCode":"ethnicity","errorName":"JSON_Mapping_Error","oasysErrorLogId":61,"message":"Section / fieldname not mapped"},
+      |{"failureType":"PROCESSING_RESULT","questionCode":"ethnicity","errorName":"refdata_execution_error","oasysErrorLogId":64,"message":"Section / fieldname not mapped"},
+      |{"failureType":"PARAMETER_CHECK","questionCode":"ethnicity","errorName":"JSON_Mapping_Error","oasysErrorLogId":63,"message":"Section / fieldname not mapped"},
+      |{"failureType":"PROCESSING_RESULT","questionCode":"ethnicity","errorName":"refdata_execution_error","oasysErrorLogId":62,"message":"Section / fieldname not mapped"}]}]}}""".trimMargin()
+
+    val exception = assertThrows<IllegalArgumentException> {
+      referenceDataService.getFilteredReferenceData(
+        FilteredRefDataRequestDto(
+          oasysUserCode = "TEST_USER",
+          oasysAreaCode = "WWS",
+          assessmentType = "SHORT_FORM_PSR",
+          fieldName = "ethnicity"
+        )
+      )
+    }
+
+    assertThat(exception.message).isEqualTo("Invalid parameters passed for filtered reference data ethnicity, check logs")
+  }
+
+  @Test
+  fun `throws exception when unknown error returned from OASys filtered reference data`() {
+    every {
+      referenceDataRepository.findFilteredReferenceData(
+        username = "TEST_USER",
+        area = "WWS",
+        assessmentType = "SHORT_FORM_PSR",
+        fieldName = "ethnicity"
+      )
+    } returns """{"STATE":"OASYS_FAIL"}""".trimMargin()
+
+    val exception = assertThrows<Exception> {
+      referenceDataService.getFilteredReferenceData(
+        FilteredRefDataRequestDto(
+          oasysUserCode = "TEST_USER",
+          oasysAreaCode = "WWS",
+          assessmentType = "SHORT_FORM_PSR",
+          fieldName = "ethnicity"
+        )
+      )
+    }
+  }
+
+  private fun setupElements(): Collection<RefElement?> {
     return listOf(
       RefElement(
         refElementCode = "ELEMENT_1",

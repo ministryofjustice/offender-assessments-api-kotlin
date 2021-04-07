@@ -98,3 +98,9 @@ Firstly, to encode in base64: `echo -n 'sentence-plan-api-client:clientsecret' |
  curl --location --request POST 'http://localhost:9090/auth/oauth/token?grant_type=client_credentials' \
  --header 'Authorization: Basic c2VudGVuY2UtcGxhbi1hcGktY2xpZW50OmNsaWVudHNlY3JldA=='
 ```
+
+## Filtered reference data
+
+Filtered reference data accessed at the endpoint `/referencedata/filtered` requires details of the OASys field name and parent field names which are only available from within OASys.
+
+Access to this reference data also requires passing an OASys User Code and Region to enable RBAC and filtering rules to be applied from OASys to the returned data set.
