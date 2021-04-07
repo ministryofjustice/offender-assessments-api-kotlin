@@ -127,7 +127,7 @@ class ReferenceDataServiceTest {
       )
     } returns """{"STATE":"OASYS_FAIL"}""".trimMargin()
 
-    val exception = assertThrows<Exception> {
+    assertThrows<Exception> {
       referenceDataService.getFilteredReferenceData(
         FilteredRefDataRequestDto(
           oasysUserCode = "TEST_USER",
@@ -137,6 +137,30 @@ class ReferenceDataServiceTest {
         )
       )
     }
+  }
+
+  @Test
+  fun `throws not found exception when fieldname does not exist in OASys filtered reference data`() {
+    every {
+      referenceDataRepository.findFilteredReferenceData(
+        username = "TEST_USER",
+        area = "WWS",
+        assessmentType = "SHORT_FORM_PSR",
+        fieldName = "rsr_offence_code"
+      )
+    } returns """{"STATE":"REFDATA_FAILURE"}""".trimMargin()
+
+    val exception = assertThrows<EntityNotFoundException> {
+      referenceDataService.getFilteredReferenceData(
+        FilteredRefDataRequestDto(
+          oasysUserCode = "TEST_USER",
+          oasysAreaCode = "WWS",
+          assessmentType = "SHORT_FORM_PSR",
+          fieldName = "rsr_offence_code"
+        )
+      )
+    }
+    assertThat(exception.message).isEqualTo("Ref Data item not found for rsr_offence_code, check logs")
   }
 
   private fun setupElements(): Collection<RefElement?> {
