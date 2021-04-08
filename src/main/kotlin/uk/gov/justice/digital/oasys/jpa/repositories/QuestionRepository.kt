@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.QOasysQuestion.oasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.QSection.section
-import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import javax.persistence.EntityManager
 
 @Repository
@@ -40,9 +39,6 @@ class QuestionRepository(
       .where(section.oasysSetPk.eq(oasysSetId))
       .where(where)
 
-    val answers = query.fetch()
-
-    if (answers.isNullOrEmpty()) throw EntityNotFoundException("Assessment or question codes not found for assessment $oasysSetId")
-    return answers
+    return query.fetch()
   }
 }

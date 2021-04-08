@@ -46,7 +46,7 @@ class OffenderControllerTest : IntegrationTest() {
   @Test
   fun `access forbidden when no role`() {
 
-    webTestClient.get().uri("/offenders/oasysoffenderpk/$oasysOffenderId")
+    webTestClient.get().uri("/offenders/oasysOffenderId/$oasysOffenderId")
       .headers(setAuthorisation())
       .exchange()
       .expectStatus().isForbidden

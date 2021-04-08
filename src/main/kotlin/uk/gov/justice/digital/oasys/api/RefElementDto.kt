@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
+import uk.gov.justice.digital.oasys.jpa.entities.FilteredRefDataEntity
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 
 data class RefElementDto(
@@ -20,6 +21,10 @@ data class RefElementDto(
         return null
       }
       return RefElementDto(refElement.refElementCode, refElement.refElementShortDesc, refElement.refElementDesc)
+    }
+
+    fun from(refElement: FilteredRefDataEntity): RefElementDto {
+      return RefElementDto(code = refElement.returnValue, description = refElement.displayValue)
     }
   }
 }
