@@ -12,8 +12,15 @@ import uk.gov.justice.digital.oasys.jpa.entities.RefElement
 import java.time.LocalDateTime
 
 @SqlGroup(
-  Sql(scripts = ["classpath:referenceData/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:referenceData/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:referenceData/before-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:referenceData/after-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @DisplayName("Reference Data Repository Tests")
 class ReferenceDataRepositoryTest(@Autowired private val repository: ReferenceDataRepository) : IntegrationTest() {
@@ -23,6 +30,7 @@ class ReferenceDataRepositoryTest(@Autowired private val repository: ReferenceDa
   val afterEndDate: LocalDateTime = LocalDateTime.of(2100, 1, 1, 0, 1)
 
   val category = "TEST_CATEGORY"
+
   @Test
   fun `return data by category and valid date`() {
     val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(category, betweenStartAndEndDate)
@@ -30,16 +38,29 @@ class ReferenceDataRepositoryTest(@Autowired private val repository: ReferenceDa
   }
 
   @Test
-  fun `return empty collection for invalid category`() {
-    val invalidCategory = "INVALID"
-    val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(invalidCategory, betweenStartAndEndDate)
-    assertThat(refData).isEmpty()
+  fun `return data by category and null end date`() {
+    val nullCategory = "NULL_DATE"
+    val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(nullCategory, betweenStartAndEndDate)
+    assertThat(refData).isEqualTo(
+      listOf(
+        RefElement(
+          refElementUk = 9997,
+          refCategoryCode = "NULL_DATE",
+          refElementCode = "ELEMENT_1",
+          refElementCtid = "9400",
+          refElementShortDesc = "El 1",
+          refElementDesc = "Element 1",
+          displaySort = 940L,
+          startDate = LocalDateTime.of(2010, 1, 1, 0, 0)
+        )
+      )
+    )
   }
 
   @Test
-  fun `return empty collection for null date`() {
-    val nullCategory = "NULL_DATE"
-    val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(nullCategory, betweenStartAndEndDate)
+  fun `return empty collection for invalid category`() {
+    val invalidCategory = "INVALID"
+    val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(invalidCategory, betweenStartAndEndDate)
     assertThat(refData).isEmpty()
   }
 
