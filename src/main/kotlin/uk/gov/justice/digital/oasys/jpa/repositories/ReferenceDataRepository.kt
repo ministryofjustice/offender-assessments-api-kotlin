@@ -32,7 +32,7 @@ interface ReferenceDataRepository : JpaRepository<RefElement?, Long?>, Reference
   @Query(
     """
  SELECT r FROM RefElement r where (r.refCategoryCode = ?1)
- AND (?2 BETWEEN r.startDate and r.endDate OR r.endDate = null)
+ AND (?2 >= r.startDate AND (?2 <= r.endDate OR r.endDate = null))
  """
   )
   fun findAllByRefCategoryCodeAndBetweenStartAndEndDate(

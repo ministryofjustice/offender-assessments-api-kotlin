@@ -76,6 +76,13 @@ class ReferenceDataRepositoryTest(@Autowired private val repository: ReferenceDa
     assertThat(refData).isEmpty()
   }
 
+  @Test
+  fun `return empty collection for future start date and null end date`() {
+    val nullCategory = "NULL_DATE"
+    val refData = repository.findAllByRefCategoryCodeAndBetweenStartAndEndDate(nullCategory, beforeStartDate)
+    assertThat(refData).isEmpty()
+  }
+
   private fun setupElements(): Collection<RefElement> {
     return listOf(
       RefElement(
