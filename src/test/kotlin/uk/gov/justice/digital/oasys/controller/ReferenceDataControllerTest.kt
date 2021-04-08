@@ -39,15 +39,6 @@ class ReferenceDataControllerTest : IntegrationTest() {
       .expectStatus().isNotFound
   }
 
-  @Test
-  fun `Category with null end date returns not found`() {
-    val category = "NULL_CATEGORY"
-    webTestClient.get().uri("/referencedata/$category")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isNotFound
-  }
-
   fun setupElementDtos(): List<RefElementDto> {
     return listOf(
       RefElementDto(

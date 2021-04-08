@@ -1,6 +1,6 @@
 {
   "role": {
-    "name": "offender-assessments-api-kotlin"
+    "name": "offender-assessments-api"
   },
   "customDimensions": {
     "service.version": "${BUILD_NUMBER}"
