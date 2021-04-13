@@ -13,6 +13,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.ReferenceDataEntity
 import uk.gov.justice.digital.oasys.jpa.entities.ReferenceDataFailureEntity
 import uk.gov.justice.digital.oasys.jpa.repositories.ReferenceDataRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
+import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedException
 import java.time.LocalDateTime
 
 @Service
@@ -66,11 +67,18 @@ class ReferenceDataService(private val referenceDataRepository: ReferenceDataRep
             }
           }.orEmpty().also { log.info("Returned ${it.size} items of reference data") }
         }
+        "REFDATA_FAILURE" -> throw EntityNotFoundException("Ref Data item not found for $fieldName, check logs")
         "MAPPING_ERROR" -> throw IllegalArgumentException("Invalid parameters passed for filtered reference data $fieldName, check logs")
+        "INVALID_ASSESSMENT_TYPE" -> throw IllegalArgumentException("Assessment Type $assessmentType is invalid for offender $offenderPk")
+        "ASSESSOR_FAIL" -> throw UserNotAuthorisedException("Assessor invalid for offender  $offenderPk areaCode")
+        "TEAM_FAIL" -> throw UserNotAuthorisedException("Team invalid for offender $offenderPk areaCode")
+        "OFFENDER_FAIL" -> throw EntityNotFoundException("Offender $offenderPk not found")
+        "OASYS_SET_FAIL" -> throw IllegalArgumentException("Oasys Set $oasysSetPk not valid")
+        "INVALID_SQL_PARAMETERS" -> throw Exception("Invalid parameters configured for create_assessment function for offender $offenderPk")
         "OASYS_FAIL" -> throw Exception("Internal OASys error when calling create_assessment function for offender $offenderPk, check logs")
         "SYSTEM_ERROR" -> throw Exception("Unknown OASys error when calling create_assessment function for offender $offenderPk, check logs")
         else -> throw Exception(
-          "Unknown STATE returned by update assessment function. " +
+          "Unknown STATE ${result.state} returned by update assessment function. " +
             "User: $oasysUserCode, areaCode $oasysAreaCode, " +
             "Offender: $offenderPk, AssessmentType: $assessmentType"
         )
@@ -81,7 +89,7 @@ class ReferenceDataService(private val referenceDataRepository: ReferenceDataRep
   private fun logErrors(response: String) {
 
     val result: ReferenceDataFailureEntity = objectMapper.readValue(response)
-    result?.errorDetail?.failures?.forEach {
+    result.errorDetail?.failures?.forEach {
       it.errors.forEach { err ->
         log.error("OASYs Validation Error: $err")
       }
