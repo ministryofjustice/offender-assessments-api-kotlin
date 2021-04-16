@@ -42,11 +42,9 @@ dependencies {
   implementation("com.sun.xml.bind:jaxb-core:3.0.0")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.2")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
-  implementation("io.springfox:springfox-swagger2:3.0.0")
-  implementation("io.springfox:springfox-swagger-ui:3.0.0")
   implementation("commons-io:commons-io:2.8.0")
   implementation("com.zaxxer:HikariCP:4.0.3")
-
+  implementation("io.springfox:springfox-boot-starter:3.0.0")
   implementation("com.google.code.gson:gson:2.8.6")
   implementation("com.google.guava:guava:30.1.1-jre")
 

@@ -37,7 +37,8 @@ class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
           "/webjars/**", "/favicon.ico", "/csrf",
           "/health/**", "/info", "/ping",
           "/v2/api-docs",
-          "/swagger-ui.html", "/swagger-resources", "/swagger-resources/configuration/ui",
+          "/v3/api-docs",
+          "/swagger-ui/**", "/swagger-resources", "/swagger-resources/configuration/ui",
           "/swagger-resources/configuration/security"
         ).permitAll()
           .antMatchers("/authentication/**").hasAnyRole("OASYS_AUTHENTICATION", "OASYS_READ_ONLY")
