@@ -33,7 +33,7 @@ class SwaggerConfiguration(buildProperties: BuildProperties) {
 
   @Bean
   fun api(): Docket {
-    val docket = Docket(DocumentationType.SWAGGER_2)
+    val docket = Docket(DocumentationType.OAS_30)
       .select()
       .apis(RequestHandlerSelectors.basePackage("uk.gov.justice.digital.oasys.controllers"))
       .paths(PathSelectors.any())
