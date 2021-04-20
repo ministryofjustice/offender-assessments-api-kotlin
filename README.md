@@ -57,7 +57,7 @@ The Spring documentation can be found here: https://docs.spring.io/spring-boot/d
 By default the application starts on port '8080'.   To override, set server.port (e.g. `SERVER_PORT=8099 java -jar build/libs/offender-assessments-api-<yyyy-mm-dd>.jar` )  
   
 ### Documentation  
-The generated documentation for the api can be viewed at http://localhost:8080/swagger-ui.html  
+The generated documentation for the api can be viewed at http://localhost:8080/swagger-ui/  
   
 ### Health  
   
