@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.oasys.jpa.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Repository
 import java.sql.Types
 import javax.sql.DataSource

@@ -1,8 +1,8 @@
-package uk.gov.justice.digital.oasys.api
+package uk.gov.justice.digital.oasys.jpa.entities
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class PermissionsResponseDto(
+data class OasysPermissions(
   @JsonProperty("STATE")
   val state: String,
   @JsonProperty("DETAIL")
@@ -15,7 +15,7 @@ data class PermissionsDetails(
 )
 
 data class PermissionsDetail(
-  val checkCode: Roles,
+  val checkCode: String,
   val returnCode: String,
   val returnMessage: String? = null,
   val areaCode: String? = null,

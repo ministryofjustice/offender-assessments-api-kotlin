@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.PermissionsDto
-import uk.gov.justice.digital.oasys.api.PermissionsResponseDto
 import uk.gov.justice.digital.oasys.services.PermissionsService
 
 @RestController
@@ -27,7 +27,7 @@ class PermissionsController(private val permissionsService: PermissionsService) 
   fun getPermissionsForUserCode(
     @PathVariable("userCode") userCode: String,
     @RequestBody permissions: PermissionsDto
-  ): PermissionsResponseDto {
+  ): PermissionsDetailsDto {
     return permissionsService.getPermissions(
       userCode,
       permissions.roleChecks,

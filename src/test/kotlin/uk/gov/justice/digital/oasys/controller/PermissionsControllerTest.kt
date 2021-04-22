@@ -3,7 +3,6 @@ package uk.gov.justice.digital.oasys.controller
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.PermissionsDetail
 import uk.gov.justice.digital.oasys.api.PermissionsDetails
 import uk.gov.justice.digital.oasys.api.PermissionsDto
@@ -53,7 +52,7 @@ class PermissionsControllerTest : IntegrationTest() {
         results = listOf(
           PermissionsDetail(
             checkCode = Roles.ASSESSMENT_READ,
-            returnCode = "YES",
+            authorised = "YES",
             offenderPK = 123456L,
             oasysSetPk = 12L,
             userCode = "USERCODE",
@@ -71,7 +70,7 @@ class PermissionsControllerTest : IntegrationTest() {
         results = listOf(
           PermissionsDetail(
             checkCode = Roles.ASSESSMENT_EDIT,
-            returnCode = "YES",
+            authorised = "YES",
             offenderPK = 123456L,
             oasysSetPk = 12L,
             userCode = "USERCODE",

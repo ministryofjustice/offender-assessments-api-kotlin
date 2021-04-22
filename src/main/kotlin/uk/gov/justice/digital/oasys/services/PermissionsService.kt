@@ -6,11 +6,13 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AssessmentType
-import uk.gov.justice.digital.oasys.api.PermissionsResponseDto
+import uk.gov.justice.digital.oasys.api.PermissionsDetail
+import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
+import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
-import kotlin.streams.toList
+import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysPermissions
 
 @Service
 class PermissionsService(private val permissionsRepository: PermissionsRepository) {
@@ -30,14 +32,33 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     oasysSetPk: Long?,
     assessmentType: AssessmentType?,
     roleNames: RoleNames?
-  ): PermissionsResponseDto {
+  ): PermissionsDetailsDto {
     val permissions = permissionsRepository.getPermissions(
       userCode,
-      roleChecks.stream().map { it.name }.toList(),
+      roleChecks.map { it.name }.toList(),
       area,
       offenderPk,
       oasysSetPk
     )
-    return objectMapper.readValue(permissions)
+    val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
+    //TODO check status SUCCESS
+    //TODO understand errors better
+    if (oasysPermissionsResponse.detail.results.isEmpty()) {
+      throw InvalidOasysPermissions("Permissions not found for user with code $userCode and roleChecks ${roleChecks.joinToString()}")
+    }
+    val firstResult = oasysPermissionsResponse.detail.results[0]
+    val permissionDetails = oasysPermissionsResponse.detail.results.map {
+      PermissionsDetail(
+        Roles.valueOf(it.checkCode),
+        it.returnCode == "YES",
+        it.returnMessage
+      )
+    }
+    return PermissionsDetailsDto(
+      firstResult.userCode,
+      firstResult.offenderPK,
+      firstResult.oasysSetPk,
+      permissionDetails
+    )
   }
 }
