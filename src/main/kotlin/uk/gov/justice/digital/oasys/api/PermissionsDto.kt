@@ -20,5 +20,9 @@ enum class AssessmentType {
 
 enum class Roles {
   RBAC_OTHER,
-  ASSESSMENT_READ
+  ASSESSMENT_READ,
+  ASSESSMENT_EDIT,
+  RBAC_SARA_EDIT,
+  RBAC_SARA_CREATE,
+  OFF_ASSESSMENT_CREATE
 }
