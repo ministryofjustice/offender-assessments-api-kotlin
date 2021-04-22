@@ -1,15 +1,13 @@
 package uk.gov.justice.digital.oasys.jpa.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Repository
-import java.sql.Connection
 import java.sql.Types
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
+import javax.sql.DataSource
 
 @Repository
 class PermissionsRepository(
-  @PersistenceContext
-  private val em: EntityManager
+  val dataSource: DataSource
 ) {
   fun getPermissions(
     userCode: String,
@@ -18,7 +16,6 @@ class PermissionsRepository(
     offenderPk: Long?,
     oasysSetPk: Long?
   ): String {
-    val connection = em.unwrap(Connection::class.java)
 
     val query =
       """DECLARE 
@@ -28,16 +25,13 @@ class PermissionsRepository(
             |p_checks_required => ?, p_user => ?, p_area => ?, p_offender_pk => ?, p_oasys_set_pk => ?);
             |? := LV_RES; END;""".trimMargin()
 
-    connection.prepareCall(query).use { function ->
-      function.setString(1, roleChecks.joinToString(prefix = "'", postfix = "'"))
+    dataSource.connection.prepareCall(query).use { function ->
+      function.setString(1, roleChecks.joinToString())
       function.setString(2, userCode)
       function.setString(3, area)
-      offenderPk?.let {
-        function.setLong(4, offenderPk)
-      }
-      oasysSetPk?.let {
-        function.setLong(5, oasysSetPk)
-      }
+      function.setString(4,  offenderPk.toString())
+      function.setString(5, oasysSetPk.toString())
+
       function.registerOutParameter(6, Types.VARCHAR)
       function.execute()
       return function.getString(6)
