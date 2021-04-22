@@ -19,12 +19,13 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     assessmentType: AssessmentType?,
     roleNames: RoleNames?
   ): PermissionsResponseDto {
-    throw permissionsRepository.getPermissions(
+    val permissions = permissionsRepository.getPermissions(
       userCode,
       roleChecks.stream().map { it.name }.toList(),
       area,
       offenderPk,
       oasysSetPk
     )
+    TODO()
   }
 }
