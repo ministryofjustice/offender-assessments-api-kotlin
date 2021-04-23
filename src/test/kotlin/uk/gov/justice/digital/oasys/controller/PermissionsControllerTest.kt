@@ -1,5 +1,8 @@
 package uk.gov.justice.digital.oasys.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -20,6 +23,7 @@ class PermissionsControllerTest : IntegrationTest() {
   private val area = "AREA"
   private val offenderPk = 123456L
   private val oasysSetPk = 12L
+  private val objectMapper: ObjectMapper = jacksonObjectMapper()
 
   @MockBean
   private lateinit var permissionsRepository: PermissionsRepository
@@ -115,8 +119,10 @@ class PermissionsControllerTest : IntegrationTest() {
       .consumeWith {
         val response = it.responseBody
         assertThat(response.status).isEqualTo(403)
-        assertThat(response.userMessage).isEqualTo("")
-        assertThat(response.payload).isEqualTo(
+        assertThat(response.developerMessage).isEqualTo("")
+        val permissionsDetails =
+          objectMapper.readValue<PermissionsDetailsDto>(objectMapper.writeValueAsString(response.payload))
+        assertThat(permissionsDetails).isEqualTo(
           readAssessmentPermissionsResponse().copy(
             permissions = listOf(
               PermissionsDetail(

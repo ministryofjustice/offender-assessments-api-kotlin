@@ -42,7 +42,6 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
       oasysSetPk
     )
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
-    //TODO check status SUCCESS
     when (oasysPermissionsResponse.state) {
       "SUCCESS" -> {}
       "USER_FAIL"-> {}

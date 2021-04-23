@@ -26,5 +26,5 @@ data class ErrorResponse(
     example = "Response Payload",
     position = 5
   )
-  val payload: String? = null
+  val payload: Any? = null
 )
