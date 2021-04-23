@@ -42,6 +42,13 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     )
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     //TODO check status SUCCESS
+    when (oasysPermissionsResponse.state) {
+      "SUCCESS" -> {}
+      "USER_FAIL"-> {}
+      else -> { throw NotImplementedError()}
+
+
+    }
     //TODO understand errors better
     //TODO 403 error if any of the permissions is not granted
     if (oasysPermissionsResponse.detail.results.isEmpty()) {
