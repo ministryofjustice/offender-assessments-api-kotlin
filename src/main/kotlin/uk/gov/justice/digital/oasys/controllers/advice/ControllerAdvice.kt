@@ -13,6 +13,7 @@ import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.services.exceptions.DuplicateOffenderRecordException
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @ControllerAdvice
 class ControllerAdvice {
@@ -61,6 +62,12 @@ class ControllerAdvice {
   fun handle(e: UserNotAuthorisedException): ResponseEntity<ErrorResponse?> {
     log.error("UserNotAuthorisedException: {}", e.message)
     return ResponseEntity(ErrorResponse(status = 401, developerMessage = e.message), HttpStatus.UNAUTHORIZED)
+  }
+
+  @ExceptionHandler(UserPermissionsChecksFailedException::class)
+  fun handle(e: UserPermissionsChecksFailedException): ResponseEntity<ErrorResponse?> {
+    log.error("UserPermissionsChecksFailedException: {}", e.message)
+    return ResponseEntity(ErrorResponse(status = 403, developerMessage = e.message, payload = e.permissions.toString()), HttpStatus.FORBIDDEN)
   }
 
   @ExceptionHandler(Exception::class)

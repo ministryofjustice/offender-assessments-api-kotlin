@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBody
+import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.api.PermissionsDetail
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.PermissionsDto
@@ -109,11 +110,13 @@ class PermissionsControllerTest : IntegrationTest() {
       .bodyValue(permissions)
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
-      .expectStatus().isUnauthorized
-      .expectBody<PermissionsDetailsDto>()
+      .expectStatus().isForbidden
+      .expectBody<ErrorResponse>()
       .consumeWith {
         val response = it.responseBody
-        assertThat(response).isEqualTo(
+        assertThat(response.status).isEqualTo(403)
+        assertThat(response.userMessage).isEqualTo("")
+        assertThat(response.payload).isEqualTo(
           readAssessmentPermissionsResponse().copy(
             permissions = listOf(
               PermissionsDetail(

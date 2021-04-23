@@ -12,7 +12,8 @@ import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
-import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysPermissions
+import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysPermissionsException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @Service
 class PermissionsService(private val permissionsRepository: PermissionsRepository) {
