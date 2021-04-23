@@ -28,7 +28,7 @@ class PermissionsRepository(
       function.setString(1, roleChecks.joinToString())
       function.setString(2, userCode)
       function.setString(3, area)
-      function.setString(4,  offenderPk.toString())
+      function.setString(4, offenderPk.toString())
       function.setString(5, oasysSetPk.toString())
 
       function.registerOutParameter(6, Types.VARCHAR)
