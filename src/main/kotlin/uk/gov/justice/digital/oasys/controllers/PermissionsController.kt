@@ -17,19 +17,18 @@ import uk.gov.justice.digital.oasys.services.PermissionsService
 @Api(value = "Permissions ", tags = ["Permissions"])
 class PermissionsController(private val permissionsService: PermissionsService) {
 
-  @RequestMapping(path = ["/authentication/user/{userCode}"], method = [RequestMethod.POST])
+  @RequestMapping(path = ["/authorisation/permissions"], method = [RequestMethod.POST])
   @ApiOperation(value = "Checks the permissions of a user in oasys")
   @ApiResponses(
     ApiResponse(code = 200, message = "OK"),
     ApiResponse(code = 403, message = "Unauthorised"),
-    ApiResponse(code = 404, message = "USer not found")
+    ApiResponse(code = 404, message = "User not found")
   )
   fun getPermissionsForUserCode(
-    @PathVariable("userCode") userCode: String,
     @RequestBody permissions: PermissionsDto
   ): PermissionsDetailsDto {
     return permissionsService.getPermissions(
-      userCode,
+      permissions.userCode,
       permissions.roleChecks,
       permissions.area,
       permissions.offenderPk,

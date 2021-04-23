@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.api
 
 class PermissionsDto(
+  val userCode: String,
   val roleChecks: Set<Roles>,
   val area: String,
   val offenderPk: Long? = null,
