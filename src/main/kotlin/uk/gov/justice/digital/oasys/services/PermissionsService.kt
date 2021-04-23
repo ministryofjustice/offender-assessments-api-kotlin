@@ -43,30 +43,38 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     )
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     when (oasysPermissionsResponse.state) {
-      "SUCCESS" -> {}
-      "USER_FAIL"-> {}
-      else -> { throw NotImplementedError()}
-
-
+      "SUCCESS" -> {
+        val firstResult = oasysPermissionsResponse.detail.results[0]
+        val permissionDetails = oasysPermissionsResponse.detail.results.map {
+          PermissionsDetail(
+            Roles.valueOf(it.checkCode),
+            it.returnCode == "YES",
+            it.returnMessage
+          )
+        }
+        val permissionsResponse = PermissionsDetailsDto(
+          firstResult.userCode,
+          firstResult.offenderPK,
+          firstResult.oasysSetPk,
+          permissionDetails
+        )
+        if (permissionsResponse.permissions.any { !it.authorised }) {
+          throw UserPermissionsChecksFailedException("", permissionsResponse)
+        }
+        return permissionsResponse
+      }
+      "USER_FAIL" -> {
+        if (oasysPermissionsResponse.detail.results.isEmpty()) {
+          throw InvalidOasysPermissionsException("Permissions not found for user with code $userCode and roleChecks ${roleChecks.joinToString()}")
+        }
+        throw InvalidOasysPermissionsException("")
+      }
+      "OPERATION_CHECK_FAIL" -> {
+        throw InvalidOasysPermissionsException("")
+      }
+      else -> {
+        throw InvalidOasysPermissionsException("")
+      }
     }
-    //TODO understand errors better
-    //TODO 403 error if any of the permissions is not granted
-    if (oasysPermissionsResponse.detail.results.isEmpty()) {
-      throw InvalidOasysPermissions("Permissions not found for user with code $userCode and roleChecks ${roleChecks.joinToString()}")
-    }
-    val firstResult = oasysPermissionsResponse.detail.results[0]
-    val permissionDetails = oasysPermissionsResponse.detail.results.map {
-      PermissionsDetail(
-        Roles.valueOf(it.checkCode),
-        it.returnCode == "YES",
-        it.returnMessage
-      )
-    }
-    return PermissionsDetailsDto(
-      firstResult.userCode,
-      firstResult.offenderPK,
-      firstResult.oasysSetPk,
-      permissionDetails
-    )
   }
 }
