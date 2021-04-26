@@ -35,10 +35,13 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     offenderPk: Long? = null,
     oasysSetPk: Long? = null,
     assessmentType: AssessmentType? = null,
-    roleNames: RoleNames? = null
+    roleNames: Set<RoleNames>? = emptySet()
   ): PermissionsDetailsDto {
-    if(roleChecks.isEmpty()){
+    if (roleChecks.isEmpty()) {
       throw UserPermissionsBadRequestException("roleChecks should not be empty for user with code $userCode, area $area")
+    }
+    if (roleChecks.contains(Roles.RBAC_OTHER) && roleNames.isNullOrEmpty()) {
+      throw UserPermissionsBadRequestException("At least one RBAC name must be selected for user with code $userCode, area $area")
     }
     val permissions = permissionsRepository.getPermissions(
       userCode,
@@ -47,8 +50,9 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
       offenderPk,
       oasysSetPk,
       assessmentType?.name,
-      roleNames?.rbacName
+      roleNames?.map { it.rbacName }?.toSet()
     )
+    // TODO response String is null?
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     when (oasysPermissionsResponse.state) {
       "SUCCESS" -> {
@@ -101,7 +105,8 @@ fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {
     PermissionsDetailDto(
       Roles.valueOf(it.checkCode),
       it.returnCode == "YES",
-      it.returnMessage
+      it.returnMessage,
+      it.rbacName?.let { rbacName -> RoleNames.valueOf(rbacName) }
     )
   }
 }

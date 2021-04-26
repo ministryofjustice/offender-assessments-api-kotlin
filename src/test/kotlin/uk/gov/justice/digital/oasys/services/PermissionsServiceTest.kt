@@ -260,6 +260,21 @@ class PermissionsServiceTest {
     assertThat(exception.message).isEqualTo("Assessment not found in OASys for oasys set pk $oasysSetPk")
   }
 
+  @Test
+  fun `At least one role name needed to get permissions for RBAC_OTHER role`() {
+    val roleChecks = setOf(Roles.RBAC_OTHER)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    }
+    assertThat(exception.message).isEqualTo("At least one RBAC name must be selected for user with code $userCode, area $area")
+  }
+
   private fun readAssessmentPermissionsResponse(): PermissionsDetailsDto {
     return PermissionsDetailsDto(
       userCode = userCode,

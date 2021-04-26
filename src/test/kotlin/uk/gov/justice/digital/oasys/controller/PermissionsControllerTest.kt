@@ -15,6 +15,7 @@ import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.PermissionsDto
+import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
 
@@ -155,7 +156,7 @@ class PermissionsControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `user can crete offender assessment`() {
+  fun `user can create offender assessment`() {
     given(
       permissionsRepository.getPermissions(
         userCode,
@@ -325,6 +326,123 @@ class PermissionsControllerTest : IntegrationTest() {
       }
   }
 
+  @Test
+  fun `User can get all permissions for RBAC_OTHER role`() {
+    val roleNames = setOf(
+      RoleNames.CREATE_BASIC_ASSESSMENT, RoleNames.CREATE_FULL_ASSESSMENT, RoleNames.CREATE_STANDARD_ASSESSMENT,
+      RoleNames.EDIT_SARA, RoleNames.EDIT_SIGN_AND_LOCK_THE_ASSESSMENT, RoleNames.OPEN_OFFENDER_RECORD,
+      RoleNames.OPEN_SARA, RoleNames.CREATE_OFFENDER, RoleNames.CREATE_RISK_OF_HARM_ASSESSMENT
+    )
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("RBAC_OTHER"),
+        area,
+        offenderPk,
+        oasysSetPk,
+        roleNames = roleNames?.map { it.rbacName }?.toSet()
+      )
+    )
+      .willReturn(
+        "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
+          "{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"CREATE_BASIC_ASSESSMENT\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ", \"RBACName\":\"CREATE_FULL_ASSESSMENT\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"CREATE_STANDARD_ASSESSMENT\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"EDIT_SARA\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"EDIT_SIGN_AND_LOCK_THE_ASSESSMENT\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"OPEN_OFFENDER_RECORD\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"OPEN_SARA\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"CREATE_OFFENDER\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          ",{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"NO\"" +
+          ",\"areaCode\":\"" + area + "\"" +
+          ",\"RBACName\":\"CREATE_RISK_OF_HARM_ASSESSMENT\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}]}}"
+      )
+
+    val permissions = PermissionsDto(
+      userCode,
+      setOf(Roles.RBAC_OTHER),
+      area,
+      offenderPk,
+      oasysSetPk,
+      roleNames = roleNames
+    )
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isForbidden
+      .expectBody<ErrorResponse>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response.developerMessage).isEqualTo("One of the permissions is Unauthorized")
+        val permissionsDetails =
+          objectMapper.readValue<PermissionsDetailsDto>(objectMapper.writeValueAsString(response.payload))
+        assertThat(permissionsDetails).isEqualTo(allRbacOtherPermissionsResponse())
+      }
+  }
+
   fun readAndEditAssessmentPermissionsResponse(): PermissionsDetailsDto {
     return PermissionsDetailsDto(
       userCode = userCode,
@@ -356,6 +474,7 @@ class PermissionsControllerTest : IntegrationTest() {
       )
     )
   }
+
   fun readAssessmentPermissionsResponse(): PermissionsDetailsDto {
     return PermissionsDetailsDto(
       userCode = userCode,
@@ -379,6 +498,59 @@ class PermissionsControllerTest : IntegrationTest() {
         PermissionsDetailDto(
           checkCode = Roles.ASSESSMENT_EDIT,
           authorised = true
+        )
+      )
+    )
+  }
+
+  fun allRbacOtherPermissionsResponse(): PermissionsDetailsDto {
+    return PermissionsDetailsDto(
+      userCode = userCode,
+      permissions = listOf(
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.CREATE_BASIC_ASSESSMENT
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.CREATE_FULL_ASSESSMENT
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.CREATE_STANDARD_ASSESSMENT
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.EDIT_SARA
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.EDIT_SIGN_AND_LOCK_THE_ASSESSMENT
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.OPEN_OFFENDER_RECORD
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.OPEN_SARA
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.CREATE_OFFENDER
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = false,
+          rbacName = RoleNames.CREATE_RISK_OF_HARM_ASSESSMENT
         )
       )
     )

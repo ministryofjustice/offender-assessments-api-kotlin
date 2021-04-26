@@ -10,7 +10,8 @@ data class PermissionsDetailsDto(
 data class PermissionsDetailDto(
   val checkCode: Roles,
   val authorised: Boolean,
-  val returnMessage: String? = null
+  val returnMessage: String? = null,
+  val rbacName: RoleNames? = null
 )
 
 data class ErrorDetailsDto(

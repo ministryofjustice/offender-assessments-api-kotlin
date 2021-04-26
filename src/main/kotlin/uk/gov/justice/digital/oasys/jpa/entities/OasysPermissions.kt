@@ -21,6 +21,7 @@ data class OasysPermissionsDetail(
   val returnCode: String,
   val returnMessage: String? = null,
   val areaCode: String? = null,
+  @JsonProperty("RBACName")
   val rbacName: String? = null,
   val checkDate: String,
   val userCode: String,

@@ -15,7 +15,7 @@ class PermissionsRepository(
     offenderPk: Long? = null,
     oasysSetPk: Long? = null,
     assessmentType: String? = null,
-    roleNames: String? = null
+    roleNames: Set<String>? = null
   ): String {
 
     val query =
@@ -34,7 +34,7 @@ class PermissionsRepository(
       function.setString(4, offenderPk?.toString())
       function.setString(5, oasysSetPk?.toString())
       function.setString(6, assessmentType)
-      function.setString(7, roleNames)
+      function.setString(7, roleNames?.joinToString())
 
       function.registerOutParameter(8, Types.VARCHAR)
       function.execute()

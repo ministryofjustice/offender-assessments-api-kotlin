@@ -7,11 +7,19 @@ class PermissionsDto(
   val offenderPk: Long? = null,
   val oasysSetPk: Long? = null,
   val assessmentType: AssessmentType? = null,
-  val roleNames: RoleNames? = null
+  val roleNames: Set<RoleNames>? = emptySet()
 )
 
 enum class RoleNames(val rbacName: String) {
   CREATE_BASIC_ASSESSMENT("Create Basic Assessment"),
+  CREATE_FULL_ASSESSMENT("Create Full Assessment"),
+  CREATE_STANDARD_ASSESSMENT("Create Standard Assessment"),
+  EDIT_SARA("Edit SARA"),
+  EDIT_SIGN_AND_LOCK_THE_ASSESSMENT("Edit Sign And Lock The Assessment"),
+  OPEN_OFFENDER_RECORD("Open Offender Record"),
+  OPEN_SARA("Open SARA"),
+  CREATE_OFFENDER("Create Offender"),
+  CREATE_RISK_OF_HARM_ASSESSMENT("Create Risk of Harm Assessment")
 }
 
 enum class AssessmentType {
