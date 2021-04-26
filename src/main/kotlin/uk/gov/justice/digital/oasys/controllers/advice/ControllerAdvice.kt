@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.services.exceptions.DuplicateOffenderRecordException
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
-import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysPermissionsException
+import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
@@ -65,8 +65,8 @@ class ControllerAdvice {
     return ResponseEntity(ErrorResponse(status = 401, developerMessage = e.message), HttpStatus.UNAUTHORIZED)
   }
 
-  @ExceptionHandler(InvalidOasysPermissionsException::class)
-  fun handle(e: InvalidOasysPermissionsException): ResponseEntity<ErrorResponse?> {
+  @ExceptionHandler(InvalidOasysRequestException::class)
+  fun handle(e: InvalidOasysRequestException): ResponseEntity<ErrorResponse?> {
     log.error("InvalidOasysPermissionsException: {}", e.message)
     return ResponseEntity(ErrorResponse(status = 403, developerMessage = e.message), HttpStatus.FORBIDDEN)
   }

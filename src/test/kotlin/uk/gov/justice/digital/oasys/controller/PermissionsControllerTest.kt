@@ -30,7 +30,7 @@ class PermissionsControllerTest : IntegrationTest() {
 
   @Test
   fun `user can read an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, listOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +
@@ -61,7 +61,7 @@ class PermissionsControllerTest : IntegrationTest() {
 
   @Test
   fun `user can edit an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, listOf("ASSESSMENT_EDIT"), area, offenderPk, oasysSetPk))
+    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_EDIT"), area, offenderPk, oasysSetPk))
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +
@@ -91,7 +91,7 @@ class PermissionsControllerTest : IntegrationTest() {
 
   @Test
   fun `user does not have permissions to read an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, listOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +

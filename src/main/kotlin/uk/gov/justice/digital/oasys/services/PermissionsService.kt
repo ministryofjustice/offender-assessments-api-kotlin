@@ -12,7 +12,7 @@ import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
-import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysPermissionsException
+import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @Service
@@ -29,14 +29,14 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     userCode: String,
     roleChecks: Set<Roles>,
     area: String,
-    offenderPk: Long?,
-    oasysSetPk: Long?,
-    assessmentType: AssessmentType?,
-    roleNames: RoleNames?
+    offenderPk: Long? = null,
+    oasysSetPk: Long? = null,
+    assessmentType: AssessmentType? = null,
+    roleNames: RoleNames? = null
   ): PermissionsDetailsDto {
     val permissions = permissionsRepository.getPermissions(
       userCode,
-      roleChecks.map { it.name }.toList(),
+      roleChecks.map { it.name }.toSet(),
       area,
       offenderPk,
       oasysSetPk
@@ -44,37 +44,45 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     when (oasysPermissionsResponse.state) {
       "SUCCESS" -> {
-        val firstResult = oasysPermissionsResponse.detail.results[0]
-        val permissionDetails = oasysPermissionsResponse.detail.results.map {
-          PermissionsDetail(
-            Roles.valueOf(it.checkCode),
-            it.returnCode == "YES",
-            it.returnMessage
-          )
+        val permissionsDetailsDto = oasysPermissionsResponse.toPermissionsDetailsDto()
+        if (permissionsDetailsDto.permissions.any { !it.authorised }) {
+          throw UserPermissionsChecksFailedException("", permissionsDetailsDto)
         }
-        val permissionsResponse = PermissionsDetailsDto(
-          firstResult.userCode,
-          firstResult.offenderPK,
-          firstResult.oasysSetPk,
-          permissionDetails
-        )
-        if (permissionsResponse.permissions.any { !it.authorised }) {
-          throw UserPermissionsChecksFailedException("", permissionsResponse)
-        }
-        return permissionsResponse
+        return permissionsDetailsDto
       }
       "USER_FAIL" -> {
-        if (oasysPermissionsResponse.detail.results.isEmpty()) {
-          throw InvalidOasysPermissionsException("Permissions not found for user with code $userCode and roleChecks ${roleChecks.joinToString()}")
-        }
-        throw InvalidOasysPermissionsException("")
+        throw InvalidOasysRequestException("User not found in OASys for user with code $userCode, area $area")
+      }
+      "OFFENDER_FAIL" -> {
+        throw InvalidOasysRequestException("Offender not found in OASys for offender $offenderPk")
+      }
+      "OASYS_SET_FAIL" -> {
+        throw InvalidOasysRequestException("Assessment not found in OASys for oasys set pk $oasysSetPk")
       }
       "OPERATION_CHECK_FAIL" -> {
-        throw InvalidOasysPermissionsException("")
+        throw InvalidOasysRequestException("")
       }
       else -> {
-        throw InvalidOasysPermissionsException("")
+        throw InvalidOasysRequestException("")
       }
     }
   }
+}
+
+
+fun OasysPermissions.toPermissionsDetailsDto() : PermissionsDetailsDto {
+  val firstResult = this.detail.results[0]
+  val permissionDetails = this.detail.results.map {
+    PermissionsDetail(
+      Roles.valueOf(it.checkCode),
+      it.returnCode == "YES",
+      it.returnMessage
+    )
+  }
+ return PermissionsDetailsDto(
+    firstResult.userCode,
+    firstResult.offenderPK,
+    firstResult.oasysSetPk,
+    permissionDetails
+  )
 }

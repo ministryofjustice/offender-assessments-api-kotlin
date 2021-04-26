@@ -8,6 +8,6 @@ class DuplicateOffenderRecordException(msg: String) : RuntimeException(msg)
 
 class UserNotAuthorisedException(msg: String) : RuntimeException(msg)
 
-class InvalidOasysPermissionsException(msg: String) : RuntimeException(msg)
+class InvalidOasysRequestException(msg: String) : RuntimeException(msg)
 
 class UserPermissionsChecksFailedException(msg: String, val permissions: PermissionsDetailsDto) : RuntimeException(msg)
