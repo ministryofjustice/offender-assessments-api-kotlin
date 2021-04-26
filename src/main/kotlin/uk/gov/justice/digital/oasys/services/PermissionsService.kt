@@ -11,6 +11,7 @@ import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
+import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionsDetails
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
 import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
@@ -46,7 +47,7 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
       "SUCCESS" -> {
         val permissionsDetailsDto = oasysPermissionsResponse.toPermissionsDetailsDto()
         if (permissionsDetailsDto.permissions.any { !it.authorised }) {
-          throw UserPermissionsChecksFailedException("", permissionsDetailsDto)
+          throw UserPermissionsChecksFailedException("One of the permissions is Unauthorized", permissionsDetailsDto)
         }
         return permissionsDetailsDto
       }
@@ -69,20 +70,22 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
   }
 }
 
-
-fun OasysPermissions.toPermissionsDetailsDto() : PermissionsDetailsDto {
+fun OasysPermissions.toPermissionsDetailsDto(): PermissionsDetailsDto {
   val firstResult = this.detail.results[0]
-  val permissionDetails = this.detail.results.map {
+  return PermissionsDetailsDto(
+    firstResult.userCode,
+    firstResult.offenderPK,
+    firstResult.oasysSetPk,
+    this.detail.toPermissionsDetails()
+  )
+}
+
+fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetail> {
+  return this.results.map {
     PermissionsDetail(
       Roles.valueOf(it.checkCode),
       it.returnCode == "YES",
       it.returnMessage
     )
   }
- return PermissionsDetailsDto(
-    firstResult.userCode,
-    firstResult.offenderPK,
-    firstResult.oasysSetPk,
-    permissionDetails
-  )
 }

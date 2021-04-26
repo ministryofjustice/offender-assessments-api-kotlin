@@ -6,15 +6,15 @@ data class OasysPermissions(
   @JsonProperty("STATE")
   val state: String,
   @JsonProperty("DETAIL")
-  val detail: PermissionsDetails
+  val detail: OasysPermissionsDetails
 )
 
-data class PermissionsDetails(
+data class OasysPermissionsDetails(
   @JsonProperty("Results")
-  val results: List<PermissionsDetail>
+  val results: List<OasysPermissionsDetail>
 )
 
-data class PermissionsDetail(
+data class OasysPermissionsDetail(
   val checkCode: String,
   val returnCode: String,
   val returnMessage: String? = null,
@@ -25,3 +25,14 @@ data class PermissionsDetail(
   val offenderPK: Long? = null,
   val oasysSetPk: Long? = null
 )
+
+data class OasysPermissionError(
+  val failureType: FailureType,
+  val errorName: String,
+  val oasysErrorLogId: Int,
+  val message: String
+)
+
+enum class FailureType {
+  PARAMETER_CHECK
+}
