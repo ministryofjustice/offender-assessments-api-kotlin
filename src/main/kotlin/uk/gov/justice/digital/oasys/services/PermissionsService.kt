@@ -37,12 +37,17 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     assessmentType: AssessmentType? = null,
     roleNames: RoleNames? = null
   ): PermissionsDetailsDto {
+    if(roleChecks.isEmpty()){
+      throw UserPermissionsBadRequestException("roleChecks should not be empty for user with code $userCode, area $area")
+    }
     val permissions = permissionsRepository.getPermissions(
       userCode,
       roleChecks.map { it.name }.toSet(),
       area,
       offenderPk,
-      oasysSetPk
+      oasysSetPk,
+      assessmentType?.name,
+      roleNames?.rbacName
     )
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     when (oasysPermissionsResponse.state) {
@@ -67,7 +72,7 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
         throw UserPermissionsBadRequestException("Operation check failed", errors = errorDetailsDto)
       }
       else -> {
-        throw InvalidOasysRequestException("")
+        throw InvalidOasysRequestException("Unknown Exception with oasys response $oasysPermissionsResponse")
       }
     }
   }

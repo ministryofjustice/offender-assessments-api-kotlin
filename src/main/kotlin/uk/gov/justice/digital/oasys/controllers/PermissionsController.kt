@@ -20,8 +20,8 @@ class PermissionsController(private val permissionsService: PermissionsService) 
   @ApiOperation(value = "Checks the permissions of a user in oasys")
   @ApiResponses(
     ApiResponse(code = 200, message = "OK"),
-    ApiResponse(code = 403, message = "Unauthorised"),
-    ApiResponse(code = 404, message = "User not found")
+    ApiResponse(code = 400, message = "Bad Request"),
+    ApiResponse(code = 403, message = "Unauthorised")
   )
   fun getPermissionsForUserCode(
     @RequestBody permissions: PermissionsDto

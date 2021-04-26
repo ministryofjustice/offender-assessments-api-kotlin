@@ -33,6 +33,20 @@ class PermissionsServiceTest {
   private val service = PermissionsService(permissionsRepository)
 
   @Test
+  fun `get permissions with empty roleChecks throws Exception`() {
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        setOf(),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    }
+    assertThat(exception.message).isEqualTo("roleChecks should not be empty for user with code $userCode, area $area")
+  }
+
+  @Test
   fun `user can read an assessment`() {
     val permissions = "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
       "{" +

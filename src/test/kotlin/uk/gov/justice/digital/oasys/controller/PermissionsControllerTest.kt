@@ -18,7 +18,7 @@ import uk.gov.justice.digital.oasys.api.PermissionsDto
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
 
-@AutoConfigureWebTestClient(timeout = "60000")
+@AutoConfigureWebTestClient
 class PermissionsControllerTest : IntegrationTest() {
   private val userCode = "USER_CODE"
   private val area = "AREA"
@@ -31,7 +31,15 @@ class PermissionsControllerTest : IntegrationTest() {
 
   @Test
   fun `user can read an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_READ"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +
@@ -62,7 +70,15 @@ class PermissionsControllerTest : IntegrationTest() {
 
   @Test
   fun `user can edit an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_EDIT"), area, offenderPk, oasysSetPk))
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_EDIT"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +
@@ -91,8 +107,103 @@ class PermissionsControllerTest : IntegrationTest() {
   }
 
   @Test
+  fun `user can read and edit an assessment`() {
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_READ", "ASSESSMENT_EDIT"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
+      .willReturn(
+        "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
+          "{" +
+          "\"checkCode\":\"ASSESSMENT_READ\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"offenderPK\":" + offenderPk + "" +
+          ",\"oasysSetPk\":" + oasysSetPk + "" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}," +
+          "{" +
+          "\"checkCode\":\"ASSESSMENT_EDIT\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"offenderPK\":" + offenderPk + "" +
+          ",\"oasysSetPk\":" + oasysSetPk + "" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          "]" +
+          "}}"
+      )
+    val permissions =
+      PermissionsDto(userCode, setOf(Roles.ASSESSMENT_READ, Roles.ASSESSMENT_EDIT), area, offenderPk, oasysSetPk)
+
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<PermissionsDetailsDto>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response).isEqualTo(readAndEditAssessmentPermissionsResponse())
+      }
+  }
+
+  @Test
+  fun `user can crete offender assessment`() {
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("OFF_ASSESSMENT_CREATE"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
+      .willReturn(
+        "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
+          "{" +
+          "\"checkCode\":\"OFF_ASSESSMENT_CREATE\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"offenderPK\":" + offenderPk + "" +
+          ",\"oasysSetPk\":" + oasysSetPk + "" +
+          ",\"assessmentType\":\"LONG_FORM_PSR\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          "]" +
+          "}}"
+      )
+    val permissions = PermissionsDto(userCode, setOf(Roles.OFF_ASSESSMENT_CREATE), area, offenderPk, oasysSetPk)
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<PermissionsDetailsDto>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response).isEqualTo(createOffenderAssessmentPermissionsResponse())
+      }
+  }
+
+  @Test
   fun `user does not have permissions to read an assessment`() {
-    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_READ"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
       .willReturn(
         "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
           "{" +
@@ -155,7 +266,15 @@ class PermissionsControllerTest : IntegrationTest() {
       "\"message\":\"OASYS SET PKmissing\"" +
       "}" +
       "]}}"
-    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_READ"),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    )
       .willReturn(errorResponse)
 
     val permissions = PermissionsDto(userCode, setOf(Roles.ASSESSMENT_READ), area, offenderPk, oasysSetPk)
@@ -189,6 +308,54 @@ class PermissionsControllerTest : IntegrationTest() {
       }
   }
 
+  @Test
+  fun `get permissions with empty roleChecks throws Exception`() {
+    val permissions = PermissionsDto(userCode, setOf(), area, offenderPk, oasysSetPk)
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isBadRequest
+      .expectBody<ErrorResponse>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response.status).isEqualTo(400)
+        assertThat(response.developerMessage).isEqualTo("roleChecks should not be empty for user with code $userCode, area $area")
+      }
+  }
+
+  fun readAndEditAssessmentPermissionsResponse(): PermissionsDetailsDto {
+    return PermissionsDetailsDto(
+      userCode = userCode,
+      offenderPk = offenderPk,
+      oasysSetPk = oasysSetPk,
+      permissions = listOf(
+        PermissionsDetailDto(
+          checkCode = Roles.ASSESSMENT_READ,
+          authorised = true
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.ASSESSMENT_EDIT,
+          authorised = true
+        )
+      )
+    )
+  }
+
+  fun createOffenderAssessmentPermissionsResponse(): PermissionsDetailsDto {
+    return PermissionsDetailsDto(
+      userCode = userCode,
+      offenderPk = offenderPk,
+      oasysSetPk = oasysSetPk,
+      permissions = listOf(
+        PermissionsDetailDto(
+          checkCode = Roles.OFF_ASSESSMENT_CREATE,
+          authorised = true
+        )
+      )
+    )
+  }
   fun readAssessmentPermissionsResponse(): PermissionsDetailsDto {
     return PermissionsDetailsDto(
       userCode = userCode,

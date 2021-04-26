@@ -13,7 +13,9 @@ class PermissionsRepository(
     roleChecks: Set<String>,
     area: String,
     offenderPk: Long? = null,
-    oasysSetPk: Long? = null
+    oasysSetPk: Long? = null,
+    assessmentType: String? = null,
+    roleNames: String? = null
   ): String {
 
     val query =
@@ -21,7 +23,8 @@ class PermissionsRepository(
             |LV_RES VARCHAR2(4000); 
             |BEGIN 
             |LV_RES := ARN_RESTFUL_API_PKG.allowed_operations(
-            |p_checks_required => ?, p_user => ?, p_area => ?, p_offender_pk => ?, p_oasys_set_pk => ?);
+            |p_checks_required => ?, p_user => ?, p_area => ?, p_offender_pk => ?, p_oasys_set_pk => ?
+            |, p_assessment_type => ?, p_rbac_name => ?);
             |? := LV_RES; END;""".trimMargin()
 
     dataSource.connection.prepareCall(query).use { function ->
@@ -30,10 +33,12 @@ class PermissionsRepository(
       function.setString(3, area)
       function.setString(4, offenderPk?.toString())
       function.setString(5, oasysSetPk?.toString())
+      function.setString(6, assessmentType)
+      function.setString(7, roleNames)
 
-      function.registerOutParameter(6, Types.VARCHAR)
+      function.registerOutParameter(8, Types.VARCHAR)
       function.execute()
-      return function.getString(6)
+      return function.getString(8)
     }
   }
 }
