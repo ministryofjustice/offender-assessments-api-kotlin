@@ -10,8 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBody
+import uk.gov.justice.digital.oasys.api.ErrorDetailsDto
 import uk.gov.justice.digital.oasys.api.ErrorResponse
-import uk.gov.justice.digital.oasys.api.PermissionsDetail
+import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.PermissionsDto
 import uk.gov.justice.digital.oasys.api.Roles
@@ -119,18 +120,70 @@ class PermissionsControllerTest : IntegrationTest() {
       .consumeWith {
         val response = it.responseBody
         assertThat(response.status).isEqualTo(403)
-        assertThat(response.developerMessage).isEqualTo("")
+        assertThat(response.developerMessage).isEqualTo("One of the permissions is Unauthorized")
         val permissionsDetails =
           objectMapper.readValue<PermissionsDetailsDto>(objectMapper.writeValueAsString(response.payload))
         assertThat(permissionsDetails).isEqualTo(
           readAssessmentPermissionsResponse().copy(
             permissions = listOf(
-              PermissionsDetail(
+              PermissionsDetailDto(
                 checkCode = Roles.ASSESSMENT_READ,
                 authorised = false,
                 returnMessage = "Assessment is read-only"
               )
             )
+          )
+        )
+      }
+  }
+
+  @Test
+  fun `Operation check failed and a list of errors is returned`() {
+    val errorResponse = "{\"STATE\":\"OPERATION_CHECK_FAIL\"" +
+      ",\"DETAIL\":{\"Results\":[]" +
+      ", \"Errors\": [" +
+      "{" +
+      "\"failureType\":\"PARAMETER_CHECK\"," +
+      "\"errorName\":\"missing_assessment_type\"," +
+      "\"oasysErrorLogId\":863," +
+      "\"message\":\"Assessment type missing\"" +
+      " }," +
+      "{" +
+      "\"failureType\":\"PARAMETER_CHECK\"," +
+      "\"errorName\":\"missing_set_pk\"," +
+      "\"oasysErrorLogId\":862," +
+      "\"message\":\"OASYS SET PKmissing\"" +
+      "}" +
+      "]}}"
+    given(permissionsRepository.getPermissions(userCode, setOf("ASSESSMENT_READ"), area, offenderPk, oasysSetPk))
+      .willReturn(errorResponse)
+
+    val permissions = PermissionsDto(userCode, setOf(Roles.ASSESSMENT_READ), area, offenderPk, oasysSetPk)
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isBadRequest
+      .expectBody<ErrorResponse>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response.status).isEqualTo(400)
+        assertThat(response.developerMessage).isEqualTo("Operation check failed")
+        val errorDetails =
+          objectMapper.readValue<List<ErrorDetailsDto>>(objectMapper.writeValueAsString(response.payload))
+        assertThat(errorDetails).containsExactlyInAnyOrder(
+          ErrorDetailsDto(
+            failureType = "PARAMETER_CHECK",
+            errorName = "missing_assessment_type",
+            oasysErrorLogId = 863,
+            message = "Assessment type missing"
+          ),
+          ErrorDetailsDto(
+            failureType = "PARAMETER_CHECK",
+            errorName = "missing_set_pk",
+            oasysErrorLogId = 862,
+            message = "OASYS SET PKmissing"
           )
         )
       }
@@ -142,7 +195,7 @@ class PermissionsControllerTest : IntegrationTest() {
       offenderPk = offenderPk,
       oasysSetPk = oasysSetPk,
       permissions = listOf(
-        PermissionsDetail(
+        PermissionsDetailDto(
           checkCode = Roles.ASSESSMENT_READ,
           authorised = true
         )
@@ -156,7 +209,7 @@ class PermissionsControllerTest : IntegrationTest() {
       offenderPk = offenderPk,
       oasysSetPk = oasysSetPk,
       permissions = listOf(
-        PermissionsDetail(
+        PermissionsDetailDto(
           checkCode = Roles.ASSESSMENT_EDIT,
           authorised = true
         )

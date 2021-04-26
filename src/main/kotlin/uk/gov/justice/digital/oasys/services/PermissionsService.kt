@@ -6,7 +6,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AssessmentType
-import uk.gov.justice.digital.oasys.api.PermissionsDetail
+import uk.gov.justice.digital.oasys.api.ErrorDetailsDto
+import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
@@ -14,6 +15,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionsDetails
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
 import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsBadRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @Service
@@ -61,7 +63,8 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
         throw InvalidOasysRequestException("Assessment not found in OASys for oasys set pk $oasysSetPk")
       }
       "OPERATION_CHECK_FAIL" -> {
-        throw InvalidOasysRequestException("")
+        val errorDetailsDto = oasysPermissionsResponse.toErrorDetailsDto()
+        throw UserPermissionsBadRequestException("Operation check failed", errors = errorDetailsDto)
       }
       else -> {
         throw InvalidOasysRequestException("")
@@ -80,9 +83,17 @@ fun OasysPermissions.toPermissionsDetailsDto(): PermissionsDetailsDto {
   )
 }
 
-fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetail> {
+fun OasysPermissions.toErrorDetailsDto(): List<ErrorDetailsDto> {
+  return this.detail.errors.map {
+    ErrorDetailsDto(
+      it.failureType.name, it.errorName, it.oasysErrorLogId, it.message
+    )
+  }.toList()
+}
+
+fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {
   return this.results.map {
-    PermissionsDetail(
+    PermissionsDetailDto(
       Roles.valueOf(it.checkCode),
       it.returnCode == "YES",
       it.returnMessage

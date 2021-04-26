@@ -11,11 +11,13 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.gov.justice.digital.oasys.api.PermissionsDetail
+import uk.gov.justice.digital.oasys.api.ErrorDetailsDto
+import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.Roles
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
 import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsBadRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @ExtendWith(MockKExtension::class)
@@ -100,12 +102,68 @@ class PermissionsServiceTest {
     assertThat(permissionsDetails).isEqualTo(
       readAssessmentPermissionsResponse().copy(
         permissions = listOf(
-          PermissionsDetail(
+          PermissionsDetailDto(
             checkCode = Roles.ASSESSMENT_READ,
             authorised = false,
             returnMessage = "Assessment is read-only"
           )
         )
+      )
+    )
+  }
+
+  @Test
+  fun `Operation check failed and a list of errors is returned`() {
+    val errorResponse = "{\"STATE\":\"OPERATION_CHECK_FAIL\"" +
+      ",\"DETAIL\":{\"Results\":[]" +
+      ", \"Errors\": [" +
+      "{" +
+      "\"failureType\":\"PARAMETER_CHECK\"," +
+      "\"errorName\":\"missing_assessment_type\"," +
+      "\"oasysErrorLogId\":863," +
+      "\"message\":\"Assessment type missing\"" +
+      " }," +
+      "{" +
+      "\"failureType\":\"PARAMETER_CHECK\"," +
+      "\"errorName\":\"missing_set_pk\"," +
+      "\"oasysErrorLogId\":862," +
+      "\"message\":\"OASYS SET PKmissing\"" +
+      "}" +
+      "]}}"
+    val roleChecks = setOf(Roles.ASSESSMENT_READ)
+    every {
+      permissionsRepository.getPermissions(
+        userCode,
+        roleChecks.map { it.name }.toSet(),
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    } returns errorResponse
+
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        offenderPk,
+        oasysSetPk
+      )
+    }
+    val errorDetails =
+      objectMapper.readValue<List<ErrorDetailsDto>>(objectMapper.writeValueAsString(exception.errors))
+    assertThat(errorDetails).containsExactlyInAnyOrder(
+      ErrorDetailsDto(
+        failureType = "PARAMETER_CHECK",
+        errorName = "missing_assessment_type",
+        oasysErrorLogId = 863,
+        message = "Assessment type missing"
+      ),
+      ErrorDetailsDto(
+        failureType = "PARAMETER_CHECK",
+        errorName = "missing_set_pk",
+        oasysErrorLogId = 862,
+        message = "OASYS SET PKmissing"
       )
     )
   }
@@ -194,7 +252,7 @@ class PermissionsServiceTest {
       offenderPk = offenderPk,
       oasysSetPk = oasysSetPk,
       permissions = listOf(
-        PermissionsDetail(
+        PermissionsDetailDto(
           checkCode = Roles.ASSESSMENT_READ,
           authorised = true
         )
