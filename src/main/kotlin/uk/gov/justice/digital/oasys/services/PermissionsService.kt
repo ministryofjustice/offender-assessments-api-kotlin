@@ -52,7 +52,6 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
       assessmentType?.name,
       roleNames?.map { it.rbacName }?.toSet()
     )
-    // TODO response String is null?
     val oasysPermissionsResponse = objectMapper.readValue<OasysPermissions>(permissions)
     when (oasysPermissionsResponse.state) {
       "SUCCESS" -> {
