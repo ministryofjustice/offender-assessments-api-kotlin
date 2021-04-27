@@ -38,7 +38,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("ASSESSMENT_READ"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(
@@ -77,7 +79,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("ASSESSMENT_EDIT"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(
@@ -115,7 +119,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("ASSESSMENT_READ", "ASSESSMENT_EDIT"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(
@@ -163,7 +169,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("OFF_ASSESSMENT_CREATE"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(
@@ -202,7 +210,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("ASSESSMENT_READ"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(
@@ -273,7 +283,9 @@ class PermissionsControllerTest : IntegrationTest() {
         setOf("ASSESSMENT_READ"),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     )
       .willReturn(errorResponse)
