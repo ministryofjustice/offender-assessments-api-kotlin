@@ -40,7 +40,9 @@ class PermissionsServiceTest {
         setOf(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     }
     assertThat(exception.message).isEqualTo("roleChecks should not be empty for user with code $userCode, area $area")
@@ -66,7 +68,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns permissions
 
@@ -98,7 +102,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns permissions
 
@@ -108,7 +114,9 @@ class PermissionsServiceTest {
         roleChecks,
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     }
     val permissionsDetails =
@@ -151,7 +159,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns errorResponse
 
@@ -192,7 +202,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns permissions
 
@@ -202,7 +214,9 @@ class PermissionsServiceTest {
         roleChecks,
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     }
     assertThat(exception.message).isEqualTo("User not found in OASys for user with code $userCode, area $area")
@@ -218,7 +232,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns permissions
 
@@ -244,7 +260,9 @@ class PermissionsServiceTest {
         roleChecks.map { it.name }.toSet(),
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     } returns permissions
 
@@ -254,7 +272,9 @@ class PermissionsServiceTest {
         roleChecks,
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     }
     assertThat(exception.message).isEqualTo("Assessment not found in OASys for oasys set pk $oasysSetPk")
@@ -269,7 +289,9 @@ class PermissionsServiceTest {
         roleChecks,
         area,
         offenderPk,
-        oasysSetPk
+        oasysSetPk,
+        null,
+        emptySet()
       )
     }
     assertThat(exception.message).isEqualTo("At least one RBAC name must be selected for user with code $userCode, area $area")
