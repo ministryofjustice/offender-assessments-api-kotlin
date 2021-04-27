@@ -148,4 +148,80 @@
         <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
         <cve>CVE-2020-8908</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: commons-io:commons-io:2.2)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/commons\-io/commons\-io@.*$</packageUrl>
+        <cve>CVE-2021-29425</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-client:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-client@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-continuation:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-continuation@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-http:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-http@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-security:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-security@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-server:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-server@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-servlet:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-servlet@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-servlets:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-servlets@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-util:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-util@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress><suppress>
+    <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-webapp:9.2.28.v20190418)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-webapp@.*$</packageUrl>
+    <cve>CVE-2021-28165</cve>
+</suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: wiremock-standalone-2.27.2.jar (shaded: org.eclipse.jetty:jetty-xml:9.2.28.v20190418)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-xml@.*$</packageUrl>
+        <cve>CVE-2021-28165</cve>
+    </suppress>
 </suppressions>

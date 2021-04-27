@@ -1,6 +1,6 @@
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.1"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.7"
   kotlin("plugin.spring") version "1.4.21"
   kotlin("plugin.jpa") version "1.4.21"
   kotlin("plugin.allopen") version "1.4.10"
@@ -40,8 +40,8 @@ dependencies {
   implementation("javax.activation:activation:1.1.1")
   implementation("com.sun.xml.bind:jaxb-impl:3.0.0")
   implementation("com.sun.xml.bind:jaxb-core:3.0.0")
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.2")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")
   implementation("commons-io:commons-io:2.8.0")
   implementation("com.zaxxer:HikariCP:4.0.3")
   implementation("io.springfox:springfox-boot-starter:3.0.0")
@@ -51,7 +51,7 @@ dependencies {
   runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.10.0.0")
   implementation("org.apache.commons:commons-lang3:3.12.0")
   runtimeOnly("com.h2database:h2:1.4.200")
-  runtimeOnly("org.flywaydb:flyway-core:7.7.0")
+  runtimeOnly("org.flywaydb:flyway-core:7.8.1")
 
   testRuntimeOnly("com.h2database:h2:1.4.200")
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
