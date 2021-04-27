@@ -31,7 +31,7 @@ class AuthenticationController(private val authenticationService: Authentication
   }
 
   @RequestMapping(path = ["/authentication/user/{oasysUserId}/offender/{offenderId}/{resource}"], method = [RequestMethod.GET])
-  @ApiOperation(value = "Verifies a user has access to an offender")
+  @ApiOperation(value = "Verifies a user has access to an offender", hidden = true)
   @ApiResponses(ApiResponse(code = 200, message = "OK"))
   fun getUserAuthorisedForOffenderId(
     @PathVariable("oasysUserId") oasysUserId: String?,
