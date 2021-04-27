@@ -23,6 +23,7 @@ class SentencePlanController(private val sentencePlanService: SentencePlanServic
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
+  @Deprecated("/latest is now deprecated")
   @RequestMapping(path = ["/offenders/{identityType}/{identity}/basicSentencePlans/latest"], method = [RequestMethod.GET])
   @ApiResponses(ApiResponse(code = 404, message = "Sentence Plan or Offender not found"), ApiResponse(code = 200, message = "OK"))
   fun getLatestBasicSentencePlanForOffender(

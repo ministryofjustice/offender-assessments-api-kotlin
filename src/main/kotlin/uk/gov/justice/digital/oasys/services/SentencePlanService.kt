@@ -23,6 +23,7 @@ class SentencePlanService(
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
+  @Deprecated("Latest is now deprecated.")
   fun getLatestBasicSentencePlanForOffender(identityType: String?, identity: String?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): BasicSentencePlanDto {
     val offenderId = getOffenderIdByIdentifier(identityType, identity)
     val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)

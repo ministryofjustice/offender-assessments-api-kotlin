@@ -48,6 +48,7 @@ class AssessmentController(private val assessmentService: AssessmentService) {
     return assessmentService.getAssessmentsForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
   }
 
+  @Deprecated("/latest is now deprecated")
   @GetMapping(path = ["/offenders/{identityType}/{identity}/assessments/latest"])
   @ApiOperation(value = "Gets the latest assessment for an offender")
   @ApiResponses(ApiResponse(code = 404, message = "Assessment or Offender not found"), ApiResponse(code = 200, message = "OK"))
