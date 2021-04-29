@@ -12,7 +12,7 @@ data class OasysPermissions(
 data class OasysPermissionsDetails(
   @JsonProperty("Results")
   val results: List<OasysPermissionsDetail> = emptyList(),
-  @JsonProperty("Errors")
+  @JsonProperty("Failures")
   val errors: List<OasysPermissionError> = emptyList()
 )
 
