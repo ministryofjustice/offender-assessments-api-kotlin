@@ -13,6 +13,18 @@ data class ErrorResponse(
   val errorCode: Int? = null,
   @ApiModelProperty(required = true, value = "Error message information", example = "Prisoner Not Found", position = 2)
   val userMessage: String? = null,
-  @ApiModelProperty(required = false, value = "Additional information about the error", example = "Hard disk failure", position = 4)
-  val moreInfo: String? = null
+  @ApiModelProperty(
+    required = false,
+    value = "Additional information about the error",
+    example = "Hard disk failure",
+    position = 4
+  )
+  val moreInfo: String? = null,
+  @ApiModelProperty(
+    required = false,
+    value = "Response Payload",
+    example = "Response Payload",
+    position = 5
+  )
+  val payload: Any? = null
 )

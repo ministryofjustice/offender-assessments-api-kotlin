@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.services.exceptions.DuplicateOffenderRecordException
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
+import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsBadRequestException
+import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
 
 @ControllerAdvice
 class ControllerAdvice {
@@ -61,6 +64,24 @@ class ControllerAdvice {
   fun handle(e: UserNotAuthorisedException): ResponseEntity<ErrorResponse?> {
     log.error("UserNotAuthorisedException: {}", e.message)
     return ResponseEntity(ErrorResponse(status = 401, developerMessage = e.message), HttpStatus.UNAUTHORIZED)
+  }
+
+  @ExceptionHandler(InvalidOasysRequestException::class)
+  fun handle(e: InvalidOasysRequestException): ResponseEntity<ErrorResponse?> {
+    log.error("InvalidOasysPermissionsException: {}", e.message)
+    return ResponseEntity(ErrorResponse(status = 403, developerMessage = e.message), HttpStatus.FORBIDDEN)
+  }
+
+  @ExceptionHandler(UserPermissionsChecksFailedException::class)
+  fun handle(e: UserPermissionsChecksFailedException): ResponseEntity<ErrorResponse?> {
+    log.error("UserPermissionsChecksFailedException: {}", e.message)
+    return ResponseEntity(ErrorResponse(status = 403, developerMessage = e.message, payload = e.permissions), HttpStatus.FORBIDDEN)
+  }
+
+  @ExceptionHandler(UserPermissionsBadRequestException::class)
+  fun handle(e: UserPermissionsBadRequestException): ResponseEntity<ErrorResponse?> {
+    log.error("UserPermissionsBadRequestException: {}", e.message)
+    return ResponseEntity(ErrorResponse(status = 400, developerMessage = e.message, payload = e.errors), HttpStatus.BAD_REQUEST)
   }
 
   @ExceptionHandler(Exception::class)
