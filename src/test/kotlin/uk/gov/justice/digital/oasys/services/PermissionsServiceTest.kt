@@ -138,7 +138,7 @@ class PermissionsServiceTest {
   fun `Operation check failed and a list of errors is returned`() {
     val errorResponse = "{\"STATE\":\"OPERATION_CHECK_FAIL\"" +
       ",\"DETAIL\":{\"Results\":[]" +
-      ", \"Errors\": [" +
+      ", \"Failures\": [" +
       "{" +
       "\"failureType\":\"PARAMETER_CHECK\"," +
       "\"errorName\":\"missing_assessment_type\"," +
