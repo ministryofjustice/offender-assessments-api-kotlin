@@ -136,7 +136,7 @@ fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {
       Roles.valueOf(it.checkCode),
       it.returnCode == "YES",
       it.returnMessage,
-      it.rbacName?.let { rbacName -> RoleNames.findByRbacName(rbacName) }
+      it.rbacName?.let { rbacName -> RoleNames.findByRbacName(rbacName.trimStart()) }
     )
   }
 }
