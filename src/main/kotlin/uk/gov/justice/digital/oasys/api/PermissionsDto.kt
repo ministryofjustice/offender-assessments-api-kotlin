@@ -19,7 +19,12 @@ enum class RoleNames(val rbacName: String) {
   OPEN_OFFENDER_RECORD("Open Offender Record"),
   OPEN_SARA("Open SARA"),
   CREATE_OFFENDER("Create Offender"),
-  CREATE_RISK_OF_HARM_ASSESSMENT("Create Risk of Harm Assessment")
+  CREATE_RISK_OF_HARM_ASSESSMENT("Create Risk of Harm Assessment");
+  companion object {
+    fun findByRbacName(rbacName: String): RoleNames? {
+      return values().firstOrNull { value -> value.rbacName == rbacName }
+    }
+  }
 }
 
 enum class AssessmentType {
