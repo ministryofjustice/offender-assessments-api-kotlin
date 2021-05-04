@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBody
+import uk.gov.justice.digital.oasys.api.AssessmentType
 import uk.gov.justice.digital.oasys.api.ErrorDetailsDto
 import uk.gov.justice.digital.oasys.api.ErrorResponse
 import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
@@ -170,7 +171,7 @@ class PermissionsControllerTest : IntegrationTest() {
         area,
         offenderPk,
         oasysSetPk,
-        null,
+        "SHORT_FORM_PSR",
         emptySet()
       )
     )
@@ -181,14 +182,21 @@ class PermissionsControllerTest : IntegrationTest() {
           ",\"returnCode\":\"YES\"" +
           ",\"offenderPK\":" + offenderPk + "" +
           ",\"oasysSetPk\":" + oasysSetPk + "" +
-          ",\"assessmentType\":\"LONG_FORM_PSR\"" +
+          ",\"assessmentType\":\"SHORT_FORM_PSR\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
           "]" +
           "}}"
       )
-    val permissions = PermissionsDto(userCode, setOf(Roles.OFF_ASSESSMENT_CREATE), area, offenderPk, oasysSetPk)
+    val permissions = PermissionsDto(
+      userCode,
+      setOf(Roles.OFF_ASSESSMENT_CREATE),
+      area,
+      offenderPk,
+      oasysSetPk,
+      AssessmentType.SHORT_FORM_PSR
+    )
     webTestClient.post().uri("/authorisation/permissions")
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(permissions)
@@ -359,7 +367,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"CREATE_BASIC_ASSESSMENT\"" +
+          ",\"RBACName\":\"Create Basic Assessment\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -367,7 +375,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ", \"RBACName\":\"CREATE_FULL_ASSESSMENT\"" +
+          ", \"RBACName\":\"Create Full Assessment\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -375,7 +383,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"CREATE_STANDARD_ASSESSMENT\"" +
+          ",\"RBACName\":\"Create Standard Assessment\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -383,7 +391,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"EDIT_SARA\"" +
+          ",\"RBACName\":\"Edit SARA\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -391,7 +399,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"EDIT_SIGN_AND_LOCK_THE_ASSESSMENT\"" +
+          ",\"RBACName\":\"Edit Sign And Lock The Assessment\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -399,7 +407,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"OPEN_OFFENDER_RECORD\"" +
+          ",\"RBACName\":\"Open Offender Record\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -407,7 +415,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"OPEN_SARA\"" +
+          ",\"RBACName\":\"Open SARA\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -415,7 +423,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"YES\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"CREATE_OFFENDER\"" +
+          ",\"RBACName\":\"Create Offender\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}" +
@@ -423,7 +431,7 @@ class PermissionsControllerTest : IntegrationTest() {
           "\"checkCode\":\"RBAC_OTHER\"" +
           ",\"returnCode\":\"NO\"" +
           ",\"areaCode\":\"" + area + "\"" +
-          ",\"RBACName\":\"CREATE_RISK_OF_HARM_ASSESSMENT\"" +
+          ",\"RBACName\":\"Create Risk of Harm Assessment\"" +
           ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
           ",\"userCode\":\"" + userCode + "\"" +
           "}]}}"
