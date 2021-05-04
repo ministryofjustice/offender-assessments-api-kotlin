@@ -15,6 +15,7 @@ import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionError
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionsDetails
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
+import uk.gov.justice.digital.oasys.services.PermissionsService.Companion.authorisedReturnCode
 import uk.gov.justice.digital.oasys.services.exceptions.InvalidOasysRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsBadRequestException
 import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFailedException
@@ -22,7 +23,12 @@ import uk.gov.justice.digital.oasys.services.exceptions.UserPermissionsChecksFai
 @Service
 class PermissionsService(private val permissionsRepository: PermissionsRepository) {
 
-  private val objectMapper: ObjectMapper = jacksonObjectMapper()
+  companion object {
+    val authorisedReturnCode = "YES"
+    val readAndEditAssessmentRoles = setOf(Roles.ASSESSMENT_READ, Roles.ASSESSMENT_EDIT)
+    val createOffenderAssessmentRole = setOf(Roles.OFF_ASSESSMENT_CREATE)
+    val objectMapper: ObjectMapper = jacksonObjectMapper()
+  }
 
   init {
     objectMapper.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)
@@ -91,14 +97,12 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     if (roleChecks.contains(Roles.RBAC_OTHER) && roleNames.isNullOrEmpty()) {
       throw UserPermissionsBadRequestException("At least one RBAC name must be selected for user with code $userCode, area $area")
     }
-    val readAndEditAssessmentRoles = setOf(Roles.ASSESSMENT_READ, Roles.ASSESSMENT_EDIT)
     if (offenderPk == null && roleChecks.any(readAndEditAssessmentRoles::contains)) {
       throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter offenderPk")
     }
     if (oasysSetPk == null && roleChecks.any(readAndEditAssessmentRoles::contains)) {
       throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter oasysSetPk")
     }
-    val createOffenderAssessmentRole = setOf(Roles.OFF_ASSESSMENT_CREATE)
     if (offenderPk == null && roleChecks.any(createOffenderAssessmentRole::contains)) {
       throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter offenderPk")
     }
@@ -134,7 +138,7 @@ fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {
   return this.results.map {
     PermissionsDetailDto(
       Roles.valueOf(it.checkCode),
-      it.returnCode == "YES",
+      it.returnCode == authorisedReturnCode,
       it.returnMessage,
       it.rbacName?.let { rbacName -> RoleNames.findByRbacName(rbacName.trimStart()) }
     )
