@@ -94,7 +94,7 @@ fun OasysPermissions.toPermissionsDetailsDto(): PermissionsDetailsDto {
 fun OasysPermissions.toErrorDetailsDto(): List<ErrorDetailsDto> {
   return this.detail.errors.map {
     ErrorDetailsDto(
-      it.failureType.name, it.errorName, it.oasysErrorLogId, it.message
+      it.failureType.name, it.errorName, it.message
     )
   }.toList()
 }
@@ -105,7 +105,7 @@ fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {
       Roles.valueOf(it.checkCode),
       it.returnCode == "YES",
       it.returnMessage,
-      it.rbacName?.let { rbacName -> RoleNames.valueOf(rbacName) }
+      it.rbacName?.let { rbacName -> RoleNames.findByRbacName(rbacName) }
     )
   }
 }

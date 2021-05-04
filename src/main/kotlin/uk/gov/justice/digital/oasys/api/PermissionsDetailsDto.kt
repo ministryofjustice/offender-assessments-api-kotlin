@@ -17,6 +17,5 @@ data class PermissionsDetailDto(
 data class ErrorDetailsDto(
   val failureType: String,
   val errorName: String,
-  val oasysErrorLogId: Int,
   val message: String
 )

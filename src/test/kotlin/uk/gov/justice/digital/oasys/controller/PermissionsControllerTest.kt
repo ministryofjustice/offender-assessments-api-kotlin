@@ -308,13 +308,11 @@ class PermissionsControllerTest : IntegrationTest() {
           ErrorDetailsDto(
             failureType = "PARAMETER_CHECK",
             errorName = "missing_assessment_type",
-            oasysErrorLogId = 863,
             message = "Assessment type missing"
           ),
           ErrorDetailsDto(
             failureType = "PARAMETER_CHECK",
             errorName = "missing_set_pk",
-            oasysErrorLogId = 862,
             message = "OASYS SET PKmissing"
           )
         )
