@@ -11,6 +11,7 @@ import uk.gov.justice.digital.oasys.api.PermissionsDetailDto
 import uk.gov.justice.digital.oasys.api.PermissionsDetailsDto
 import uk.gov.justice.digital.oasys.api.RoleNames
 import uk.gov.justice.digital.oasys.api.Roles
+import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionError
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissions
 import uk.gov.justice.digital.oasys.jpa.entities.OasysPermissionsDetails
 import uk.gov.justice.digital.oasys.jpa.repositories.PermissionsRepository
@@ -37,12 +38,7 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
     assessmentType: AssessmentType? = null,
     roleNames: Set<RoleNames>? = emptySet()
   ): PermissionsDetailsDto {
-    if (roleChecks.isEmpty()) {
-      throw UserPermissionsBadRequestException("roleChecks should not be empty for user with code $userCode, area $area")
-    }
-    if (roleChecks.contains(Roles.RBAC_OTHER) && roleNames.isNullOrEmpty()) {
-      throw UserPermissionsBadRequestException("At least one RBAC name must be selected for user with code $userCode, area $area")
-    }
+    validateInputsForRoleChecks(roleChecks, userCode, area, roleNames, offenderPk, oasysSetPk, assessmentType)
     val permissions = permissionsRepository.getPermissions(
       userCode,
       roleChecks.map { it.name }.toSet(),
@@ -71,12 +67,43 @@ class PermissionsService(private val permissionsRepository: PermissionsRepositor
         throw InvalidOasysRequestException("Assessment not found in OASys for oasys set pk $oasysSetPk")
       }
       "OPERATION_CHECK_FAIL" -> {
-        val errorDetailsDto = oasysPermissionsResponse.toErrorDetailsDto()
+        val errorDetailsDto = oasysPermissionsResponse.toErrorDetailsDtos()
         throw UserPermissionsBadRequestException("Operation check failed", errors = errorDetailsDto)
       }
       else -> {
         throw InvalidOasysRequestException("Unknown Exception with oasys response $oasysPermissionsResponse")
       }
+    }
+  }
+
+  private fun validateInputsForRoleChecks(
+    roleChecks: Set<Roles>,
+    userCode: String,
+    area: String,
+    roleNames: Set<RoleNames>?,
+    offenderPk: Long?,
+    oasysSetPk: Long?,
+    assessmentType: AssessmentType?
+  ) {
+    if (roleChecks.isEmpty()) {
+      throw UserPermissionsBadRequestException("roleChecks should not be empty for user with code $userCode, area $area")
+    }
+    if (roleChecks.contains(Roles.RBAC_OTHER) && roleNames.isNullOrEmpty()) {
+      throw UserPermissionsBadRequestException("At least one RBAC name must be selected for user with code $userCode, area $area")
+    }
+    val readAndEditAssessmentRoles = setOf(Roles.ASSESSMENT_READ, Roles.ASSESSMENT_EDIT)
+    if (offenderPk == null && roleChecks.any(readAndEditAssessmentRoles::contains)) {
+      throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter offenderPk")
+    }
+    if (oasysSetPk == null && roleChecks.any(readAndEditAssessmentRoles::contains)) {
+      throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter oasysSetPk")
+    }
+    val createOffenderAssessmentRole = setOf(Roles.OFF_ASSESSMENT_CREATE)
+    if (offenderPk == null && roleChecks.any(createOffenderAssessmentRole::contains)) {
+      throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter offenderPk")
+    }
+    if (assessmentType == null && roleChecks.any(createOffenderAssessmentRole::contains)) {
+      throw UserPermissionsBadRequestException("Role checks $roleChecks, require parameter assessmentType")
     }
   }
 }
@@ -91,12 +118,16 @@ fun OasysPermissions.toPermissionsDetailsDto(): PermissionsDetailsDto {
   )
 }
 
-fun OasysPermissions.toErrorDetailsDto(): List<ErrorDetailsDto> {
+fun OasysPermissions.toErrorDetailsDtos(): List<ErrorDetailsDto> {
   return this.detail.errors.map {
-    ErrorDetailsDto(
-      it.failureType.name, it.errorName, it.message
-    )
+    it.toErrorDetailsDto()
   }.toList()
+}
+
+fun OasysPermissionError.toErrorDetailsDto(): ErrorDetailsDto {
+  return ErrorDetailsDto(
+    failureType.name, errorName, message
+  )
 }
 
 fun OasysPermissionsDetails.toPermissionsDetails(): List<PermissionsDetailDto> {

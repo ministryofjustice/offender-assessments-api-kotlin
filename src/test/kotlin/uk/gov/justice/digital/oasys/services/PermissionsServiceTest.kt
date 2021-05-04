@@ -297,6 +297,108 @@ class PermissionsServiceTest {
   }
 
   @Test
+  fun `Read assessment requires offenderPk`() {
+    val roleChecks = setOf(Roles.ASSESSMENT_READ)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        null,
+        oasysSetPk,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter offenderPk")
+  }
+
+  @Test
+  fun `Read assessment requires oasysSetPk`() {
+    val roleChecks = setOf(Roles.ASSESSMENT_READ)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        offenderPk,
+        null,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter oasysSetPk")
+  }
+
+  @Test
+  fun `Edit assessment requires offenderPk`() {
+    val roleChecks = setOf(Roles.ASSESSMENT_EDIT)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        null,
+        oasysSetPk,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter offenderPk")
+  }
+
+  @Test
+  fun `Create offender assessment requires offenderPk`() {
+    val roleChecks = setOf(Roles.OFF_ASSESSMENT_CREATE)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        null,
+        oasysSetPk,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter offenderPk")
+  }
+
+  @Test
+  fun `Create offender assessment assessmentType`() {
+    val roleChecks = setOf(Roles.OFF_ASSESSMENT_CREATE)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        offenderPk,
+        oasysSetPk,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter assessmentType")
+  }
+
+  @Test
+  fun `Edit assessment requires oasysSetPk`() {
+    val roleChecks = setOf(Roles.ASSESSMENT_EDIT)
+    val exception = assertThrows<UserPermissionsBadRequestException> {
+      service.getPermissions(
+        userCode,
+        roleChecks,
+        area,
+        offenderPk,
+        null,
+        null,
+        emptySet()
+      )
+    }
+    assertThat(exception.message).isEqualTo("Role checks $roleChecks, require parameter oasysSetPk")
+  }
+
+  @Test
   fun `user does have permissions to create basic assessment for rbac_other`() {
     val permissions = "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
       "{" +
