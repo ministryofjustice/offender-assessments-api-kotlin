@@ -28,13 +28,13 @@ class PermissionsRepository(
             |? := LV_RES; END;""".trimMargin()
 
     dataSource.connection.prepareCall(query).use { function ->
-      function.setString(1, roleChecks.joinToString())
+      function.setString(1, roleChecks.joinToString(","))
       function.setString(2, userCode)
       function.setString(3, area)
       function.setString(4, offenderPk?.toString())
       function.setString(5, oasysSetPk?.toString())
       function.setString(6, assessmentType)
-      function.setString(7, roleNames?.joinToString())
+      function.setString(7, roleNames?.joinToString(","))
 
       function.registerOutParameter(8, Types.VARCHAR)
       function.execute()
