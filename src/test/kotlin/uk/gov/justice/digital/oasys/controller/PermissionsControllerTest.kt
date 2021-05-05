@@ -73,6 +73,78 @@ class PermissionsControllerTest : IntegrationTest() {
   }
 
   @Test
+  fun `user can read assessment but cant edit SARA`() {
+    given(
+      permissionsRepository.getPermissions(
+        userCode,
+        setOf("ASSESSMENT_READ", "RBAC_OTHER"),
+        area,
+        offenderPk,
+        oasysSetPk,
+        "SHORT_FORM_PSR",
+        setOf("Create Basic Assessment", "Edit SARA")
+      )
+    )
+      .willReturn(
+        "{\"STATE\":\"SUCCESS\",\"DETAIL\":{\"Results\":[" +
+          "{" +
+          "\"checkCode\":\"ASSESSMENT_READ\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"offenderPK\":" + offenderPk + "" +
+          ",\"oasysSetPk\":" + oasysSetPk + "" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}," +
+          "{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"YES\"" +
+          ",\"areaCode\":\"WWS\"" +
+          ",\"RBACName\":\"Create Basic Assessment\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}," +
+          "{" +
+          "\"checkCode\":\"RBAC_OTHER\"" +
+          ",\"returnCode\":\"NO\"" +
+          ",\"returnMessage\":\"User is not authorised\"" +
+          ",\"areaCode\":\"WWS\"" +
+          ",\"RBACName\":\"Edit SARA\"" +
+          ",\"checkDate\":\"21\\/04\\/2021 12:21:35\"" +
+          ",\"userCode\":\"" + userCode + "\"" +
+          "}" +
+          "]" +
+          "}}"
+      )
+    val permissions =
+      PermissionsDto(
+        userCode,
+        setOf(Roles.ASSESSMENT_READ, Roles.RBAC_OTHER),
+        area,
+        offenderPk,
+        oasysSetPk,
+        AssessmentType.SHORT_FORM_PSR,
+        setOf(RoleNames.CREATE_BASIC_ASSESSMENT, RoleNames.EDIT_SARA)
+      )
+
+    webTestClient.post().uri("/authorisation/permissions")
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(permissions)
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange().expectStatus()
+      .isForbidden
+      .expectBody<ErrorResponse>()
+      .consumeWith {
+        val response = it.responseBody
+        assertThat(response.status).isEqualTo(403)
+        assertThat(response.developerMessage).isEqualTo("One of the permissions is Unauthorized")
+        val permissionsDetails =
+          objectMapper.readValue<PermissionsDetailsDto>(objectMapper.writeValueAsString(response.payload))
+
+        assertThat(permissionsDetails).isEqualTo(readAssessmentAndRbacPermissionsResponse())
+      }
+  }
+
+  @Test
   fun `user can edit an assessment`() {
     given(
       permissionsRepository.getPermissions(
@@ -489,6 +561,31 @@ class PermissionsControllerTest : IntegrationTest() {
           checkCode = Roles.OFF_ASSESSMENT_CREATE,
           authorised = true
         )
+      )
+    )
+  }
+
+  fun readAssessmentAndRbacPermissionsResponse(): PermissionsDetailsDto {
+    return PermissionsDetailsDto(
+      userCode = userCode,
+      offenderPk = offenderPk,
+      oasysSetPk = oasysSetPk,
+      permissions = listOf(
+        PermissionsDetailDto(
+          checkCode = Roles.ASSESSMENT_READ,
+          authorised = true
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = true,
+          rbacName = RoleNames.CREATE_BASIC_ASSESSMENT
+        ),
+        PermissionsDetailDto(
+          checkCode = Roles.RBAC_OTHER,
+          authorised = false,
+          rbacName = RoleNames.EDIT_SARA,
+          returnMessage = "User is not authorised"
+        ),
       )
     )
   }
