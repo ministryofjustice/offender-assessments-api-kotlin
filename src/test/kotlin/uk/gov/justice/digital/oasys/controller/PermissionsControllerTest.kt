@@ -544,7 +544,7 @@ class PermissionsControllerTest : IntegrationTest() {
           authorised = true
         ),
         PermissionsDetailDto(
-          checkCode = Roles.RBAC_OTHER,
+          checkCode = Roles.ASSESSMENT_EDIT,
           authorised = true
         )
       )
