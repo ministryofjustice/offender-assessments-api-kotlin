@@ -61,7 +61,7 @@ class ReferenceDataRepositoryImpl constructor(@PersistenceContext var em: Entity
 
     val query =
       """DECLARE 
-            |LV_RES VARCHAR2(4000); 
+            |LV_RES CLOB; 
             |BEGIN 
             |LV_RES := ARN_RESTFUL_API_PKG.refdata( 
             |p_user => ?,

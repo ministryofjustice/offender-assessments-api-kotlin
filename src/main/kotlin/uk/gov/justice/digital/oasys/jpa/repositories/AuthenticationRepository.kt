@@ -20,7 +20,7 @@ class AuthenticationRepository(
     // We therefore have to call the function using the raw PL SQL
     val query =
       """DECLARE 
-            |LV_RES VARCHAR2(4000); 
+            |LV_RES CLOB; 
             |BEGIN 
             |LV_RES := RESTFUL_API_PKG.USER_LOGIN(P_USER => ?, P_PASSWORD => ?);
             |? := LV_RES; END;""".trimMargin()
@@ -41,7 +41,7 @@ class AuthenticationRepository(
 
     val query =
       """DECLARE 
-            |LV_RES VARCHAR2(4000);
+            |LV_RES CLOB;
             |BEGIN LV_RES := RESTFUL_API_PKG.SENTENCE_PLAN(P_USER => ?, P_OFFENDER_PK => ?, P_SESSION_SNAPSHOT_PK => ?);
             |? := LV_RES; END;""".trimMargin()
 
