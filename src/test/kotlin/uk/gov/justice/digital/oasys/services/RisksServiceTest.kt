@@ -293,7 +293,6 @@ class RisksServiceTest {
         QuestionDto(refQuestionCode = it.key, answers = listOf(AnswerDto(it.value)))
       }.toList()
     )
-
   }
 
   private fun saraAnswers(): AssessmentAnswersDto {

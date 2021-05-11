@@ -10,7 +10,6 @@ import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.OffenderIdentifier
-import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import java.time.LocalDate
 import java.time.LocalDateTime
 

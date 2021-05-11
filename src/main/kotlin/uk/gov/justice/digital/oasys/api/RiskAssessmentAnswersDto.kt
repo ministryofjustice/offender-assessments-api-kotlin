@@ -77,7 +77,7 @@ data class RiskAnswerDto(
   @ApiModelProperty(value = "Static text", example = "123456")
   val staticText: String? = null,
 
-  ) {
+) {
   companion object {
     fun from(answer: AnswerDto): RiskAnswerDto {
       return RiskAnswerDto(

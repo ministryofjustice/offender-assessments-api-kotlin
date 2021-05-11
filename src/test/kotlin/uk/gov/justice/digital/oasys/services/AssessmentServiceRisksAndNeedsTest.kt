@@ -1,24 +1,12 @@
 package uk.gov.justice.digital.oasys.services
 
-import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.AssessmentGroup
-import uk.gov.justice.digital.oasys.jpa.entities.OasysAnswer
-import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
-import uk.gov.justice.digital.oasys.jpa.entities.RefAnswer
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
-import uk.gov.justice.digital.oasys.jpa.entities.RefElement
-import uk.gov.justice.digital.oasys.jpa.entities.RefQuestion
-import uk.gov.justice.digital.oasys.jpa.entities.RefSection
-import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 import java.time.LocalDateTime
 
