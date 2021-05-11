@@ -37,6 +37,11 @@ class RisksControllerTest : IntegrationTest() {
         assertThat(risks?.sara?.oasysSetId).isEqualTo(9487348)
         assertThat(risks?.sara?.riskQuestions).hasSize(2)
         assertThat(risks?.sara?.riskQuestions?.get(0)).isEqualTo(validSaraQuestion())
+
+        assertThat(risks?.rosh?.oasysSetId).isEqualTo(9487347)
+        assertThat(risks?.rosh?.riskQuestions).hasSize(2)
+        assertThat(risks?.rosh?.riskQuestions).containsExactly(validRoshQuestion1(), validRoshQuestion2())
+        assertThat(risks?.childSafeguardingIndicated).isTrue
       }
   }
 
@@ -82,6 +87,7 @@ class RisksControllerTest : IntegrationTest() {
       .expectBodyList(RiskDto::class.java)
       .consumeWith<ListBodySpec<RiskDto>> {
         val risks = it.responseBody
+        assertThat(risks).hasSize(2)
         assertThat(risks?.get(0)?.oasysSetId).isEqualTo(9487347)
         assertThat(risks?.get(0)?.rosha?.riskQuestions).hasSize(10)
         assertThat(risks?.get(0)?.rosha?.riskQuestions?.get(0)).isEqualTo(validRoshaQuestion())
@@ -89,6 +95,14 @@ class RisksControllerTest : IntegrationTest() {
         assertThat(risks?.get(0)?.sara?.oasysSetId).isEqualTo(9487348)
         assertThat(risks?.get(0)?.sara?.riskQuestions).hasSize(2)
         assertThat(risks?.get(0)?.sara?.riskQuestions?.get(0)).isEqualTo(validSaraQuestion())
+
+        assertThat(risks?.get(0)?.rosh?.oasysSetId).isEqualTo(9487347)
+        assertThat(risks?.get(0)?.rosh?.riskQuestions).hasSize(2)
+        assertThat(risks?.get(0)?.rosh?.riskQuestions).containsExactly(validRoshQuestion1(), validRoshQuestion2())
+        assertThat(risks?.get(0)?.childSafeguardingIndicated).isTrue
+
+        assertThat(risks?.get(1)?.rosh).isNull()
+        assertThat(risks?.get(1)?.childSafeguardingIndicated).isNull()
       }
   }
 
@@ -138,6 +152,26 @@ class RisksControllerTest : IntegrationTest() {
       currentlyHidden = false,
       disclosed = false,
       answers = listOf(RiskAnswerDto(refAnswerCode = "3", staticText = "High"))
+    )
+  }
+
+  fun validRoshQuestion1(): RiskQuestionDto {
+    return RiskQuestionDto(
+      refQuestionCode = "R2.1",
+      questionText = "Is the offender, now or on release, likely to live with, or have frequent contact with, any child who is on the child protection register or is being looked after by the local authority.",
+      currentlyHidden = false,
+      disclosed = false,
+      answers = listOf(RiskAnswerDto(refAnswerCode = "YES", staticText = "Yes"))
+    )
+  }
+
+  fun validRoshQuestion2(): RiskQuestionDto {
+    return RiskQuestionDto(
+      refQuestionCode = "R2.2",
+      questionText = "Are there any concerns in relation to children",
+      currentlyHidden = false,
+      disclosed = false,
+      answers = listOf(RiskAnswerDto(refAnswerCode = "YES", staticText = "Yes"))
     )
   }
 }
