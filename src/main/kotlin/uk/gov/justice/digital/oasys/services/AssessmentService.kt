@@ -40,6 +40,7 @@ class AssessmentService constructor(
     return AssessmentSummaryDto.from(assessments)
   }
 
+  @Deprecated("Latest is now deprecated.")
   fun getLatestAssessmentForOffender(identityType: String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto {
     val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
     val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
