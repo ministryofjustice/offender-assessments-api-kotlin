@@ -57,7 +57,7 @@ class RisksService(
 
   private fun calculateChildSafeguardingIndicated(answers: AssessmentAnswersDto): Boolean? {
     val riskQuestions = answers.questionAnswers.filter { roshQuestionIds.contains(it.refQuestionCode) }
-    return if(riskQuestions.isNullOrEmpty() || riskQuestions?.map { it.answers }.flatten().isEmpty()) null
+    return if (riskQuestions.isNullOrEmpty() || riskQuestions?.map { it.answers }.flatten().isEmpty()) null
     else riskQuestions?.any {
       anySingleAnswersArePositive(
         it.answers

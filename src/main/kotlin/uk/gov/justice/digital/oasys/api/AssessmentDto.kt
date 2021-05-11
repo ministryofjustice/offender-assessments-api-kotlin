@@ -49,7 +49,7 @@ data class AssessmentDto(
   @ApiModelProperty(value = "Sentences")
   val sentence: Collection<SentenceDto?>? = null,
 
-) {
+  ) {
 
   companion object {
     fun from(assessment: Assessment?): AssessmentDto {

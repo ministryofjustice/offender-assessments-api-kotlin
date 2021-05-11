@@ -17,21 +17,23 @@ data class RiskAssessmentAnswersDto(
     fun fromRosha(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
       return riskAssessmentAnswersDto(assessmentAnswers, roshaQuestionIds)
     }
+
     fun fromSara(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
       return riskAssessmentAnswersDto(assessmentAnswers, saraQuestionIds)
     }
+
     fun fromRosh(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
       return riskAssessmentAnswersDto(assessmentAnswers, roshQuestionIds)
     }
 
-     fun riskAssessmentAnswersDto(
+    fun riskAssessmentAnswersDto(
       assessmentAnswers: AssessmentAnswersDto,
       questionCodes: Set<String>
     ): RiskAssessmentAnswersDto {
       val riskQuestions = assessmentAnswers.questionAnswers.filter { questionCodes.contains(it.refQuestionCode) }
       return RiskAssessmentAnswersDto(
-            oasysSetId = assessmentAnswers.assessmentId,
-            riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
+        oasysSetId = assessmentAnswers.assessmentId,
+        riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
       )
     }
   }
@@ -75,7 +77,7 @@ data class RiskAnswerDto(
   @ApiModelProperty(value = "Static text", example = "123456")
   val staticText: String? = null,
 
-) {
+  ) {
   companion object {
     fun from(answer: AnswerDto): RiskAnswerDto {
       return RiskAnswerDto(
