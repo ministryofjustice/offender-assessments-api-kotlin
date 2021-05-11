@@ -3,7 +3,12 @@ package uk.gov.justice.digital.oasys.services
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.oasys.api.AnswerDto
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshFullQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshSumQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionIds
 import uk.gov.justice.digital.oasys.api.RiskDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
@@ -33,28 +38,45 @@ class RisksService(
 
   fun getRisksForAssessment(assessment: Assessment): RiskDto {
     val answers = getRiskAnswersByAssessmentId(assessment.oasysSetPk!!)
+    val childSafeguardingIndicated = calculateChildSafeguardingIndicated(answers)
     if (assessment.assessmentType.equals("SARA")) {
-      return RiskDto.fromSara(assessment, answers)
+      return RiskDto.fromSara(assessment, answers, childSafeguardingIndicated)
     } else {
       val sara = assessment.childAssessments.find { it?.assessmentType.equals("SARA") }
-        ?: return RiskDto.fromRosha(assessment, answers)
+        ?: return RiskDto.fromRosha(assessment, answers, childSafeguardingIndicated)
       val saraAnswers = getRiskAnswersByAssessmentId(sara.oasysSetPk!!)
-      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers)
+      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers, childSafeguardingIndicated)
     }
   }
 
-  fun getRiskAnswersByAssessmentId(assessmentId: Long): AssessmentAnswersDto {
+  private fun getRiskAnswersByAssessmentId(assessmentId: Long): AssessmentAnswersDto {
     return answerService.getAnswersForQuestions(assessmentId, riskQuestions).also {
       log.info("Found ${it.questionAnswers.size} risk Answers for Assessment ID: $assessmentId")
     }
   }
 
+  private fun calculateChildSafeguardingIndicated(answers: AssessmentAnswersDto): Boolean? {
+    val riskQuestions = answers.questionAnswers.filter { roshQuestionIds.contains(it.refQuestionCode) }
+    return if(riskQuestions.isNullOrEmpty() || riskQuestions?.map { it.answers }.flatten().isEmpty()) null
+    else riskQuestions?.any {
+      anySingleAnswersArePositive(
+        it.answers
+      )
+    }
+  }
+
+  private fun anySingleAnswersArePositive(answers: Collection<AnswerDto>): Boolean {
+    return POSITIVE_ANSWERS.any { answers?.map { a -> a.refAnswerCode }?.contains(it) }
+  }
+
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
-    val riskQuestions = mapOf<String, Collection<String>>(
-      "SARA" to listOf("SR76.1.1", "SR77.1.1"),
-      "ROSHSUM" to listOf("SUM6.1.2", "SUM6.2.1", "SUM6.2.2", "SUM6.3.1", "SUM6.3.2", "SUM6.4.1", "SUM6.4.2", "SUM6.5.2"),
-      "ROSHFULL" to listOf("FA31", "FA32")
+    val riskQuestions = mapOf(
+      "SARA" to saraQuestionIds,
+      "ROSHSUM" to roshSumQuestionIds,
+      "ROSHFULL" to roshFullQuestionIds,
+      "ROSH" to roshQuestionIds
     )
+    val POSITIVE_ANSWERS = setOf("YES", "Y")
   }
 }

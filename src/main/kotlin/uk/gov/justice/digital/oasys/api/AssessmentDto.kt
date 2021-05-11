@@ -49,16 +49,10 @@ data class AssessmentDto(
   @ApiModelProperty(value = "Sentences")
   val sentence: Collection<SentenceDto?>? = null,
 
-  @ApiModelProperty(value = "Child Safeguarding flat", example = "true")
-  val childSafeguardingIndicated: Boolean? = null,
-
-  @ApiModelProperty(value = "Identified Layer 3 Criminogenic Needs")
-  val layer3SentencePlanNeeds: Collection<AssessmentNeedDto?>? = null
-
 ) {
 
   companion object {
-    fun from(assessment: Assessment?, childSafeguardingIndicated: Boolean?, needs: Collection<CriminogenicNeed?>): AssessmentDto {
+    fun from(assessment: Assessment?): AssessmentDto {
 
       val assessmentVersion = assessment?.assessmentVersion
       return AssessmentDto(
@@ -75,9 +69,7 @@ data class AssessmentDto(
         assessment?.dateCompleted,
         assessment?.assessmentVoidedDate,
         SectionDto.from(assessment?.oasysSections),
-        SentenceDto.from(assessment?.offenceBlocks),
-        childSafeguardingIndicated,
-        AssessmentNeedDto.from(needs)
+        SentenceDto.from(assessment?.offenceBlocks)
       )
     }
   }

@@ -29,7 +29,7 @@ class AssessmentDtoTest {
       )
     )
 
-    val assessmentDto = AssessmentDto.from(assessment, null, needs)
+    val assessmentDto = AssessmentDto.from(assessment)
 
     assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
     assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)
@@ -44,14 +44,12 @@ class AssessmentDtoTest {
     assertThat(assessmentDto.completed).isEqualTo(assessment.dateCompleted)
     assertThat(assessmentDto.voided).isEqualTo(assessment.assessmentVoidedDate)
     assertThat(assessmentDto.sections).hasSize(assessment.oasysSections!!.size)
-    assertThat(assessmentDto.childSafeguardingIndicated).isNull()
-    assertThat(assessmentDto.layer3SentencePlanNeeds).hasSize(needs.size)
   }
 
   @Test
   fun `Builds valid Assessment DTO from Entity with no child safeguarding and empty needs`() {
 
-    val assessmentDto = AssessmentDto.from(assessment, null, emptySet())
+    val assessmentDto = AssessmentDto.from(assessment)
 
     assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
     assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)
@@ -66,8 +64,6 @@ class AssessmentDtoTest {
     assertThat(assessmentDto.completed).isEqualTo(assessment.dateCompleted)
     assertThat(assessmentDto.voided).isEqualTo(assessment.assessmentVoidedDate)
     assertThat(assessmentDto.sections).hasSize(assessment.oasysSections!!.size)
-    assertThat(assessmentDto.childSafeguardingIndicated).isNull()
-    assertThat(assessmentDto.layer3SentencePlanNeeds).isEmpty()
   }
 
   private fun setupAssessmentGroup(): AssessmentGroup {

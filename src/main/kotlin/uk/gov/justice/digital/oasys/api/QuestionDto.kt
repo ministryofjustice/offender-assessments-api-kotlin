@@ -36,6 +36,13 @@ data class QuestionDto(
 ) {
 
   companion object {
+    val roshQuestionIds = setOf("R2.1", "R2.2")
+    val saraQuestionIds = setOf("SR76.1.1", "SR77.1.1")
+    val roshSumQuestionIds = setOf(
+      "SUM6.1.2", "SUM6.2.1", "SUM6.2.2", "SUM6.3.1", "SUM6.3.2", "SUM6.4.1", "SUM6.4.2", "SUM6.5.2"
+    )
+    val roshFullQuestionIds = setOf("FA31", "FA32")
+    val roshaQuestionIds = setOf(roshSumQuestionIds, roshFullQuestionIds).flatten().toSet()
 
     fun from(oasysQuestions: Collection<OasysQuestion?>?): Set<QuestionDto> {
       return oasysQuestions?.mapNotNull { from(it) }?.toSet().orEmpty()

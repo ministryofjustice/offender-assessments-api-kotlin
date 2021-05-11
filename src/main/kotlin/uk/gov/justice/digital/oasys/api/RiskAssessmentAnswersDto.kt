@@ -1,6 +1,9 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshaQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionIds
 
 data class RiskAssessmentAnswersDto(
   @ApiModelProperty(value = "Assessment ID/Oasys Set ID for SARA risk answers")
@@ -12,19 +15,23 @@ data class RiskAssessmentAnswersDto(
   companion object {
 
     fun fromRosha(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      val roshaQuestionIds: Set<String> = setOf("SUM6.1.2", "SUM6.2.1", "SUM6.2.2", "SUM6.3.1", "SUM6.3.2", "SUM6.4.1", "SUM6.4.2", "SUM6.5.2", "FA31", "FA32")
-      val riskQuestions = assessmentAnswers.questionAnswers.filter { roshaQuestionIds.contains(it.refQuestionCode) }
-      return RiskAssessmentAnswersDto(
-        oasysSetId = assessmentAnswers.assessmentId,
-        riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
-      )
+      return riskAssessmentAnswersDto(assessmentAnswers, roshaQuestionIds)
     }
     fun fromSara(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      val saraQuestionIds: Set<String> = setOf("SR76.1.1", "SR77.1.1")
-      val riskQuestions = assessmentAnswers.questionAnswers.filter { saraQuestionIds.contains(it.refQuestionCode) }
+      return riskAssessmentAnswersDto(assessmentAnswers, saraQuestionIds)
+    }
+    fun fromRosh(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
+      return riskAssessmentAnswersDto(assessmentAnswers, roshQuestionIds)
+    }
+
+     fun riskAssessmentAnswersDto(
+      assessmentAnswers: AssessmentAnswersDto,
+      questionCodes: Set<String>
+    ): RiskAssessmentAnswersDto {
+      val riskQuestions = assessmentAnswers.questionAnswers.filter { questionCodes.contains(it.refQuestionCode) }
       return RiskAssessmentAnswersDto(
-        oasysSetId = assessmentAnswers.assessmentId,
-        riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
+            oasysSetId = assessmentAnswers.assessmentId,
+            riskQuestions = riskQuestions.map { RiskQuestionDto.from(it) }
       )
     }
   }
