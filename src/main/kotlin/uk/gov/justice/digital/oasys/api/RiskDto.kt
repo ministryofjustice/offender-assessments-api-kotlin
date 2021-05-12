@@ -16,7 +16,7 @@ data class RiskDto(
   val refAssessmentVersionNumber: String? = null,
 
   @ApiModelProperty(value = "Assessment Reference Version", example = "1")
-  val refAssessmentId: Long ? = null,
+  val refAssessmentId: Long? = null,
 
   @ApiModelProperty(value = "Completed Date", example = "2020-01-02T16:00:00")
   val completedDate: LocalDateTime? = null,
@@ -35,10 +35,19 @@ data class RiskDto(
 
   @ApiModelProperty(value = "ROSHA risk answers")
   val rosha: RiskAssessmentAnswersDto? = null,
+
+  @ApiModelProperty(value = "ROSH risk answers")
+  val rosh: RiskAssessmentAnswersDto? = null,
+
+  @ApiModelProperty(value = "Child Safeguarding flag", example = "true")
+  val childSafeguardingIndicated: Boolean? = null,
 ) {
   companion object {
-
-    fun fromSara(assessment: Assessment?, answers: AssessmentAnswersDto): RiskDto {
+    fun fromSara(
+      assessment: Assessment?,
+      answers: AssessmentAnswersDto,
+      childSafeguardingIndicated: Boolean?
+    ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
@@ -48,11 +57,17 @@ data class RiskDto(
         voidedDateTime = assessment?.assessmentVoidedDate,
         assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
-        sara = RiskAssessmentAnswersDto.fromSara(answers)
+        sara = RiskAssessmentAnswersDto.fromSara(answers),
+        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(answers) },
+        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
 
-    fun fromRosha(assessment: Assessment?, answers: AssessmentAnswersDto): RiskDto {
+    fun fromRosha(
+      assessment: Assessment?,
+      answers: AssessmentAnswersDto,
+      childSafeguardingIndicated: Boolean?
+    ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
@@ -62,11 +77,18 @@ data class RiskDto(
         voidedDateTime = assessment?.assessmentVoidedDate,
         assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
-        rosha = RiskAssessmentAnswersDto.fromRosha(answers)
+        rosha = RiskAssessmentAnswersDto.fromRosha(answers),
+        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(answers) },
+        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
 
-    fun fromRoshaWithSara(assessment: Assessment?, roshaAnswers: AssessmentAnswersDto, saraAnswers: AssessmentAnswersDto): RiskDto {
+    fun fromRoshaWithSara(
+      assessment: Assessment?,
+      assessmentAnswers: AssessmentAnswersDto,
+      saraAnswers: AssessmentAnswersDto,
+      childSafeguardingIndicated: Boolean?
+    ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
@@ -77,7 +99,9 @@ data class RiskDto(
         assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
         sara = RiskAssessmentAnswersDto.fromSara(saraAnswers),
-        rosha = RiskAssessmentAnswersDto.fromRosha(roshaAnswers)
+        rosha = RiskAssessmentAnswersDto.fromRosha(assessmentAnswers),
+        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(assessmentAnswers) },
+        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
   }

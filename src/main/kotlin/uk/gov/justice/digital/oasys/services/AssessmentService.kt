@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
-import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
@@ -24,13 +23,10 @@ class AssessmentService constructor(
   private val offenderService: OffenderService,
   private val sectionService: SectionService,
 ) {
-
-  private val LAYER_3 = "LAYER_3"
-  private val ROSH_SECTION = "ROSH"
-  private val POSITIVE_ANSWERS = setOf("YES", "Y")
-
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
+    const val LAYER_3 = "LAYER_3"
+    val POSITIVE_ANSWERS = setOf("YES", "Y")
   }
 
   fun getAssessmentsForOffender(identityType: String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<AssessmentSummaryDto> {
@@ -46,7 +42,7 @@ class AssessmentService constructor(
     val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
       ?: throw EntityNotFoundException("Assessment for Oasys Offender $offenderId, not found")
     log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for identity: ($identity, $identityType)")
-    return populateAssessmentDto(assessment)
+    return AssessmentDto.from(assessment)
   }
 
   fun getAssessment(oasysSetId: Long?): AssessmentDto {
@@ -54,23 +50,7 @@ class AssessmentService constructor(
     val assessment = assessmentRepository.getAssessment(oasysSetId)
       ?: throw EntityNotFoundException("Assessment for OasysSetId $oasysSetId, not found")
     log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for oasysSetId: $oasysSetId")
-    return populateAssessmentDto(assessment)
-  }
-
-  private fun populateAssessmentDto(assessment: Assessment?): AssessmentDto {
-    val childSafeguardingIndicated = calculateChildSafeguardingIndicated(assessment?.oasysSetPk)
-    // only return needs where a risk has been flagged when returning full assessment
-    val needs = calculateNeeds(assessment?.assessmentType, assessment?.oasysSetPk).filter(CriminogenicNeed::anyRiskFlagged)
-    return AssessmentDto.from(assessment, childSafeguardingIndicated, needs)
-  }
-
-  private fun calculateChildSafeguardingIndicated(oasysSetId: Long?): Boolean? {
-    val roshSection = sectionService.getSectionForAssessment(oasysSetId, ROSH_SECTION)
-    val answers = roshSection?.getRefAnswersValues(setOf("R2.1", "R2.2"))
-    if (answers.isNullOrEmpty()) {
-      return null
-    }
-    return anySingleAnswersArePositive(answers.values)
+    return AssessmentDto.from(assessment)
   }
 
   private fun calculateNeeds(assessmentType: String?, oasysSetId: Long?): Collection<CriminogenicNeed> {
@@ -120,10 +100,6 @@ class AssessmentService constructor(
     val rawScore: Long = section?.sectOtherRawScore ?: 0L
     val threshold: Long = section?.refSection?.crimNeedScoreThreshold ?: Long.MAX_VALUE
     return rawScore >= threshold
-  }
-
-  private fun anySingleAnswersArePositive(answers: Collection<List<String>?>?): Boolean {
-    return POSITIVE_ANSWERS.any { answers?.map { a -> a?.getOrNull(0) }?.contains(it) ?: false }
   }
 
   fun getAssessmentNeeds(oasysSetId: Long?): Collection<AssessmentNeedDto> {

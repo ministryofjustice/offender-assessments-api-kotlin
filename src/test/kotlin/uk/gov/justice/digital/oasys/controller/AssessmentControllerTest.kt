@@ -10,7 +10,6 @@ import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.OffenderIdentifier
-import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -107,25 +106,6 @@ class AssessmentControllerTest : IntegrationTest() {
 
     // Sections check
     assertThat(assessment.sections).hasSize(17)
-
-    // child safeguarding
-    assertThat(assessment.childSafeguardingIndicated).isTrue()
-
-    // Example flagged as need
-    val drugs = assessment.layer3SentencePlanNeeds?.first { n -> n?.section == SectionHeader.DRUG_MISUSE }
-    assertThat(drugs?.flaggedAsNeed).isTrue()
-
-    // Example risk of harm
-    val emotional = assessment.layer3SentencePlanNeeds?.first { n -> n?.section == SectionHeader.EMOTIONAL_WELL_BEING }
-    assertThat(emotional?.riskOfHarm).isTrue()
-
-    // Example risk of reoffending
-    val alcohol = assessment.layer3SentencePlanNeeds?.first { n -> n?.section == SectionHeader.ALCOHOL_MISUSE }
-    assertThat(alcohol?.riskOfReoffending).isTrue()
-
-    // Example over threshold
-    val relationships = assessment.layer3SentencePlanNeeds?.first { n -> n?.section == SectionHeader.RELATIONSHIPS }
-    assertThat(relationships?.overThreshold).isTrue()
 
     // sentence data
     val sentence = assessment.sentence?.first { s -> s?.sentenceCode == "310" }
