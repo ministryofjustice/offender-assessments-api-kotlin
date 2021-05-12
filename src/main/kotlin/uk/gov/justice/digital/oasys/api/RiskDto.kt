@@ -12,6 +12,9 @@ data class RiskDto(
   @ApiModelProperty(value = "Assessment Reference Version Code", example = "Layer3")
   val refAssessmentVersionCode: String? = null,
 
+  @ApiModelProperty(value = "Is Assessment RSR(Risk of Serious Recidivism) only", example = "true")
+  val isRsrOnly: Boolean? = null,
+
   @ApiModelProperty(value = "Assessment Reference Version", example = "1")
   val refAssessmentVersionNumber: String? = null,
 
@@ -41,16 +44,19 @@ data class RiskDto(
 
   @ApiModelProperty(value = "Child Safeguarding flag", example = "true")
   val childSafeguardingIndicated: Boolean? = null,
+
 ) {
   companion object {
     fun fromSara(
       assessment: Assessment?,
       answers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?
+      childSafeguardingIndicated: Boolean?,
+      isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        isRsrOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,
@@ -66,11 +72,13 @@ data class RiskDto(
     fun fromRosha(
       assessment: Assessment?,
       answers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?
+      childSafeguardingIndicated: Boolean?,
+      isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        isRsrOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,
@@ -87,11 +95,13 @@ data class RiskDto(
       assessment: Assessment?,
       assessmentAnswers: AssessmentAnswersDto,
       saraAnswers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?
+      childSafeguardingIndicated: Boolean?,
+      isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
+        isRsrOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,

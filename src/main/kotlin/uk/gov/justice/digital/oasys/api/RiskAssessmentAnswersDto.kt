@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionIds
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshaQuestionIds
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshaQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionCodes
 
 data class RiskAssessmentAnswersDto(
   @ApiModelProperty(value = "Assessment ID/Oasys Set ID for SARA risk answers")
@@ -15,15 +15,15 @@ data class RiskAssessmentAnswersDto(
   companion object {
 
     fun fromRosha(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      return riskAssessmentAnswersDto(assessmentAnswers, roshaQuestionIds)
+      return riskAssessmentAnswersDto(assessmentAnswers, roshaQuestionCodes)
     }
 
     fun fromSara(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      return riskAssessmentAnswersDto(assessmentAnswers, saraQuestionIds)
+      return riskAssessmentAnswersDto(assessmentAnswers, saraQuestionCodes)
     }
 
     fun fromRosh(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      return riskAssessmentAnswersDto(assessmentAnswers, roshQuestionIds)
+      return riskAssessmentAnswersDto(assessmentAnswers, roshQuestionCodes)
     }
 
     fun riskAssessmentAnswersDto(
