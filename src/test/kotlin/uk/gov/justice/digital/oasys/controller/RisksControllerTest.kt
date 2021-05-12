@@ -16,7 +16,7 @@ import uk.gov.justice.digital.oasys.api.RiskQuestionDto
   Sql(scripts = ["classpath:risks/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
   Sql(scripts = ["classpath:risks/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 )
-@AutoConfigureWebTestClient(timeout = "60000")
+@AutoConfigureWebTestClient
 class RisksControllerTest : IntegrationTest() {
 
   @Test
