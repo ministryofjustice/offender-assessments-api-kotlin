@@ -45,7 +45,7 @@ data class RiskDto(
   @ApiModelProperty(value = "Child Safeguarding flag", example = "true")
   val childSafeguardingIndicated: Boolean? = null,
 
-  ) {
+) {
   companion object {
     fun fromSara(
       assessment: Assessment?,
