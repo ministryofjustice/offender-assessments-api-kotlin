@@ -13,7 +13,7 @@ data class RiskDto(
   val refAssessmentVersionCode: String? = null,
 
   @ApiModelProperty(value = "Is Assessment RSR(Risk of Serious Recidivism) only", example = "true")
-  val isRSROnly: Boolean? = null,
+  val isRrsOnly: Boolean? = null,
 
   @ApiModelProperty(value = "Assessment Reference Version", example = "1")
   val refAssessmentVersionNumber: String? = null,
@@ -45,7 +45,7 @@ data class RiskDto(
   @ApiModelProperty(value = "Child Safeguarding flag", example = "true")
   val childSafeguardingIndicated: Boolean? = null,
 
-) {
+  ) {
   companion object {
     fun fromSara(
       assessment: Assessment?,
@@ -56,7 +56,7 @@ data class RiskDto(
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
-        isRSROnly = isRsrOnly,
+        isRrsOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,
@@ -78,7 +78,7 @@ data class RiskDto(
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
-        isRSROnly = isRsrOnly,
+        isRrsOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,
@@ -101,7 +101,7 @@ data class RiskDto(
       return RiskDto(
         oasysSetId = assessment?.oasysSetPk,
         refAssessmentVersionCode = assessment?.assessmentVersion?.refAssVersionCode,
-        isRSROnly = isRsrOnly,
+        isRrsOnly = isRsrOnly,
         refAssessmentVersionNumber = assessment?.assessmentVersion?.versionNumber,
         refAssessmentId = assessment?.assessmentVersion?.refAssVersionUk,
         completedDate = assessment?.dateCompleted,

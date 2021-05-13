@@ -256,7 +256,7 @@ class RisksServiceTest {
         val risks = risksService.getAllRisksForOffender("OASYS", "1")
         assertThat(risks?.size).isEqualTo(1)
         with(risks?.first()!!) {
-          assertThat(isRSROnly).isNull()
+          assertThat(isRrsOnly).isNull()
         }
       }
 
@@ -275,7 +275,7 @@ class RisksServiceTest {
 
         assertThat(risks?.size).isEqualTo(1)
         with(risks?.first()!!) {
-          assertThat(isRSROnly).isFalse
+          assertThat(isRrsOnly).isFalse
         }
       }
 
@@ -294,7 +294,7 @@ class RisksServiceTest {
 
         assertThat(risks?.size).isEqualTo(1)
         with(risks?.first()!!) {
-          assertThat(isRSROnly).isTrue
+          assertThat(isRrsOnly).isTrue
         }
       }
 
@@ -313,7 +313,7 @@ class RisksServiceTest {
 
         assertThat(risks?.size).isEqualTo(1)
         with(risks?.first()!!) {
-          assertThat(isRSROnly).isFalse
+          assertThat(isRrsOnly).isFalse
         }
       }
 
@@ -332,7 +332,7 @@ class RisksServiceTest {
 
         assertThat(risks?.size).isEqualTo(1)
         with(risks?.first()!!) {
-          assertThat(isRSROnly).isTrue
+          assertThat(isRrsOnly).isTrue
         }
       }
     }

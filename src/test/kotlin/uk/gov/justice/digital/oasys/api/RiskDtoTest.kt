@@ -34,7 +34,7 @@ class RiskDtoTest {
     assertThat(riskDto.rosha?.riskQuestions).isEmpty()
     assertThat(riskDto.childSafeguardingIndicated).isNull()
     assertThat(riskDto.rosh).isNull()
-    assertThat(riskDto.isRSROnly).isNull()
+    assertThat(riskDto.isRrsOnly).isNull()
   }
 
   @Test
@@ -53,7 +53,7 @@ class RiskDtoTest {
     assertThat(riskDto.rosha?.riskQuestions).isEmpty()
     assertThat(riskDto.childSafeguardingIndicated).isTrue
     assertThat(riskDto.rosh?.riskQuestions).isEmpty()
-    assertThat(riskDto.isRSROnly).isTrue
+    assertThat(riskDto.isRrsOnly).isTrue
   }
 
   @Test
@@ -72,7 +72,7 @@ class RiskDtoTest {
     assertThat(riskDto.rosha?.riskQuestions).isNull()
     assertThat(riskDto.childSafeguardingIndicated).isFalse
     assertThat(riskDto.rosh?.riskQuestions).isEmpty()
-    assertThat(riskDto.isRSROnly).isFalse
+    assertThat(riskDto.isRrsOnly).isFalse
   }
 
   private fun assessment(): Assessment {
