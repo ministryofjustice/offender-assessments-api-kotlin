@@ -5,6 +5,7 @@ plugins {
   kotlin("plugin.jpa") version "1.4.21"
   kotlin("plugin.allopen") version "1.4.10"
   kotlin("kapt") version "1.4.10"
+  id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
 allOpen {
