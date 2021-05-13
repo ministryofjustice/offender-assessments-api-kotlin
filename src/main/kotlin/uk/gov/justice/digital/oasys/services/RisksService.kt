@@ -56,7 +56,7 @@ class RisksService(
   private fun isRsrOnlyAssessment(assessment: Assessment, answers: AssessmentAnswersDto): Boolean? {
     return when (assessment?.assessmentType.let { AssessmentType.fromString(it) }) {
       AssessmentType.LAYER1 -> {
-        assessment?.assessmentVersion?.versionNumber?.equals('2').let {
+        assessment?.assessmentVersion?.versionNumber?.equals(VERSION_2).let {
           areAnyOfTheQuestionAnswersNegative(rsrQuestionCodes, answers)
         }
       }
@@ -111,5 +111,6 @@ class RisksService(
     )
     val POSITIVE_ANSWERS = setOf("YES", "Y")
     val NEGATIVE_ANSWERS = setOf("NO", "N")
+    val VERSION_2 = "2"
   }
 }
