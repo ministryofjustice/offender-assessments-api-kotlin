@@ -31,8 +31,11 @@ This service is built using Gradle. In order to build the project from the comma
 ./gradlew clean build  
 ```  
 The created JAR file will be named "`offender-assessment-api-<yyyy-mm-dd>.jar`", using the date that the build takes place in the format `yyyy-mm-dd`.  
-  
-  
+
+### Code style & formatting
+`./gradlew ktlintApplyToIdea addKtlintFormatGitPreCommitHook`
+will apply ktlint styles to intellij and also add a pre-commit hook to format all changed kotlin files.
+
 ### Start the application with H2 database  
   
 The configuration can be changed for the api to use an in-memory H2 database by using the spring boot profile `dev`. On the command line run:
