@@ -26,6 +26,9 @@ data class AreaEstUserRole(
   @Column(name = "REF_ROLE_CODE")
   val refRoleCode: String? = null,
 
+  @Column(name = "AREA_EST_USER_ROLE_UK")
+  var areaEstUserRoleUk: Long? = null,
+
   @Column(name = "START_DATE")
   val startDate: LocalDateTime? = null,
 
