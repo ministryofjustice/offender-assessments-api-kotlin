@@ -5,13 +5,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AnswerDto
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshFullQuestionIds
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionIds
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshSumQuestionIds
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionIds
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshFullQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshSumQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.rsrQuestionCodes
+import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionCodes
 import uk.gov.justice.digital.oasys.api.RiskDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.domain.AssessmentPurposeType
+import uk.gov.justice.digital.oasys.services.domain.AssessmentType
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 @Service
@@ -38,14 +41,29 @@ class RisksService(
 
   fun getRisksForAssessment(assessment: Assessment): RiskDto {
     val answers = getRiskAnswersByAssessmentId(assessment.oasysSetPk!!)
-    val childSafeguardingIndicated = calculateChildSafeguardingIndicated(answers)
-    if (assessment.assessmentType.equals("SARA")) {
-      return RiskDto.fromSara(assessment, answers, childSafeguardingIndicated)
+    val childSafeguardingIndicated = calculateChildSafeguardingIndicated(roshQuestionCodes, answers)
+    val isRsrOnly = isRsrOnlyAssessment(assessment, answers)
+    if (assessment.assessmentType?.equals(AssessmentType.SARA.value)!!) {
+      return RiskDto.fromSara(assessment, answers, childSafeguardingIndicated, isRsrOnly)
     } else {
-      val sara = assessment.childAssessments.find { it?.assessmentType.equals("SARA") }
-        ?: return RiskDto.fromRosha(assessment, answers, childSafeguardingIndicated)
+      val sara = assessment.childAssessments.find { it?.assessmentType?.equals(AssessmentType.SARA.value)!! }
+        ?: return RiskDto.fromRosha(assessment, answers, childSafeguardingIndicated, isRsrOnly)
       val saraAnswers = getRiskAnswersByAssessmentId(sara.oasysSetPk!!)
-      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers, childSafeguardingIndicated)
+      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers, childSafeguardingIndicated, isRsrOnly)
+    }
+  }
+
+  private fun isRsrOnlyAssessment(assessment: Assessment, answers: AssessmentAnswersDto): Boolean? {
+    return when (assessment?.assessmentType.let { AssessmentType.fromString(it) }) {
+      AssessmentType.LAYER1 -> {
+        assessment?.assessmentVersion?.versionNumber?.equals(VERSION_2).let {
+          areAnyOfTheQuestionAnswersNegative(rsrQuestionCodes, answers)
+        }
+      }
+      AssessmentType.LAYER3 -> {
+        AssessmentPurposeType.fromString(assessment.assessmentPurposeType)?.equals(AssessmentPurposeType.RSR_ONLY)
+      }
+      else -> null
     }
   }
 
@@ -55,28 +73,44 @@ class RisksService(
     }
   }
 
-  private fun calculateChildSafeguardingIndicated(answers: AssessmentAnswersDto): Boolean? {
-    val riskQuestions = answers.questionAnswers.filter { roshQuestionIds.contains(it.refQuestionCode) }
+  private fun calculateChildSafeguardingIndicated(questionCodes: Set<String>, answers: AssessmentAnswersDto): Boolean? {
+    return areAnyOfTheAnswersOfType(questionCodes, answers, POSITIVE_ANSWERS)
+  }
+
+  private fun areAnyOfTheQuestionAnswersNegative(questionCodes: Set<String>, answers: AssessmentAnswersDto): Boolean? {
+    return areAnyOfTheAnswersOfType(questionCodes, answers, NEGATIVE_ANSWERS)
+  }
+
+  private fun areAnyOfTheAnswersOfType(
+    questionCodes: Set<String>,
+    answers: AssessmentAnswersDto,
+    answerTypes: Set<String>
+  ): Boolean? {
+    val riskQuestions = answers.questionAnswers.filter { questionCodes.contains(it.refQuestionCode) }
     return if (riskQuestions.isNullOrEmpty() || riskQuestions?.map { it.answers }.flatten().isEmpty()) null
     else riskQuestions?.any {
-      anySingleAnswersArePositive(
+      anySingleAnswersMatch(
+        answerTypes,
         it.answers
       )
     }
   }
 
-  private fun anySingleAnswersArePositive(answers: Collection<AnswerDto>): Boolean {
-    return POSITIVE_ANSWERS.any { answers?.map { a -> a.refAnswerCode }?.contains(it) }
+  private fun anySingleAnswersMatch(answerTypes: Set<String>, answers: Collection<AnswerDto>): Boolean {
+    return answerTypes.any { answers?.map { a -> a.refAnswerCode }?.contains(it) }
   }
 
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
     val riskQuestions = mapOf(
-      "SARA" to saraQuestionIds,
-      "ROSHSUM" to roshSumQuestionIds,
-      "ROSHFULL" to roshFullQuestionIds,
-      "ROSH" to roshQuestionIds
+      "SARA" to saraQuestionCodes,
+      "ROSHSUM" to roshSumQuestionCodes,
+      "ROSHFULL" to roshFullQuestionCodes,
+      "ROSH" to roshQuestionCodes,
+      "RSR" to rsrQuestionCodes
     )
     val POSITIVE_ANSWERS = setOf("YES", "Y")
+    val NEGATIVE_ANSWERS = setOf("NO", "N")
+    val VERSION_2 = "2"
   }
 }

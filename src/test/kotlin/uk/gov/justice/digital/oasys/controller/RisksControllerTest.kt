@@ -87,8 +87,9 @@ class RisksControllerTest : IntegrationTest() {
       .expectBodyList(RiskDto::class.java)
       .consumeWith<ListBodySpec<RiskDto>> {
         val risks = it.responseBody
-        assertThat(risks).hasSize(2)
+        assertThat(risks).hasSize(3)
         assertThat(risks?.get(0)?.oasysSetId).isEqualTo(9487347)
+        assertThat(risks?.get(0)?.isRrsOnly).isTrue
         assertThat(risks?.get(0)?.rosha?.riskQuestions).hasSize(10)
         assertThat(risks?.get(0)?.rosha?.riskQuestions?.get(0)).isEqualTo(validRoshaQuestion())
 
@@ -101,8 +102,16 @@ class RisksControllerTest : IntegrationTest() {
         assertThat(risks?.get(0)?.rosh?.riskQuestions).containsExactly(validRoshQuestion1(), validRoshQuestion2())
         assertThat(risks?.get(0)?.childSafeguardingIndicated).isTrue
 
-        assertThat(risks?.get(1)?.rosh).isNull()
+        assertThat(risks?.get(1)?.oasysSetId).isEqualTo(9487350)
         assertThat(risks?.get(1)?.childSafeguardingIndicated).isNull()
+        assertThat(risks?.get(1)?.isRrsOnly).isTrue
+
+        assertThat(risks?.get(2)?.oasysSetId).isEqualTo(9487348)
+        assertThat(risks?.get(2)?.sara?.oasysSetId).isEqualTo(9487348)
+        assertThat(risks?.get(2)?.sara?.riskQuestions).hasSize(2)
+        assertThat(risks?.get(2)?.sara?.riskQuestions?.get(0)).isEqualTo(validSaraQuestion())
+        assertThat(risks?.get(2)?.childSafeguardingIndicated).isNull()
+        assertThat(risks?.get(2)?.isRrsOnly).isNull()
       }
   }
 

@@ -155,7 +155,7 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "YES")))
+      } returns (answers(mapOf("R2.1" to "YES")))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
@@ -171,7 +171,7 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "Y", "R2.2" to null)))
+      } returns (answers(mapOf("R2.1" to "Y", "R2.2" to null)))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
@@ -187,7 +187,7 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "N", "R2.2" to "Y")))
+      } returns (answers(mapOf("R2.1" to "N", "R2.2" to "Y")))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
@@ -203,7 +203,7 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "Y", "R2.2" to "Y")))
+      } returns (answers(mapOf("R2.1" to "Y", "R2.2" to "Y")))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
@@ -219,7 +219,7 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "N", "R2.2" to null)))
+      } returns (answers(mapOf("R2.1" to "N", "R2.2" to null)))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
@@ -235,12 +235,106 @@ class RisksServiceTest {
           1111,
           RisksService.riskQuestions
         )
-      } returns (roshAnswers(mapOf("R2.1" to "N", "R2.2" to "NO")))
+      } returns (answers(mapOf("R2.1" to "N", "R2.2" to "NO")))
       every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
 
       val risk = risksService.getRisksForAssessmentId(2222L)
 
       assertThat(risk?.childSafeguardingIndicated).isFalse
+    }
+
+    @Nested
+    @DisplayName("RSR only assessments")
+    inner class RSROnlyAssessmentsTest {
+
+      @Test
+      fun `should not return rsr only flag if RSR section not present`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(roshAssessment()))
+        every { answerService.getAnswersForQuestions(2222L, RisksService.riskQuestions) } returns (roshaAnswers())
+
+        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+        assertThat(risks?.size).isEqualTo(1)
+        with(risks?.first()!!) {
+          assertThat(isRrsOnly).isNull()
+        }
+      }
+
+      @Test
+      fun `should return rsr only flag false if assessment Layer1 and RSR section present but answer to RA is Yes`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
+        every {
+          answerService.getAnswersForQuestions(
+            4444,
+            RisksService.riskQuestions
+          )
+        } returns (answers(mapOf("RA" to "YES")))
+
+        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+
+        assertThat(risks?.size).isEqualTo(1)
+        with(risks?.first()!!) {
+          assertThat(isRrsOnly).isFalse
+        }
+      }
+
+      @Test
+      fun `should return rsr only flag if assessment Layer1, RSR section present and answer to RA is No`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
+        every {
+          answerService.getAnswersForQuestions(
+            4444,
+            RisksService.riskQuestions
+          )
+        } returns (answers(mapOf("RA" to "NO")))
+
+        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+
+        assertThat(risks?.size).isEqualTo(1)
+        with(risks?.first()!!) {
+          assertThat(isRrsOnly).isTrue
+        }
+      }
+
+      @Test
+      fun `should return rsr only flag false if assessment Layer3, but assessment purpose is risk review`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer3Assessment()))
+        every {
+          answerService.getAnswersForQuestions(
+            4444,
+            RisksService.riskQuestions
+          )
+        } returns (roshaAnswers())
+
+        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+
+        assertThat(risks?.size).isEqualTo(1)
+        with(risks?.first()!!) {
+          assertThat(isRrsOnly).isFalse
+        }
+      }
+
+      @Test
+      fun `should return rsr only flag if assessment Layer3, and assessment purpose is rsr only`() {
+        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(rsrOnlyAssessment()))
+        every {
+          answerService.getAnswersForQuestions(
+            4444,
+            RisksService.riskQuestions
+          )
+        } returns (roshaAnswers())
+
+        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+
+        assertThat(risks?.size).isEqualTo(1)
+        with(risks?.first()!!) {
+          assertThat(isRrsOnly).isTrue
+        }
+      }
     }
   }
 
@@ -269,6 +363,27 @@ class RisksServiceTest {
     )
   }
 
+  private fun layer1Assessment(): Assessment {
+    return Assessment(
+      oasysSetPk = 4444L,
+      assessmentStatus = "COMPLETED",
+      assessmentType = "LAYER_1"
+    )
+  }
+
+  private fun layer3Assessment(): Assessment {
+    return Assessment(
+      oasysSetPk = 4444L,
+      assessmentStatus = "COMPLETED",
+      assessmentType = "LAYER_3",
+      assessmentPurposeType = "580"
+    )
+  }
+
+  private fun rsrOnlyAssessment(): Assessment {
+    return layer3Assessment().copy(assessmentPurposeType = "620")
+  }
+
   private fun roshaAnswers(): AssessmentAnswersDto {
     return AssessmentAnswersDto(
       assessmentId = 1111,
@@ -286,7 +401,7 @@ class RisksServiceTest {
     )
   }
 
-  private fun roshAnswers(refQuestionCode: Map<String, String?>): AssessmentAnswersDto {
+  private fun answers(refQuestionCode: Map<String, String?>): AssessmentAnswersDto {
     return AssessmentAnswersDto(
       assessmentId = 1111,
       questionAnswers = refQuestionCode.map {

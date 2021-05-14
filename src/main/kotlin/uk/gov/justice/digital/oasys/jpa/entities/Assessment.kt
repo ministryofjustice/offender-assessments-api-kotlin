@@ -29,6 +29,9 @@ data class Assessment(
   @Column(name = "ASSESSMENT_TYPE_ELM")
   val assessmentType: String? = null,
 
+  @Column(name = "PURPOSE_ASSESSMENT_ELM")
+  val assessmentPurposeType: String? = null,
+
   @Column(name = "CREATE_DATE")
   val createDate: LocalDateTime? = null,
 
