@@ -3,16 +3,18 @@ package uk.gov.justice.digital.oasys.jpa.entities
 import java.sql.Time
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
 @Table(name = "CT_AREA_EST")
 data class CtAreaEst(
-  @Column(name = "CT_AREA_EST_UK")
-  var ctAreaEstUk: Long? = null,
-  @javax.persistence.Id
+  @Id
   @Column(name = "CT_AREA_EST_CODE")
   val ctAreaEstCode: String? = null,
+
+  @Column(name = "CT_AREA_EST_UK")
+  var ctAreaEstUk: Long? = null,
 
   @Column(name = "AREA_EST_CTID")
   val areaEstCtid: String? = null,

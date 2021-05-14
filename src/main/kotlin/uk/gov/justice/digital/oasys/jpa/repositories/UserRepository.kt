@@ -21,7 +21,6 @@ interface UserRepository : CrudRepository<OasysUser?, String?> {
       ORDER BY TIME_STAMP DESC""",
     nativeQuery = true
   )
-
   fun findCurrentUserSessionForOffender(oasysOffenderId: Long, userCode: String): Long?
 
   fun findOasysUserByEmailAddressIgnoreCase(emailAddress: String): OasysUser?

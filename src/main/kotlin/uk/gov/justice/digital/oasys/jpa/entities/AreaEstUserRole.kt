@@ -18,9 +18,7 @@ data class AreaEstUserRole(
   @Column(name = "CT_AREA_EST_CODE")
   val ctAreaEstCode: String? = null,
 
-  @Column(name = "AREA_EST_USER_ROLE_UK")
-  var areaEstUserRoleUk: Long? = null,
-  @javax.persistence.Id
+  @Id
   @Column(name = "OASYS_USER_CODE")
   val oasysUserCode: String? = null,
 

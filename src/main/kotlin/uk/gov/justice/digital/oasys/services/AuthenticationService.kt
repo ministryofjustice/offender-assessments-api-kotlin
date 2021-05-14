@@ -18,6 +18,8 @@ import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
+import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
+import uk.gov.justice.digital.oasys.jpa.repositories.AreaRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
@@ -27,6 +29,7 @@ import java.io.IOException
 @Service
 class AuthenticationService(
   private var oasysUserRepository: UserRepository,
+  private var areaRepository: AreaRepository,
   private val oasysAuthenticationRepository: AuthenticationRepository,
   private val telemetryClient: TelemetryClient
 ) {
@@ -77,7 +80,12 @@ class AuthenticationService(
     throw UserNotAuthorisedException("No response from OASys authentication function for user, $username")
   }
 
-  fun userCanAccessOffenderRecord(oasysUserCode: String?, offenderId: Long?, sessionId: Long?, resource: OffenderPermissionResource?): AuthorisationDto {
+  fun userCanAccessOffenderRecord(
+    oasysUserCode: String?,
+    offenderId: Long?,
+    sessionId: Long?,
+    resource: OffenderPermissionResource?
+  ): AuthorisationDto {
 
     log.info("Attempting to authorise user $oasysUserCode for offender $offenderId")
 
@@ -97,21 +105,56 @@ class AuthenticationService(
 
         when (authStatus.state) {
           AuthorisationStatus.AuthorisationState.READ -> {
-            logAuthSuccess(oasysUserCode, OffenderPermissionLevel.READ_ONLY, OffenderPermissionResource.SENTENCE_PLAN, offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.READ_ONLY, OffenderPermissionResource.SENTENCE_PLAN)
+            logAuthSuccess(
+              oasysUserCode,
+              OffenderPermissionLevel.READ_ONLY,
+              OffenderPermissionResource.SENTENCE_PLAN,
+              offenderId
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.READ_ONLY,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           AuthorisationStatus.AuthorisationState.EDIT -> {
-            logAuthSuccess(oasysUserCode, OffenderPermissionLevel.WRITE, OffenderPermissionResource.SENTENCE_PLAN, offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.WRITE, OffenderPermissionResource.SENTENCE_PLAN)
+            logAuthSuccess(
+              oasysUserCode,
+              OffenderPermissionLevel.WRITE,
+              OffenderPermissionResource.SENTENCE_PLAN,
+              offenderId
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.WRITE,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           AuthorisationStatus.AuthorisationState.NO_ACCESS -> {
             logAuthFailure(oasysUserCode, "Unauthorised", offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.UNAUTHORISED,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           else -> {
             logAuthFailure(oasysUserCode, "Invalid OASys Response", offenderId)
-            log.error("Failed to authorise user $oasysUserCode for offender $offenderId with status ${authStatus.state}", oasysUserCode, offenderId, authStatus.state)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+            log.error(
+              "Failed to authorise user $oasysUserCode for offender $offenderId with status ${authStatus.state}",
+              oasysUserCode,
+              offenderId,
+              authStatus.state
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.UNAUTHORISED,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
         }
       } catch (e: IOException) {
@@ -121,7 +164,12 @@ class AuthenticationService(
       }
     }
     logAuthFailure(oasysUserCode, "No response from OASys", offenderId)
-    return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+    return AuthorisationDto(
+      oasysUserCode,
+      offenderId,
+      OffenderPermissionLevel.UNAUTHORISED,
+      OffenderPermissionResource.SENTENCE_PLAN
+    )
   }
 
   private fun authoriseSentencePlan(oasysUserId: String, offenderId: Long, sessionId: Long): String? {
@@ -133,7 +181,12 @@ class AuthenticationService(
     telemetryClient.trackEvent(event, mapOf("username" to username), null)
   }
 
-  private fun logAuthSuccess(username: String?, permissionLevel: OffenderPermissionLevel, resource: OffenderPermissionResource, offenderId: Long) {
+  private fun logAuthSuccess(
+    username: String?,
+    permissionLevel: OffenderPermissionLevel,
+    resource: OffenderPermissionResource,
+    offenderId: Long
+  ) {
     telemetryClient.trackEvent(
       "OASysAuthorisationSuccess",
       mapOf(
@@ -163,6 +216,13 @@ class AuthenticationService(
     val user = oasysUserRepository.findOasysUserByEmailAddressIgnoreCase(email)
       ?: throw EntityNotFoundException("User for email $email, not found")
     log.info("Found user with email $email")
-    return UserDto.from(user)
+
+    return UserDto.from(user, user.toRegions())
+  }
+
+  fun OasysUser.toRegions(): Set<String> {
+    val ctAreaEstCode = this?.roles?.mapNotNull { it.ctAreaEstCode }?.distinct()
+    if (ctAreaEstCode?.isEmpty()!!) return emptySet()
+    return ctAreaEstCode?.let { areaRepository.findCtAreaEstByCtAreaEstCodes(it.toSet()) }!!
   }
 }
