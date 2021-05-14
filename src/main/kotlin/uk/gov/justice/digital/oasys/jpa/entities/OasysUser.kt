@@ -2,7 +2,6 @@ package uk.gov.justice.digital.oasys.jpa.entities
 
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinColumns
@@ -44,7 +43,7 @@ data class OasysUser(
   @JoinColumn(name = "CT_AREA_EST_CODE")
   val ctAreaEst: CtAreaEst? = null,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @JoinColumn(name = "OASYS_USER_CODE", referencedColumnName = "OASYS_USER_CODE")
   val roles: List<AreaEstUserRole>? = null
 ) {
