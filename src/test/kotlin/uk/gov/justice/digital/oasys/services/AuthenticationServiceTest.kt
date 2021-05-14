@@ -17,7 +17,6 @@ import uk.gov.justice.digital.oasys.jpa.entities.AreaEstUserRole
 import uk.gov.justice.digital.oasys.jpa.entities.CtAreaEst
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
-import uk.gov.justice.digital.oasys.jpa.repositories.AreaRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
@@ -28,10 +27,9 @@ import uk.gov.justice.digital.oasys.services.exceptions.UserNotAuthorisedExcepti
 class AuthenticationServiceTest {
 
   private val authenticationRepository: AuthenticationRepository = mockk()
-  private val areaRepository: AreaRepository = mockk()
   private val userRepository: UserRepository = mockk()
   private val telemetryClient: TelemetryClient = mockk(relaxed = true)
-  private val service = AuthenticationService(userRepository, areaRepository, authenticationRepository, telemetryClient)
+  private val service = AuthenticationService(userRepository, authenticationRepository, telemetryClient)
 
   private val username = "TEST_USER"
   private val password = "PASSWORD"
@@ -246,7 +244,7 @@ class AuthenticationServiceTest {
     val email = "test@test.com"
 
     every { userRepository.findOasysUserByEmailAddressIgnoreCase(email) } returns user
-    every { areaRepository.findCtAreaEstByCtAreaEstCodes(setOf("1234", "12345")) } returns setOf("Lancashire", "West Yorkshire CRC")
+    every { userRepository.findCtAreaEstByUserCode("TEST_USER") } returns setOf("Lancashire", "West Yorkshire CRC")
 
     val userDto = service.getUserCodeByEmail(email)
     assertThat(userDto.userForename1).isEqualTo("Name 1")

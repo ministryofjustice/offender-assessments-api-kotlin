@@ -12,8 +12,15 @@ import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.api.UserRequestByEmail
 
 @SqlGroup(
-  Sql(scripts = ["classpath:authentication/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:authentication/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:authentication/before-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:authentication/after-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class AuthenticationControllerUserTest : IntegrationTest() {
@@ -72,7 +79,7 @@ class AuthenticationControllerUserTest : IntegrationTest() {
       userForename3 = "Middle 2",
       userFamilyName = "SMITH",
       email = "testemail@test.com",
-      regions = setOf("Wakefield (HMP)"),
+      regions = setOf("West Yorkshire", "Wakefield (HMP)"),
       accountStatus = AccountStatus.ACTIVE
     )
   }

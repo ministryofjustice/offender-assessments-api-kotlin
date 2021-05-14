@@ -19,7 +19,6 @@ import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
-import uk.gov.justice.digital.oasys.jpa.repositories.AreaRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
@@ -29,7 +28,6 @@ import java.io.IOException
 @Service
 class AuthenticationService(
   private var oasysUserRepository: UserRepository,
-  private var areaRepository: AreaRepository,
   private val oasysAuthenticationRepository: AuthenticationRepository,
   private val telemetryClient: TelemetryClient
 ) {
@@ -221,8 +219,6 @@ class AuthenticationService(
   }
 
   fun OasysUser.toRegions(): Set<String> {
-    val ctAreaEstCode = this?.roles?.mapNotNull { it.ctAreaEstCode }?.distinct()
-    if (ctAreaEstCode?.isEmpty()!!) return emptySet()
-    return ctAreaEstCode?.let { areaRepository.findCtAreaEstByCtAreaEstCodes(it.toSet()) }!!
+    return this.oasysUserCode?.let { oasysUserRepository.findCtAreaEstByUserCode(it) }!!
   }
 }
