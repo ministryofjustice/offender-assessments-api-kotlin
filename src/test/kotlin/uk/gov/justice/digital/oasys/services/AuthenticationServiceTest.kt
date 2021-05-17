@@ -14,7 +14,6 @@ import uk.gov.justice.digital.oasys.api.AccountStatus
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.api.RegionDto
-import uk.gov.justice.digital.oasys.jpa.entities.AreaEstUserRole
 import uk.gov.justice.digital.oasys.jpa.entities.CtAreaEst
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
@@ -289,8 +288,7 @@ class AuthenticationServiceTest {
       "Last Name",
       "test@test.com",
       RefElement(refCategoryCode = "USER_STATUS", refElementCode = "ACTIVE", refElementDesc = "Active"),
-      CtAreaEst(ctAreaEstUk = 1L),
-      listOf(AreaEstUserRole(ctAreaEstCode = "1234"), AreaEstUserRole(ctAreaEstCode = "12345"))
+      CtAreaEst(ctAreaEstUk = 1L)
     )
   }
 

@@ -2,11 +2,9 @@ package uk.gov.justice.digital.oasys.jpa.entities
 
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinColumns
-import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
 
@@ -43,10 +41,6 @@ data class OasysUser(
   @OneToOne
   @JoinColumn(name = "CT_AREA_EST_CODE")
   val ctAreaEst: CtAreaEst? = null,
-
-  @OneToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "OASYS_USER_CODE", referencedColumnName = "OASYS_USER_CODE")
-  val roles: List<AreaEstUserRole>? = null
 ) {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
