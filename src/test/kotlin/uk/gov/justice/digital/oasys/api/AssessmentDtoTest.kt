@@ -14,27 +14,7 @@ class AssessmentDtoTest {
   var assessment: Assessment = setupAssessment()
 
   @Test
-  fun `Builds valid Assessment DTO from Entity with no child safeguarding and needs`() {
-
-    val assessmentDto = AssessmentDto.from(assessment)
-
-    assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
-    assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)
-    assertThat(assessmentDto.assessmentType).isEqualTo(assessment.assessmentType)
-    assertThat(assessmentDto.historicStatus).isEqualTo(assessment.group?.historicStatus)
-    assertThat(assessmentDto.assessmentStatus).isEqualTo(assessment.assessmentStatus)
-    assertThat(assessmentDto.created).isEqualTo(assessment.createDate)
-    assertThat(assessmentDto.refAssessmentId).isEqualTo(assessment.assessmentVersion?.refAssVersionUk)
-    assertThat(assessmentDto.refAssessmentVersionCode).isEqualTo(assessment.assessmentVersion?.refAssVersionCode)
-    assertThat(assessmentDto.refAssessmentVersionNumber).isEqualTo(assessment.assessmentVersion?.versionNumber)
-    assertThat(assessmentDto.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(assessment.assessmentVersion?.oasysScoringAlgVersion)
-    assertThat(assessmentDto.completed).isEqualTo(assessment.dateCompleted)
-    assertThat(assessmentDto.voided).isEqualTo(assessment.assessmentVoidedDate)
-    assertThat(assessmentDto.sections).hasSize(assessment.oasysSections!!.size)
-  }
-
-  @Test
-  fun `Builds valid Assessment DTO from Entity with no child safeguarding and empty needs`() {
+  fun `Builds valid Assessment DTO from Entity`() {
 
     val assessmentDto = AssessmentDto.from(assessment)
 

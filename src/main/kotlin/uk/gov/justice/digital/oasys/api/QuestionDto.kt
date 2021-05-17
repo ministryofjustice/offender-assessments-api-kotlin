@@ -36,7 +36,6 @@ data class QuestionDto(
 ) {
 
   companion object {
-    val roshQuestionCodes = setOf("R2.1", "R2.2")
     val rsrQuestionCodes = setOf("RA")
     val saraQuestionCodes = setOf("SR76.1.1", "SR77.1.1")
     val roshSumQuestionCodes = setOf(

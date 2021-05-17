@@ -21,7 +21,7 @@ class RiskDtoTest {
   @Test
   fun `build Risk DTO from Assessment with ROSHA and SARA`() {
 
-    val riskDto = RiskDto.fromRoshaWithSara(roshaSara, roshaAnswers(), saraAnswers(), null, null)
+    val riskDto = RiskDto.fromRoshaWithSara(roshaSara, roshaAnswers(), saraAnswers(), null)
     assertThat(riskDto.oasysSetId).isEqualTo(1111)
     assertThat(riskDto.refAssessmentId).isEqualTo(1)
     assertThat(riskDto.refAssessmentVersionCode).isEqualTo("version code")
@@ -32,15 +32,13 @@ class RiskDtoTest {
     assertThat(riskDto.assessmentStatus).isEqualTo("COMPLETED")
     assertThat(riskDto.sara?.riskQuestions).isEmpty()
     assertThat(riskDto.rosha?.riskQuestions).isEmpty()
-    assertThat(riskDto.childSafeguardingIndicated).isNull()
-    assertThat(riskDto.rosh).isNull()
     assertThat(riskDto.isRrsOnly).isNull()
   }
 
   @Test
   fun `build Risk DTO from Assessment with ROSHA, no SARA`() {
 
-    val riskDto = RiskDto.fromRosha(rosha, roshaAnswers(), true, true)
+    val riskDto = RiskDto.fromRosha(rosha, roshaAnswers(), true)
     assertThat(riskDto.oasysSetId).isEqualTo(2222)
     assertThat(riskDto.refAssessmentId).isEqualTo(1)
     assertThat(riskDto.refAssessmentVersionCode).isEqualTo("version code")
@@ -51,15 +49,13 @@ class RiskDtoTest {
     assertThat(riskDto.assessmentStatus).isEqualTo("COMPLETED")
     assertThat(riskDto.sara?.riskQuestions).isNull()
     assertThat(riskDto.rosha?.riskQuestions).isEmpty()
-    assertThat(riskDto.childSafeguardingIndicated).isTrue
-    assertThat(riskDto.rosh?.riskQuestions).isEmpty()
     assertThat(riskDto.isRrsOnly).isTrue
   }
 
   @Test
   fun `build Risk DTO from SARA Assessment`() {
 
-    val riskDto = RiskDto.fromSara(sara, saraAnswers(), false, false)
+    val riskDto = RiskDto.fromSara(sara, saraAnswers(), false)
     assertThat(riskDto.oasysSetId).isEqualTo(3333)
     assertThat(riskDto.refAssessmentId).isEqualTo(1)
     assertThat(riskDto.refAssessmentVersionCode).isEqualTo("version code")
@@ -70,8 +66,6 @@ class RiskDtoTest {
     assertThat(riskDto.assessmentStatus).isEqualTo("COMPLETED")
     assertThat(riskDto.sara?.riskQuestions).isEmpty()
     assertThat(riskDto.rosha?.riskQuestions).isNull()
-    assertThat(riskDto.childSafeguardingIndicated).isFalse
-    assertThat(riskDto.rosh?.riskQuestions).isEmpty()
     assertThat(riskDto.isRrsOnly).isFalse
   }
 

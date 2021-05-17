@@ -117,11 +117,11 @@ class RisksServiceTest {
   }
 
   @Nested
-  @DisplayName("Child safeguarding tests")
-  inner class ChildSafeguardingTest {
+  @DisplayName("RSR only assessments")
+  inner class RSROnlyAssessmentsTest {
 
     @Test
-    fun `should not return child safeguarding flag if ROSH section not present`() {
+    fun `should not return rsr only flag if RSR section not present`() {
       every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
       every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(roshAssessment()))
       every { answerService.getAnswersForQuestions(2222L, RisksService.riskQuestions) } returns (roshaAnswers())
@@ -129,291 +129,163 @@ class RisksServiceTest {
       val risks = risksService.getAllRisksForOffender("OASYS", "1")
       assertThat(risks?.size).isEqualTo(1)
       with(risks?.first()!!) {
-        assertThat(childSafeguardingIndicated).isNull()
-        assertThat(rosh).isNull()
+        assertThat(isRrsOnly).isNull()
       }
     }
 
     @Test
-    fun `should not return child safeguarding flag if ROSH section has no answers`() {
-      val assessment = assessment()
-      every { assessmentRepository.getAssessment(2222L) } returns assessment
-      every { answerService.getAnswersForQuestions(1111, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isNull()
-      assertThat(risk?.rosh).isNull()
-    }
-
-    @Test
-    fun `should return child safeguarding flag True if ROSH R2-1 is Positive`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
+    fun `should return rsr only flag false if assessment Layer1 and RSR section present but answer to RA is Yes`() {
+      every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+      every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
       every {
         answerService.getAnswersForQuestions(
-          1111,
+          4444,
           RisksService.riskQuestions
         )
-      } returns (answers(mapOf("R2.1" to "YES")))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
+      } returns (answers(mapOf("RA" to "YES")))
 
-      val risk = risksService.getRisksForAssessmentId(2222L)
+      val risks = risksService.getAllRisksForOffender("OASYS", "1")
 
-      assertThat(risk?.childSafeguardingIndicated).isTrue
-    }
-
-    @Test
-    fun `should return child safeguarding flag True if ROSH R2-1 is Positive and R2-2 is null`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
-      every {
-        answerService.getAnswersForQuestions(
-          1111,
-          RisksService.riskQuestions
-        )
-      } returns (answers(mapOf("R2.1" to "Y", "R2.2" to null)))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isTrue
-    }
-
-    @Test
-    fun `should return child safeguarding flag True if ROSH R2-2 is Positive`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
-      every {
-        answerService.getAnswersForQuestions(
-          1111,
-          RisksService.riskQuestions
-        )
-      } returns (answers(mapOf("R2.1" to "N", "R2.2" to "Y")))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isTrue
-    }
-
-    @Test
-    fun `should return child safeguarding flag True if both ROSH R2-1 and R2-2 are Positive`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
-      every {
-        answerService.getAnswersForQuestions(
-          1111,
-          RisksService.riskQuestions
-        )
-      } returns (answers(mapOf("R2.1" to "Y", "R2.2" to "Y")))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isTrue
-    }
-
-    @Test
-    fun `should return child safeguarding flag False if ROSH R2-1 is Negative and R2-2 is null`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
-      every {
-        answerService.getAnswersForQuestions(
-          1111,
-          RisksService.riskQuestions
-        )
-      } returns (answers(mapOf("R2.1" to "N", "R2.2" to null)))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isFalse
-    }
-
-    @Test
-    fun `should return child safeguarding flag False if both ROSH R2-1 and R2-2 are Negative`() {
-      every { assessmentRepository.getAssessment(2222L) } returns assessment()
-      every {
-        answerService.getAnswersForQuestions(
-          1111,
-          RisksService.riskQuestions
-        )
-      } returns (answers(mapOf("R2.1" to "N", "R2.2" to "NO")))
-      every { answerService.getAnswersForQuestions(3333L, RisksService.riskQuestions) } returns (emptyRoshAnswers())
-
-      val risk = risksService.getRisksForAssessmentId(2222L)
-
-      assertThat(risk?.childSafeguardingIndicated).isFalse
-    }
-
-    @Nested
-    @DisplayName("RSR only assessments")
-    inner class RSROnlyAssessmentsTest {
-
-      @Test
-      fun `should not return rsr only flag if RSR section not present`() {
-        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
-        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(roshAssessment()))
-        every { answerService.getAnswersForQuestions(2222L, RisksService.riskQuestions) } returns (roshaAnswers())
-
-        val risks = risksService.getAllRisksForOffender("OASYS", "1")
-        assertThat(risks?.size).isEqualTo(1)
-        with(risks?.first()!!) {
-          assertThat(isRrsOnly).isNull()
-        }
+      assertThat(risks?.size).isEqualTo(1)
+      with(risks?.first()!!) {
+        assertThat(isRrsOnly).isFalse
       }
+    }
 
-      @Test
-      fun `should return rsr only flag false if assessment Layer1 and RSR section present but answer to RA is Yes`() {
-        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
-        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
-        every {
-          answerService.getAnswersForQuestions(
-            4444,
-            RisksService.riskQuestions
-          )
-        } returns (answers(mapOf("RA" to "YES")))
+    @Test
+    fun `should return rsr only flag if assessment Layer1, RSR section present and answer to RA is No`() {
+      every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+      every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
+      every {
+        answerService.getAnswersForQuestions(
+          4444,
+          RisksService.riskQuestions
+        )
+      } returns (answers(mapOf("RA" to "NO")))
 
-        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+      val risks = risksService.getAllRisksForOffender("OASYS", "1")
 
-        assertThat(risks?.size).isEqualTo(1)
-        with(risks?.first()!!) {
-          assertThat(isRrsOnly).isFalse
-        }
+      assertThat(risks?.size).isEqualTo(1)
+      with(risks?.first()!!) {
+        assertThat(isRrsOnly).isTrue
       }
+    }
 
-      @Test
-      fun `should return rsr only flag if assessment Layer1, RSR section present and answer to RA is No`() {
-        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
-        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer1Assessment()))
-        every {
-          answerService.getAnswersForQuestions(
-            4444,
-            RisksService.riskQuestions
-          )
-        } returns (answers(mapOf("RA" to "NO")))
+    @Test
+    fun `should return rsr only flag false if assessment Layer3, but assessment purpose is risk review`() {
+      every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+      every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer3Assessment()))
+      every {
+        answerService.getAnswersForQuestions(
+          4444,
+          RisksService.riskQuestions
+        )
+      } returns (roshaAnswers())
 
-        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+      val risks = risksService.getAllRisksForOffender("OASYS", "1")
 
-        assertThat(risks?.size).isEqualTo(1)
-        with(risks?.first()!!) {
-          assertThat(isRrsOnly).isTrue
-        }
+      assertThat(risks?.size).isEqualTo(1)
+      with(risks?.first()!!) {
+        assertThat(isRrsOnly).isFalse
       }
+    }
 
-      @Test
-      fun `should return rsr only flag false if assessment Layer3, but assessment purpose is risk review`() {
-        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
-        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(layer3Assessment()))
-        every {
-          answerService.getAnswersForQuestions(
-            4444,
-            RisksService.riskQuestions
-          )
-        } returns (roshaAnswers())
+    @Test
+    fun `should return rsr only flag if assessment Layer3, and assessment purpose is rsr only`() {
+      every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
+      every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(rsrOnlyAssessment()))
+      every {
+        answerService.getAnswersForQuestions(
+          4444,
+          RisksService.riskQuestions
+        )
+      } returns (roshaAnswers())
 
-        val risks = risksService.getAllRisksForOffender("OASYS", "1")
+      val risks = risksService.getAllRisksForOffender("OASYS", "1")
 
-        assertThat(risks?.size).isEqualTo(1)
-        with(risks?.first()!!) {
-          assertThat(isRrsOnly).isFalse
-        }
-      }
-
-      @Test
-      fun `should return rsr only flag if assessment Layer3, and assessment purpose is rsr only`() {
-        every { offenderService.getOffenderIdByIdentifier("OASYS", "1") } returns (1111L)
-        every { assessmentRepository.getAssessmentsForOffender(1111) } returns (listOf(rsrOnlyAssessment()))
-        every {
-          answerService.getAnswersForQuestions(
-            4444,
-            RisksService.riskQuestions
-          )
-        } returns (roshaAnswers())
-
-        val risks = risksService.getAllRisksForOffender("OASYS", "1")
-
-        assertThat(risks?.size).isEqualTo(1)
-        with(risks?.first()!!) {
-          assertThat(isRrsOnly).isTrue
-        }
+      assertThat(risks?.size).isEqualTo(1)
+      with(risks?.first()!!) {
+        assertThat(isRrsOnly).isTrue
       }
     }
   }
+}
 
-  private fun assessment(): Assessment {
-    return Assessment(
-      oasysSetPk = 1111,
-      assessmentStatus = "COMPLETED",
-      assessmentType = "LAYER_3",
-      childAssessments = setOf(saraAssessment())
+private fun assessment(): Assessment {
+  return Assessment(
+    oasysSetPk = 1111,
+    assessmentStatus = "COMPLETED",
+    assessmentType = "LAYER_3",
+    childAssessments = setOf(saraAssessment())
+  )
+}
+
+private fun roshAssessment(): Assessment {
+  return Assessment(
+    oasysSetPk = 2222L,
+    assessmentStatus = "COMPLETED",
+    assessmentType = "LAYER_3"
+  )
+}
+
+private fun saraAssessment(): Assessment {
+  return Assessment(
+    oasysSetPk = 3333L,
+    assessmentStatus = "COMPLETED",
+    assessmentType = "SARA"
+  )
+}
+
+private fun layer1Assessment(): Assessment {
+  return Assessment(
+    oasysSetPk = 4444L,
+    assessmentStatus = "COMPLETED",
+    assessmentType = "LAYER_1"
+  )
+}
+
+private fun layer3Assessment(): Assessment {
+  return Assessment(
+    oasysSetPk = 4444L,
+    assessmentStatus = "COMPLETED",
+    assessmentType = "LAYER_3",
+    assessmentPurposeType = "580"
+  )
+}
+
+private fun rsrOnlyAssessment(): Assessment {
+  return layer3Assessment().copy(assessmentPurposeType = "620")
+}
+
+private fun roshaAnswers(): AssessmentAnswersDto {
+  return AssessmentAnswersDto(
+    assessmentId = 1111,
+    questionAnswers = listOf(QuestionDto())
+  )
+}
+
+private fun emptyRoshAnswers(): AssessmentAnswersDto {
+  return AssessmentAnswersDto(
+    assessmentId = 1111,
+    questionAnswers = listOf(
+      QuestionDto(refQuestionCode = "R2.1", answers = emptyList()),
+      QuestionDto(refQuestionCode = "R2.2", answers = emptyList())
     )
-  }
+  )
+}
 
-  private fun roshAssessment(): Assessment {
-    return Assessment(
-      oasysSetPk = 2222L,
-      assessmentStatus = "COMPLETED",
-      assessmentType = "LAYER_3"
-    )
-  }
+private fun answers(refQuestionCode: Map<String, String?>): AssessmentAnswersDto {
+  return AssessmentAnswersDto(
+    assessmentId = 1111,
+    questionAnswers = refQuestionCode.map {
+      QuestionDto(refQuestionCode = it.key, answers = listOf(AnswerDto(it.value)))
+    }.toList()
+  )
+}
 
-  private fun saraAssessment(): Assessment {
-    return Assessment(
-      oasysSetPk = 3333L,
-      assessmentStatus = "COMPLETED",
-      assessmentType = "SARA"
-    )
-  }
-
-  private fun layer1Assessment(): Assessment {
-    return Assessment(
-      oasysSetPk = 4444L,
-      assessmentStatus = "COMPLETED",
-      assessmentType = "LAYER_1"
-    )
-  }
-
-  private fun layer3Assessment(): Assessment {
-    return Assessment(
-      oasysSetPk = 4444L,
-      assessmentStatus = "COMPLETED",
-      assessmentType = "LAYER_3",
-      assessmentPurposeType = "580"
-    )
-  }
-
-  private fun rsrOnlyAssessment(): Assessment {
-    return layer3Assessment().copy(assessmentPurposeType = "620")
-  }
-
-  private fun roshaAnswers(): AssessmentAnswersDto {
-    return AssessmentAnswersDto(
-      assessmentId = 1111,
-      questionAnswers = listOf(QuestionDto())
-    )
-  }
-
-  private fun emptyRoshAnswers(): AssessmentAnswersDto {
-    return AssessmentAnswersDto(
-      assessmentId = 1111,
-      questionAnswers = listOf(
-        QuestionDto(refQuestionCode = "R2.1", answers = emptyList()),
-        QuestionDto(refQuestionCode = "R2.2", answers = emptyList())
-      )
-    )
-  }
-
-  private fun answers(refQuestionCode: Map<String, String?>): AssessmentAnswersDto {
-    return AssessmentAnswersDto(
-      assessmentId = 1111,
-      questionAnswers = refQuestionCode.map {
-        QuestionDto(refQuestionCode = it.key, answers = listOf(AnswerDto(it.value)))
-      }.toList()
-    )
-  }
-
-  private fun saraAnswers(): AssessmentAnswersDto {
-    return AssessmentAnswersDto(
-      assessmentId = 3333,
-      questionAnswers = listOf(QuestionDto())
-    )
-  }
+private fun saraAnswers(): AssessmentAnswersDto {
+  return AssessmentAnswersDto(
+    assessmentId = 3333,
+    questionAnswers = listOf(QuestionDto())
+  )
 }

@@ -39,18 +39,11 @@ data class RiskDto(
   @ApiModelProperty(value = "ROSHA risk answers")
   val rosha: RiskAssessmentAnswersDto? = null,
 
-  @ApiModelProperty(value = "ROSH risk answers")
-  val rosh: RiskAssessmentAnswersDto? = null,
-
-  @ApiModelProperty(value = "Child Safeguarding flag", example = "true")
-  val childSafeguardingIndicated: Boolean? = null,
-
 ) {
   companion object {
     fun fromSara(
       assessment: Assessment?,
       answers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?,
       isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
@@ -64,15 +57,12 @@ data class RiskDto(
         assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
         sara = RiskAssessmentAnswersDto.fromSara(answers),
-        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(answers) },
-        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
 
     fun fromRosha(
       assessment: Assessment?,
       answers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?,
       isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
@@ -86,8 +76,6 @@ data class RiskDto(
         assessmentCompleted = assessment?.dateCompleted != null,
         assessmentStatus = assessment?.assessmentStatus,
         rosha = RiskAssessmentAnswersDto.fromRosha(answers),
-        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(answers) },
-        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
 
@@ -95,7 +83,6 @@ data class RiskDto(
       assessment: Assessment?,
       assessmentAnswers: AssessmentAnswersDto,
       saraAnswers: AssessmentAnswersDto,
-      childSafeguardingIndicated: Boolean?,
       isRsrOnly: Boolean?
     ): RiskDto {
       return RiskDto(
@@ -110,8 +97,6 @@ data class RiskDto(
         assessmentStatus = assessment?.assessmentStatus,
         sara = RiskAssessmentAnswersDto.fromSara(saraAnswers),
         rosha = RiskAssessmentAnswersDto.fromRosha(assessmentAnswers),
-        rosh = childSafeguardingIndicated?.let { RiskAssessmentAnswersDto.fromRosh(assessmentAnswers) },
-        childSafeguardingIndicated = childSafeguardingIndicated
       )
     }
   }

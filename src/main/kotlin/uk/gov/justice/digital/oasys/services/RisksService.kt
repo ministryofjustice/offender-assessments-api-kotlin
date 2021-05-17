@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AnswerDto
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshFullQuestionCodes
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshSumQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.rsrQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionCodes
@@ -41,15 +40,14 @@ class RisksService(
 
   fun getRisksForAssessment(assessment: Assessment): RiskDto {
     val answers = getRiskAnswersByAssessmentId(assessment.oasysSetPk!!)
-    val childSafeguardingIndicated = calculateChildSafeguardingIndicated(roshQuestionCodes, answers)
     val isRsrOnly = isRsrOnlyAssessment(assessment, answers)
     if (assessment.assessmentType?.equals(AssessmentType.SARA.value)!!) {
-      return RiskDto.fromSara(assessment, answers, childSafeguardingIndicated, isRsrOnly)
+      return RiskDto.fromSara(assessment, answers, isRsrOnly)
     } else {
       val sara = assessment.childAssessments.find { it?.assessmentType?.equals(AssessmentType.SARA.value)!! }
-        ?: return RiskDto.fromRosha(assessment, answers, childSafeguardingIndicated, isRsrOnly)
+        ?: return RiskDto.fromRosha(assessment, answers, isRsrOnly)
       val saraAnswers = getRiskAnswersByAssessmentId(sara.oasysSetPk!!)
-      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers, childSafeguardingIndicated, isRsrOnly)
+      return RiskDto.fromRoshaWithSara(assessment, answers, saraAnswers, isRsrOnly)
     }
   }
 
@@ -71,10 +69,6 @@ class RisksService(
     return answerService.getAnswersForQuestions(assessmentId, riskQuestions).also {
       log.info("Found ${it.questionAnswers.size} risk Answers for Assessment ID: $assessmentId")
     }
-  }
-
-  private fun calculateChildSafeguardingIndicated(questionCodes: Set<String>, answers: AssessmentAnswersDto): Boolean? {
-    return areAnyOfTheAnswersOfType(questionCodes, answers, POSITIVE_ANSWERS)
   }
 
   private fun areAnyOfTheQuestionAnswersNegative(questionCodes: Set<String>, answers: AssessmentAnswersDto): Boolean? {
@@ -106,10 +100,8 @@ class RisksService(
       "SARA" to saraQuestionCodes,
       "ROSHSUM" to roshSumQuestionCodes,
       "ROSHFULL" to roshFullQuestionCodes,
-      "ROSH" to roshQuestionCodes,
       "RSR" to rsrQuestionCodes
     )
-    val POSITIVE_ANSWERS = setOf("YES", "Y")
     val NEGATIVE_ANSWERS = setOf("NO", "N")
     val VERSION_2 = "2"
   }
