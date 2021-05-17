@@ -12,9 +12,10 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.AuthorisationDto
-import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
+import uk.gov.justice.digital.oasys.api.OasysUserProfileDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
+import uk.gov.justice.digital.oasys.api.RegionDto
 import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
@@ -45,12 +46,12 @@ class AuthenticationService(
   }
 
   @Cacheable("users")
-  fun getUserByUserId(username: String?): OasysUserAuthenticationDto {
+  fun getUserByUserId(username: String?): OasysUserProfileDto {
     if (username.isNullOrEmpty()) throw IllegalArgumentException("Username cannot be blank")
     val user = oasysUserRepository.findOasysUserByOasysUserCodeIgnoreCase(username)
       ?: throw EntityNotFoundException("User for username $username, not found")
     log.info("Found user with OASys username $username")
-    return OasysUserAuthenticationDto.from(user)
+    return OasysUserProfileDto.from(user, user.toRegions())
   }
 
   fun validateUserCredentials(username: String?, password: String?): AuthenticationDto {
@@ -215,10 +216,12 @@ class AuthenticationService(
       ?: throw EntityNotFoundException("User for email $email, not found")
     log.info("Found user with email $email")
 
-    return UserDto.from(user, user.toRegions())
+    return UserDto.from(user)
   }
 
-  fun OasysUser.toRegions(): Set<String> {
-    return this.oasysUserCode?.let { oasysUserRepository.findCtAreaEstByUserCode(it) }!!
+  fun OasysUser.toRegions(): Set<RegionDto> {
+    return this.oasysUserCode?.let { oasysUserRepository.findCtAreasEstByUserCode(it) }
+      ?.map { area -> RegionDto(area.name, area.code) }
+      ?.toSet() ?: emptySet()
   }
 }

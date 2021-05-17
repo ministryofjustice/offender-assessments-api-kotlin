@@ -79,7 +79,6 @@ class AuthenticationControllerUserTest : IntegrationTest() {
       userForename3 = "Middle 2",
       userFamilyName = "SMITH",
       email = "testemail@test.com",
-      regions = setOf("West Yorkshire", "Wakefield (HMP)"),
       accountStatus = AccountStatus.ACTIVE
     )
   }

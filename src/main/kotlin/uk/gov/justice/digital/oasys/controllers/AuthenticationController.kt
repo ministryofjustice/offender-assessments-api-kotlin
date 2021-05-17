@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.AuthorisationDto
-import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
+import uk.gov.justice.digital.oasys.api.OasysUserProfileDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.api.UserDto
 import uk.gov.justice.digital.oasys.api.UserRequestByEmail
@@ -26,7 +26,7 @@ class AuthenticationController(private val authenticationService: Authentication
   @RequestMapping(path = ["/authentication/user/{oasysUserId}"], method = [RequestMethod.GET])
   @ApiOperation(value = "Gets a user by its user code")
   @ApiResponses(ApiResponse(code = 404, message = "User not found"), ApiResponse(code = 200, message = "OK"))
-  fun getUserByUserId(@PathVariable("oasysUserId") oasysUserId: String?): OasysUserAuthenticationDto {
+  fun getUserByUserId(@PathVariable("oasysUserId") oasysUserId: String?): OasysUserProfileDto {
     return authenticationService.getUserByUserId(oasysUserId)
   }
 

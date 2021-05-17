@@ -13,10 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.oasys.api.AccountStatus
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
+import uk.gov.justice.digital.oasys.api.RegionDto
 import uk.gov.justice.digital.oasys.jpa.entities.AreaEstUserRole
 import uk.gov.justice.digital.oasys.jpa.entities.CtAreaEst
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
 import uk.gov.justice.digital.oasys.jpa.entities.RefElement
+import uk.gov.justice.digital.oasys.jpa.repositories.AreaNameAndCode
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
@@ -42,16 +44,20 @@ class AuthenticationServiceTest {
     val userCode = "TEST_USER"
 
     every { userRepository.findOasysUserByOasysUserCodeIgnoreCase(userCode) } returns user
+    every { userRepository.findCtAreasEstByUserCode(userCode) } returns setOf(
+      NameAndCode("West Yorkshire", "YSW"),
+      NameAndCode("Lancashire", "LAN")
+    )
 
     val oasysUser = service.getUserByUserId(userCode)
+
+    verify(exactly = 1) { userRepository.findOasysUserByOasysUserCodeIgnoreCase(userCode) }
+
     assertThat(oasysUser.firstName).isEqualTo("Name 1")
     assertThat(oasysUser.lastName).isEqualTo("Last Name")
     assertThat(oasysUser.email).isEqualTo("test@test.com")
-    assertThat(oasysUser.userName).isEqualTo("TEST_USER")
-    assertThat(oasysUser.userId).isEqualTo("TEST_USER")
-    assertThat(oasysUser.regions).contains("1234")
-
-    verify(exactly = 1) { userRepository.findOasysUserByOasysUserCodeIgnoreCase(userCode) }
+    assertThat(oasysUser.userCode).isEqualTo("TEST_USER")
+    assertThat(oasysUser.regions).containsExactly(RegionDto("West Yorkshire", "YSW"), RegionDto("Lancashire", "LAN"))
   }
 
   @Test
@@ -244,7 +250,6 @@ class AuthenticationServiceTest {
     val email = "test@test.com"
 
     every { userRepository.findOasysUserByEmailAddressIgnoreCase(email) } returns user
-    every { userRepository.findCtAreaEstByUserCode("TEST_USER") } returns setOf("Lancashire", "West Yorkshire CRC")
 
     val userDto = service.getUserCodeByEmail(email)
     assertThat(userDto.userForename1).isEqualTo("Name 1")
@@ -254,7 +259,6 @@ class AuthenticationServiceTest {
     assertThat(userDto.accountStatus).isEqualTo(AccountStatus.ACTIVE)
     assertThat(userDto.email).isEqualTo("test@test.com")
     assertThat(userDto.oasysUserCode).isEqualTo("TEST_USER")
-    assertThat(userDto.regions).containsExactly("Lancashire", "West Yorkshire CRC")
 
     verify(exactly = 1) { userRepository.findOasysUserByEmailAddressIgnoreCase(email) }
   }
@@ -289,4 +293,6 @@ class AuthenticationServiceTest {
       listOf(AreaEstUserRole(ctAreaEstCode = "1234"), AreaEstUserRole(ctAreaEstCode = "12345"))
     )
   }
+
+  class NameAndCode(override val name: String, override val code: String) : AreaNameAndCode
 }

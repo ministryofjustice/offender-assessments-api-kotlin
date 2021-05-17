@@ -10,13 +10,12 @@ data class UserDto(
   val userForename3: String? = null,
   val userFamilyName: String? = null,
   val email: String? = null,
-  val regions: Set<String> = emptySet(),
   val accountStatus: AccountStatus? = null
 ) {
 
   companion object {
 
-    fun from(user: OasysUser?, regions: Set<String>): UserDto {
+    fun from(user: OasysUser?): UserDto {
       return UserDto(
         oasysUserCode = user?.oasysUserCode,
         userForename1 = user?.userForename1,
@@ -24,7 +23,6 @@ data class UserDto(
         userForename3 = user?.userForename3,
         userFamilyName = user?.userFamilyName,
         email = user?.emailAddress,
-        regions = regions,
         accountStatus = user?.userStatus?.refElementCode?.let { AccountStatus.valueOf(it) }
       )
     }
