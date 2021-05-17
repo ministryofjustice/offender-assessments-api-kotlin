@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.oasys.api
 
 import io.swagger.annotations.ApiModelProperty
-import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshaQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionCodes
 
@@ -20,10 +19,6 @@ data class RiskAssessmentAnswersDto(
 
     fun fromSara(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
       return riskAssessmentAnswersDto(assessmentAnswers, saraQuestionCodes)
-    }
-
-    fun fromRosh(assessmentAnswers: AssessmentAnswersDto): RiskAssessmentAnswersDto {
-      return riskAssessmentAnswersDto(assessmentAnswers, roshQuestionCodes)
     }
 
     fun riskAssessmentAnswersDto(
