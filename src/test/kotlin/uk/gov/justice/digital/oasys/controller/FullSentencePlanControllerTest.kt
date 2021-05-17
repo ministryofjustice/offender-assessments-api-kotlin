@@ -61,7 +61,7 @@ class FullSentencePlanControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `oasys offender PK returns latest Full Sentence Plan`() {
+  fun `oasys offender PK returns Full Sentence Plan`() {
 
     webTestClient.get().uri("/offenders/oasysOffenderId/$oasysOffenderId/fullSentencePlans/$oasysSetPK")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))

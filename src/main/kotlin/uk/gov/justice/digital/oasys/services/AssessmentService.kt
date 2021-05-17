@@ -36,15 +36,6 @@ class AssessmentService constructor(
     return AssessmentSummaryDto.from(assessments)
   }
 
-  @Deprecated("Latest is now deprecated.")
-  fun getLatestAssessmentForOffender(identityType: String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): AssessmentDto {
-    val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
-    val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-      ?: throw EntityNotFoundException("Assessment for Oasys Offender $offenderId, not found")
-    log.info("Found Assessment type: ${assessment.assessmentType} status: ${assessment.assessmentStatus} for identity: ($identity, $identityType)")
-    return AssessmentDto.from(assessment)
-  }
-
   fun getAssessment(oasysSetId: Long?): AssessmentDto {
     if (oasysSetId == null) throw IllegalArgumentException("OasysSetPK cannot be null")
     val assessment = assessmentRepository.getAssessment(oasysSetId)

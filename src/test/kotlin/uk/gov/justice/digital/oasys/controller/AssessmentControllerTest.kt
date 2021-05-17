@@ -9,7 +9,6 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
-import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -59,21 +58,6 @@ class AssessmentControllerTest : IntegrationTest() {
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isNotFound
-  }
-
-  @Test
-  fun `offender PK returns latest date assessment by created date`() {
-
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<AssessmentDto>()
-      .consumeWith {
-        val assessment = it.responseBody
-        assertThat(assessment?.assessmentId).isEqualTo(5434L)
-        assertThat(assessment?.created).isEqualToIgnoringSeconds(LocalDateTime.of(2018, 5, 22, 23, 0))
-      }
   }
 
   @Test

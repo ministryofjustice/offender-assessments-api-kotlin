@@ -80,35 +80,6 @@ class AssessmentServiceTest {
     verify(exactly = 1) { assessmentRepository.getAssessmentsForOffender(oasysOffenderPk, null, null, null, null) }
   }
 
-  @Test
-  fun `return latest assessment for OASys Offender ID`() {
-    val assessment = setupAssessment()
-    val oasysOffenderPk = 1L
-    val oasysSetPk = 1234L
-
-    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-    every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns assessment
-    every { sectionService.getSectionForAssessment(oasysSetPk, any()) } returns null
-    every { sectionService.getSectionsForAssessment(oasysSetPk, any()) } returns emptySet()
-
-    assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null)
-
-    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
-    verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) }
-  }
-
-  @Test
-  fun `throws not found exception when no latest assessment returned`() {
-    val oasysOffenderPk = 1L
-    every { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) } returns oasysOffenderPk
-    every { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) } returns null
-
-    assertThrows<EntityNotFoundException> { assessmentsService.getLatestAssessmentForOffender(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString(), null, null, null, null) }
-
-    verify(exactly = 1) { offenderService.getOffenderIdByIdentifier(OffenderIdentifier.OASYS.value, oasysOffenderPk.toString()) }
-    verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(oasysOffenderPk, null, null, null, null) }
-  }
-
   private fun setupAssessmentGroup(): AssessmentGroup {
     return AssessmentGroup(historicStatus = "Current")
   }
