@@ -24,6 +24,15 @@ class UserRepositoryTest(@Autowired private val repository: UserRepository) : In
     assertThat(oasysUser?.oasysUserCode).isEqualTo("USER2")
     assertThat(oasysUser?.emailAddress).isEqualTo("testemail@test.com")
     assertThat(oasysUser?.userStatus?.refElementCode).isEqualTo("ACTIVE")
+    assertThat(oasysUser?.userStatus?.refElementCode).isEqualTo("ACTIVE")
+  }
+
+  @Test
+  fun `return regions by user code`() {
+    val regions = repository.findCtAreasEstByUserCode("USER2")
+
+    assertThat(regions).hasSize(2)
+    // assertThat(regions).containsExactly("Wakefield (HMP)", "West Yorkshire")
   }
 
   @Test

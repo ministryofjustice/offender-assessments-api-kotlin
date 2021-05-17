@@ -12,12 +12,14 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.AuthorisationDto
-import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
+import uk.gov.justice.digital.oasys.api.RegionDto
 import uk.gov.justice.digital.oasys.api.UserDto
+import uk.gov.justice.digital.oasys.api.UserProfileDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
+import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 import uk.gov.justice.digital.oasys.jpa.repositories.UserRepository
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
@@ -44,12 +46,12 @@ class AuthenticationService(
   }
 
   @Cacheable("users")
-  fun getUserByUserId(username: String?): OasysUserAuthenticationDto {
+  fun getUserByUserId(username: String?): UserProfileDto {
     if (username.isNullOrEmpty()) throw IllegalArgumentException("Username cannot be blank")
     val user = oasysUserRepository.findOasysUserByOasysUserCodeIgnoreCase(username)
       ?: throw EntityNotFoundException("User for username $username, not found")
     log.info("Found user with OASys username $username")
-    return OasysUserAuthenticationDto.from(user)
+    return UserProfileDto.from(user, user.toRegions())
   }
 
   fun validateUserCredentials(username: String?, password: String?): AuthenticationDto {
@@ -77,7 +79,12 @@ class AuthenticationService(
     throw UserNotAuthorisedException("No response from OASys authentication function for user, $username")
   }
 
-  fun userCanAccessOffenderRecord(oasysUserCode: String?, offenderId: Long?, sessionId: Long?, resource: OffenderPermissionResource?): AuthorisationDto {
+  fun userCanAccessOffenderRecord(
+    oasysUserCode: String?,
+    offenderId: Long?,
+    sessionId: Long?,
+    resource: OffenderPermissionResource?
+  ): AuthorisationDto {
 
     log.info("Attempting to authorise user $oasysUserCode for offender $offenderId")
 
@@ -97,21 +104,56 @@ class AuthenticationService(
 
         when (authStatus.state) {
           AuthorisationStatus.AuthorisationState.READ -> {
-            logAuthSuccess(oasysUserCode, OffenderPermissionLevel.READ_ONLY, OffenderPermissionResource.SENTENCE_PLAN, offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.READ_ONLY, OffenderPermissionResource.SENTENCE_PLAN)
+            logAuthSuccess(
+              oasysUserCode,
+              OffenderPermissionLevel.READ_ONLY,
+              OffenderPermissionResource.SENTENCE_PLAN,
+              offenderId
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.READ_ONLY,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           AuthorisationStatus.AuthorisationState.EDIT -> {
-            logAuthSuccess(oasysUserCode, OffenderPermissionLevel.WRITE, OffenderPermissionResource.SENTENCE_PLAN, offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.WRITE, OffenderPermissionResource.SENTENCE_PLAN)
+            logAuthSuccess(
+              oasysUserCode,
+              OffenderPermissionLevel.WRITE,
+              OffenderPermissionResource.SENTENCE_PLAN,
+              offenderId
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.WRITE,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           AuthorisationStatus.AuthorisationState.NO_ACCESS -> {
             logAuthFailure(oasysUserCode, "Unauthorised", offenderId)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.UNAUTHORISED,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
           else -> {
             logAuthFailure(oasysUserCode, "Invalid OASys Response", offenderId)
-            log.error("Failed to authorise user $oasysUserCode for offender $offenderId with status ${authStatus.state}", oasysUserCode, offenderId, authStatus.state)
-            return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+            log.error(
+              "Failed to authorise user $oasysUserCode for offender $offenderId with status ${authStatus.state}",
+              oasysUserCode,
+              offenderId,
+              authStatus.state
+            )
+            return AuthorisationDto(
+              oasysUserCode,
+              offenderId,
+              OffenderPermissionLevel.UNAUTHORISED,
+              OffenderPermissionResource.SENTENCE_PLAN
+            )
           }
         }
       } catch (e: IOException) {
@@ -121,7 +163,12 @@ class AuthenticationService(
       }
     }
     logAuthFailure(oasysUserCode, "No response from OASys", offenderId)
-    return AuthorisationDto(oasysUserCode, offenderId, OffenderPermissionLevel.UNAUTHORISED, OffenderPermissionResource.SENTENCE_PLAN)
+    return AuthorisationDto(
+      oasysUserCode,
+      offenderId,
+      OffenderPermissionLevel.UNAUTHORISED,
+      OffenderPermissionResource.SENTENCE_PLAN
+    )
   }
 
   private fun authoriseSentencePlan(oasysUserId: String, offenderId: Long, sessionId: Long): String? {
@@ -133,7 +180,12 @@ class AuthenticationService(
     telemetryClient.trackEvent(event, mapOf("username" to username), null)
   }
 
-  private fun logAuthSuccess(username: String?, permissionLevel: OffenderPermissionLevel, resource: OffenderPermissionResource, offenderId: Long) {
+  private fun logAuthSuccess(
+    username: String?,
+    permissionLevel: OffenderPermissionLevel,
+    resource: OffenderPermissionResource,
+    offenderId: Long
+  ) {
     telemetryClient.trackEvent(
       "OASysAuthorisationSuccess",
       mapOf(
@@ -163,6 +215,13 @@ class AuthenticationService(
     val user = oasysUserRepository.findOasysUserByEmailAddressIgnoreCase(email)
       ?: throw EntityNotFoundException("User for email $email, not found")
     log.info("Found user with email $email")
+
     return UserDto.from(user)
+  }
+
+  fun OasysUser.toRegions(): Set<RegionDto> {
+    return this.oasysUserCode?.let { oasysUserRepository.findCtAreasEstByUserCode(it) }
+      ?.map { area -> RegionDto(area.name, area.code) }
+      ?.toSet() ?: emptySet()
   }
 }

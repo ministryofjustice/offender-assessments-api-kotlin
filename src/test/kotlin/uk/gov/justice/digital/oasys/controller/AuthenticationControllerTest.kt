@@ -11,13 +11,21 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.ErrorResponse
-import uk.gov.justice.digital.oasys.api.OasysUserAuthenticationDto
+import uk.gov.justice.digital.oasys.api.RegionDto
+import uk.gov.justice.digital.oasys.api.UserProfileDto
 import uk.gov.justice.digital.oasys.api.ValidateUserRequest
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 
 @SqlGroup(
-  Sql(scripts = ["classpath:authentication/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:authentication/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:authentication/before-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:authentication/after-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class AuthenticationControllerTest : IntegrationTest() {
@@ -49,11 +57,11 @@ class AuthenticationControllerTest : IntegrationTest() {
   @Test
   fun `oasys user code returns user`() {
 
-    webTestClient.get().uri("/authentication/user/$userCode")
+    webTestClient.get().uri("/authentication/user/USER2")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
-      .expectBody<OasysUserAuthenticationDto>()
+      .expectBody<UserProfileDto>()
       .consumeWith { validateUser(it.responseBody) }
   }
 
@@ -86,7 +94,12 @@ class AuthenticationControllerTest : IntegrationTest() {
   @Test
   fun `invalid credentials returns 401`() {
 
-    every { authenticationRepository.validateCredentials(validUserCode, "INVALIDPASSWORD") } returns """{STATE: "FAILURE"}"""
+    every {
+      authenticationRepository.validateCredentials(
+        validUserCode,
+        "INVALIDPASSWORD"
+      )
+    } returns """{STATE: "FAILURE"}"""
     val user = ValidateUserRequest("USER_CODE", "INVALIDPASSWORD")
 
     webTestClient.post().uri("/authentication/user/validate")
@@ -119,13 +132,14 @@ class AuthenticationControllerTest : IntegrationTest() {
       }
   }
 
-  private fun validateUser(user: OasysUserAuthenticationDto?) {
-    assertThat(user?.userName).isEqualTo("USER1")
-    assertThat(user?.userId).isEqualTo("USER1")
+  private fun validateUser(user: UserProfileDto?) {
+    assertThat(user?.userCode).isEqualTo("USER2")
     assertThat(user?.firstName).isEqualTo("JOHN")
     assertThat(user?.lastName).isEqualTo("SMITH")
-    assertThat(user?.enabled).isTrue()
-    assertThat(user?.email).isEqualTo("test@test.com")
-    assertThat(user?.regions).hasSize(1)
+    assertThat(user?.enabled).isTrue
+    assertThat(user?.email).isEqualTo("testemail@test.com")
+    assertThat(user?.enabled).isTrue
+    assertThat(user?.regions).hasSize(2)
+    assertThat(user?.regions).containsExactly(RegionDto("West Yorkshire", "YSW"), RegionDto("Wakefield (HMP)", "1650"))
   }
 }

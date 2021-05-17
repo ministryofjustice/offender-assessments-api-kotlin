@@ -21,8 +21,18 @@ interface UserRepository : CrudRepository<OasysUser?, String?> {
       ORDER BY TIME_STAMP DESC""",
     nativeQuery = true
   )
-
   fun findCurrentUserSessionForOffender(oasysOffenderId: Long, userCode: String): Long?
 
   fun findOasysUserByEmailAddressIgnoreCase(emailAddress: String): OasysUser?
+
+  @Query(
+    value = """SELECT AREA_EST_NAME as name, CT_AREA_EST_CODE as code FROM ACTIVE_USER_AREA_EST_VW where OASYS_USER_CODE=?1""",
+    nativeQuery = true
+  )
+  fun findCtAreasEstByUserCode(userCode: String): Set<AreaNameAndCode>
+}
+
+interface AreaNameAndCode {
+  val name: String
+  val code: String
 }

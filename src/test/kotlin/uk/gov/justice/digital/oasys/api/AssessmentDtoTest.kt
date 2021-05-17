@@ -7,8 +7,6 @@ import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.AssessmentGroup
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
 import uk.gov.justice.digital.oasys.jpa.entities.Section
-import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
-import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import java.time.LocalDateTime
 
 @DisplayName("Assessment DTO Tests")
@@ -17,17 +15,6 @@ class AssessmentDtoTest {
 
   @Test
   fun `Builds valid Assessment DTO from Entity with no child safeguarding and needs`() {
-
-    val needs = setOf(
-      CriminogenicNeed(
-        SectionHeader.ACCOMMODATION,
-        "Accomodation",
-        true,
-        true,
-        true,
-        true
-      )
-    )
 
     val assessmentDto = AssessmentDto.from(assessment)
 
