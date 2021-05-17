@@ -11,8 +11,8 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.ErrorResponse
-import uk.gov.justice.digital.oasys.api.OasysUserProfileDto
 import uk.gov.justice.digital.oasys.api.RegionDto
+import uk.gov.justice.digital.oasys.api.UserProfileDto
 import uk.gov.justice.digital.oasys.api.ValidateUserRequest
 import uk.gov.justice.digital.oasys.jpa.repositories.AuthenticationRepository
 
@@ -61,7 +61,7 @@ class AuthenticationControllerTest : IntegrationTest() {
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
-      .expectBody<OasysUserProfileDto>()
+      .expectBody<UserProfileDto>()
       .consumeWith { validateUser(it.responseBody) }
   }
 
@@ -132,7 +132,7 @@ class AuthenticationControllerTest : IntegrationTest() {
       }
   }
 
-  private fun validateUser(user: OasysUserProfileDto?) {
+  private fun validateUser(user: UserProfileDto?) {
     assertThat(user?.userCode).isEqualTo("USER2")
     assertThat(user?.firstName).isEqualTo("JOHN")
     assertThat(user?.lastName).isEqualTo("SMITH")

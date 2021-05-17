@@ -12,11 +12,11 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.oasys.api.AuthenticationDto
 import uk.gov.justice.digital.oasys.api.AuthorisationDto
-import uk.gov.justice.digital.oasys.api.OasysUserProfileDto
 import uk.gov.justice.digital.oasys.api.OffenderPermissionLevel
 import uk.gov.justice.digital.oasys.api.OffenderPermissionResource
 import uk.gov.justice.digital.oasys.api.RegionDto
 import uk.gov.justice.digital.oasys.api.UserDto
+import uk.gov.justice.digital.oasys.api.UserProfileDto
 import uk.gov.justice.digital.oasys.jpa.entities.AuthenticationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.AuthorisationStatus
 import uk.gov.justice.digital.oasys.jpa.entities.OasysUser
@@ -46,12 +46,12 @@ class AuthenticationService(
   }
 
   @Cacheable("users")
-  fun getUserByUserId(username: String?): OasysUserProfileDto {
+  fun getUserByUserId(username: String?): UserProfileDto {
     if (username.isNullOrEmpty()) throw IllegalArgumentException("Username cannot be blank")
     val user = oasysUserRepository.findOasysUserByOasysUserCodeIgnoreCase(username)
       ?: throw EntityNotFoundException("User for username $username, not found")
     log.info("Found user with OASys username $username")
-    return OasysUserProfileDto.from(user, user.toRegions())
+    return UserProfileDto.from(user, user.toRegions())
   }
 
   fun validateUserCredentials(username: String?, password: String?): AuthenticationDto {
