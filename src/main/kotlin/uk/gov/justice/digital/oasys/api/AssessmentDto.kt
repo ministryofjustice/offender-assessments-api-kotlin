@@ -45,9 +45,6 @@ data class AssessmentDto(
   @ApiModelProperty(value = "Assessment Sections")
   val sections: Collection<SectionDto?>? = null,
 
-  @ApiModelProperty(value = "Sentences")
-  val sentence: Collection<SentenceDto?>? = null,
-
 ) {
 
   companion object {
@@ -67,8 +64,7 @@ data class AssessmentDto(
         assessment?.createDate,
         assessment?.dateCompleted,
         assessment?.assessmentVoidedDate,
-        SectionDto.from(assessment?.oasysSections),
-        SentenceDto.from(assessment?.offenceBlocks)
+        SectionDto.from(assessment?.oasysSections)
       )
     }
   }
