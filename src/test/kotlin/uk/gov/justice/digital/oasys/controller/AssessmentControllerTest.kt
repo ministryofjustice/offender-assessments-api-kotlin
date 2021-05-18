@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
-import java.time.LocalDate
+import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import java.time.LocalDateTime
 
 @SqlGroup(
@@ -90,19 +90,5 @@ class AssessmentControllerTest : IntegrationTest() {
 
     // Sections check
     assertThat(assessment.sections).hasSize(17)
-
-    // sentence data
-    val sentence = assessment.sentence?.first { s -> s?.sentenceCode == "310" }
-    assertThat(sentence?.sentenceLengthCustodyDays).isEqualTo(100)
-    assertThat(sentence?.sentenceDate).isEqualTo(LocalDate.of(2017, 10, 1))
-    assertThat(sentence?.offenceDate).isEqualTo(LocalDate.of(2017, 8, 1))
-    assertThat(sentence?.activity).isEqualTo("Activity 1")
-    assertThat(sentence?.cja).isFalse()
-    assertThat(sentence?.custodial).isTrue()
-    assertThat(sentence?.cjaSupervisionMonths).isNull()
-    assertThat(sentence?.cjaUnpaidHours).isEqualTo(120)
-    assertThat(sentence?.orderType?.code).isEqualTo("S")
-    assertThat(sentence?.offenceBlockType?.code).isEqualTo("PRINCIPAL_PROPOSAL")
-    assertThat(sentence?.sentenceDescription).isEqualTo("Life")
   }
 }

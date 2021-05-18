@@ -166,10 +166,6 @@ data class Assessment(
   @JoinColumn(name = "OASYS_SET_PK", referencedColumnName = "OASYS_SET_PK")
   val sspObjectivesInSets: Set<SspObjectivesInSet?>? = mutableSetOf(),
 
-  @OneToMany
-  @JoinColumn(name = "OASYS_SET_PK", referencedColumnName = "OASYS_SET_PK")
-  val offenceBlocks: Set<OffenceBlock?>? = mutableSetOf(),
-
   @ManyToOne
   @JoinColumn(name = "PARENT_OASYS_SET_PK")
   val parentPk: Assessment? = null,

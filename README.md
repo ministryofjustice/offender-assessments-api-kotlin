@@ -1,9 +1,9 @@
 # Offender Assessments API  
-  
+
+[![CircleCI](https://circleci.com/gh/ministryofjustice/offender-assessments-api-kotlin/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/offender-assessments-api-kotlin)
+[![API docs](https://img.shields.io/badge/API_docs-view-85EA2D.svg?logo=swagger)](https://offender-dev.aks-dev-1.studio-hosting.service.justice.gov.uk/swagger-ui/)
+
 The service provides REST access to the OASYS Oracle DB offender assessment information.  
-  
-The source for this service can be found on [GitHub](https://github.com/ministryofjustice/offender-assessments-api-kotlin.git).  
-  
   
 ## Continuous Integration  
 https://circleci.com/gh/ministryofjustice/offender-assessments-api-kotlin/  
