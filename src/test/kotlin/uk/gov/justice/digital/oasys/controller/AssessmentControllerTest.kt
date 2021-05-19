@@ -9,7 +9,6 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
-import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import java.time.LocalDateTime
 
 @SqlGroup(
