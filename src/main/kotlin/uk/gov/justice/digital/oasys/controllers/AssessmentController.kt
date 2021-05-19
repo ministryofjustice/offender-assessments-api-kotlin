@@ -47,19 +47,4 @@ class AssessmentController(private val assessmentService: AssessmentService) {
   ): Collection<AssessmentSummaryDto> {
     return assessmentService.getAssessmentsForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
   }
-
-  @Deprecated("/latest is now deprecated")
-  @GetMapping(path = ["/offenders/{identityType}/{identity}/assessments/latest"])
-  @ApiOperation(value = "Gets the latest assessment for an offender")
-  @ApiResponses(ApiResponse(code = 404, message = "Assessment or Offender not found"), ApiResponse(code = 200, message = "OK"))
-  fun getAssessment(
-    @PathVariable("identityType") identityType: String,
-    @PathVariable("identity") identity: String,
-    @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
-    @RequestParam(value = "assessmentType", required = false) filterAssessmentType: String?,
-    @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
-    @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?
-  ): AssessmentDto {
-    return assessmentService.getLatestAssessmentForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-  }
 }

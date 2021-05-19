@@ -55,35 +55,6 @@ class SentencePlanServiceTest {
   }
 
   @Test
-  fun `return Latest Basic Sentence Plans`() {
-    every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns offenderId
-    every { assessmentRepository.getLatestAssessmentForOffender(offenderId) } returns setupAssessment()
-
-    val basicSentencePlan = service.getLatestBasicSentencePlanForOffender(oasysType, identity)
-
-    assertThat(basicSentencePlan.sentencePlanId).isEqualTo(oasysSetId)
-    assertThat(basicSentencePlan.createdDate).isEqualTo(LocalDate.of(2020, 1, 1))
-
-    verify(exactly = 1) { assessmentRepository.getLatestAssessmentForOffender(offenderId) }
-  }
-
-  @Test
-  fun `throws not found exception when null assessment returned`() {
-    every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns offenderId
-    every { assessmentRepository.getLatestAssessmentForOffender(offenderId) } returns null
-
-    assertThrows<EntityNotFoundException> { service.getLatestBasicSentencePlanForOffender(oasysType, identity) }
-  }
-
-  @Test
-  fun `throws not found exception when null assessment has no basic sentence plan items`() {
-    every { offenderService.getOffenderIdByIdentifier(oasysType, identity) } returns offenderId
-    every { assessmentRepository.getLatestAssessmentForOffender(offenderId) } returns Assessment()
-
-    assertThrows<EntityNotFoundException> { service.getLatestBasicSentencePlanForOffender(oasysType, identity) }
-  }
-
-  @Test
   fun `return Full Sentence Plan`() {
     every { assessmentRepository.getAssessment(oasysSetId) } returns setupAssessment()
     every { sectionService.getSectionsForAssessment(oasysSetId = oasysSetId, sectionIds = sectionIds) } returns setOf(setupSection())
