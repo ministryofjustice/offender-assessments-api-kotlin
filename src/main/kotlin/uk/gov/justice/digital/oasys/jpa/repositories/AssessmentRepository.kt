@@ -16,13 +16,6 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     return queryFactory.selectFrom(assessment).where(assessment.oasysSetPk.eq(oasysSetId)).fetchFirst()
   }
 
-  @Deprecated("latest is now deprecated")
-  fun getLatestAssessmentForOffender(offenderId: Long?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): Assessment? {
-    val query = getAssessmentsQueryForOffender(offenderId)
-    filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-    return query.orderBy(assessment.createDate.desc())?.fetchFirst()
-  }
-
   fun getAssessmentsForOffender(offenderId: Long?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): Collection<Assessment>? {
     val query = getAssessmentsQueryForOffender(offenderId)
     filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)

@@ -68,20 +68,6 @@ class SentencePlanControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `oasys offender PK returns latest Basic Sentence Plan`() {
-
-    webTestClient.get().uri("/offenders/oasysOffenderId/$oasysOffenderId/basicSentencePlans/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<BasicSentencePlanDto>()
-      .consumeWith {
-        val sentencePlan = it.responseBody
-        assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
-      }
-  }
-
-  @Test
   fun `offender CRN returns list of Basic Sentence Plans`() {
 
     webTestClient.get().uri("/offenders/crn/$crn/basicSentencePlans/")
@@ -103,20 +89,6 @@ class SentencePlanControllerTest : IntegrationTest() {
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isNotFound
-  }
-
-  @Test
-  fun `offender CRN returns latest Basic Sentence Plan`() {
-
-    webTestClient.get().uri("/offenders/crn/$crn/basicSentencePlans/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<BasicSentencePlanDto>()
-      .consumeWith {
-        val sentencePlan = it.responseBody
-        assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
-      }
   }
 
   @Test
@@ -144,20 +116,6 @@ class SentencePlanControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `offender PNC returns latest Basic Sentence Plan`() {
-
-    webTestClient.get().uri("/offenders/pnc/$pnc/basicSentencePlans/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<BasicSentencePlanDto>()
-      .consumeWith {
-        val sentencePlan = it.responseBody
-        assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
-      }
-  }
-
-  @Test
   fun `offender Nomis ID returns list of Basic Sentence Plans`() {
 
     webTestClient.get().uri("/offenders/nomisId/$nomis/basicSentencePlans/")
@@ -182,20 +140,6 @@ class SentencePlanControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `offender Nomis ID returns latest Basic Sentence Plan`() {
-
-    webTestClient.get().uri("/offenders/nomisId/$nomis/basicSentencePlans/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<BasicSentencePlanDto>()
-      .consumeWith {
-        val sentencePlan = it.responseBody
-        assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
-      }
-  }
-
-  @Test
   fun `offender Booking ID returns list of Basic Sentence Plans`() {
 
     webTestClient.get().uri("/offenders/bookingId/$booking/basicSentencePlans/")
@@ -217,20 +161,6 @@ class SentencePlanControllerTest : IntegrationTest() {
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isNotFound
-  }
-
-  @Test
-  fun `offender Booking ID returns latest Basic Sentence Plan`() {
-
-    webTestClient.get().uri("/offenders/bookingId/$booking/basicSentencePlans/latest")
-      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
-      .exchange()
-      .expectStatus().isOk
-      .expectBody<BasicSentencePlanDto>()
-      .consumeWith {
-        val sentencePlan = it.responseBody
-        assertThat(sentencePlan).isEqualTo(setupBasicSentencePlan())
-      }
   }
 
   fun setupBasicSentencePlan(): BasicSentencePlanDto {

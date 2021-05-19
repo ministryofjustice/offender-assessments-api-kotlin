@@ -23,17 +23,6 @@ class SentencePlanService(
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  @Deprecated("Latest is now deprecated.")
-  fun getLatestBasicSentencePlanForOffender(identityType: String?, identity: String?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): BasicSentencePlanDto {
-    val offenderId = getOffenderIdByIdentifier(identityType, identity)
-    val assessment = assessmentRepository.getLatestAssessmentForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-      ?: throw EntityNotFoundException("Latest assessment for Offender $offenderId, not found")
-
-    log.info("Found Latest Assessment type: ${assessment.assessmentType}status: ${assessment.assessmentStatus} for identity: ($identity,$identityType)")
-    return BasicSentencePlanDto.from(assessment)
-      ?: throw EntityNotFoundException("Latest Basic Sentence Plan for Offender $offenderId, not found")
-  }
-
   fun getBasicSentencePlansForOffender(identityType: String?, identity: String?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): Collection<BasicSentencePlanDto> {
     val offenderId = getOffenderIdByIdentifier(identityType, identity)
     val assessments = assessmentRepository.getAssessmentsForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
@@ -58,7 +47,7 @@ class SentencePlanService(
   fun getFullSentencePlan(oasysSetPk: Long?): FullSentencePlanDto? {
     val assessment = assessmentRepository.getAssessment(oasysSetPk)
       ?: throw EntityNotFoundException("Full Sentence Plan $oasysSetPk, not found!")
-    log.info("Found Latest Assessment: ${assessment.assessmentType} for OASYS id $oasysSetPk")
+    log.info("Found Assessment: ${assessment.assessmentType} for OASYS id $oasysSetPk")
     return fullSentencePlanFrom(assessment)
   }
 
