@@ -21,6 +21,7 @@ class AssessmentNeedDtoTest {
     assertThat(assessmentNeedDto.riskOfReoffending).isEqualTo(assessmentNeed.riskOfReoffending)
     assertThat(assessmentNeedDto.flaggedAsNeed).isEqualTo(assessmentNeed.flaggedAsNeed)
     assertThat(assessmentNeedDto.severity).isEqualTo(assessmentNeed.severity)
+    assertThat(assessmentNeedDto.identifiedAsNeed).isEqualTo(assessmentNeed.anyRiskFlagged())
   }
 
   @Test

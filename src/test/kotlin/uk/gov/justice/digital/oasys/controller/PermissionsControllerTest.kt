@@ -430,7 +430,7 @@ class PermissionsControllerTest : IntegrationTest() {
         area,
         offenderPk,
         oasysSetPk,
-        roleNames = roleNames?.map { it.rbacName }?.toSet()
+        roleNames = roleNames.map { it.rbacName }?.toSet()
       )
     )
       .willReturn(
