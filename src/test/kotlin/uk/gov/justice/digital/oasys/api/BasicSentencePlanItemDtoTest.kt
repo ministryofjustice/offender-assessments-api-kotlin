@@ -20,18 +20,18 @@ class BasicSentencePlanItemDtoTest {
 
     SoftAssertions().apply {
       with(basicSentencePlanItemDto) {
-        assertThat(this?.basicSentPlanObjId).isEqualTo(basicSentencePlanItem?.basicSentPlanObjPk)
+        assertThat(this?.basicSentPlanObjId).isEqualTo(basicSentencePlanItem.basicSentPlanObjPk)
         assertThat(this?.includeInPlan).isTrue()
-        assertThat(this?.objectiveText).isEqualTo(basicSentencePlanItem?.objectiveText)
-        assertThat(this?.measureText).isEqualTo(basicSentencePlanItem?.measureText)
-        assertThat(this?.whatWorkText).isEqualTo(basicSentencePlanItem?.whatWorkText)
-        assertThat(this?.whoWillDoWorkText).isEqualTo(basicSentencePlanItem?.whoWillDoWorkText)
-        assertThat(this?.timescalesText).isEqualTo(basicSentencePlanItem?.timescalesText)
+        assertThat(this?.objectiveText).isEqualTo(basicSentencePlanItem.objectiveText)
+        assertThat(this?.measureText).isEqualTo(basicSentencePlanItem.measureText)
+        assertThat(this?.whatWorkText).isEqualTo(basicSentencePlanItem.whatWorkText)
+        assertThat(this?.whoWillDoWorkText).isEqualTo(basicSentencePlanItem.whoWillDoWorkText)
+        assertThat(this?.timescalesText).isEqualTo(basicSentencePlanItem.timescalesText)
         assertThat(this?.dateOpened).isEqualTo(LocalDate.of(2020, 2, 1))
         assertThat(this?.dateCompleted).isEqualTo(LocalDate.of(2020, 12, 1))
         assertThat(this?.problemAreaCompInd).isTrue()
-        assertThat(this?.offenceBehaviourLink?.code).isEqualTo(basicSentencePlanItem?.offenceBehaviourLink?.refElementCode)
-        assertThat(this?.offenceBehaviourLink?.description).isEqualTo(basicSentencePlanItem?.offenceBehaviourLink?.refElementDesc)
+        assertThat(this?.offenceBehaviourLink?.code).isEqualTo(basicSentencePlanItem.offenceBehaviourLink?.refElementCode)
+        assertThat(this?.offenceBehaviourLink?.description).isEqualTo(basicSentencePlanItem.offenceBehaviourLink?.refElementDesc)
       }
     }.assertAll()
   }

@@ -50,7 +50,7 @@ class QuestionDtoTest {
   @Test
   fun `Builds Question DTO with values`() {
     val oasysQuestions = setOf(setupQuestion1098())
-    val questionDto = QuestionDto.from(oasysQuestions)?.first()
+    val questionDto = QuestionDto.from(oasysQuestions).first()
     assertThat(questionDto.refQuestionId).isEqualTo(1L)
     assertThat(questionDto.refQuestionCode).isEqualTo("10.98")
     assertThat(questionDto.displayOrder).isEqualTo(1L)
@@ -63,7 +63,7 @@ class QuestionDtoTest {
   @Test
   fun `Builds Question DTO with Answer if present`() {
     val oasysQuestions = setOf(setupQuestion1099())
-    val questionDto = QuestionDto.from(oasysQuestions)?.first()
+    val questionDto = QuestionDto.from(oasysQuestions).first()
     assertThat(questionDto.answers.toList()[0].staticText).isEqualTo("No")
     assertThat(questionDto.answers.toList()[0].freeFormText).isNull()
     assertThat(questionDto.answers.toList()[0].refAnswerCode).isEqualTo("NO")

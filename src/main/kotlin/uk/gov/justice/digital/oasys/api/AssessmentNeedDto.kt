@@ -13,7 +13,7 @@ data class AssessmentNeedDto(
   @ApiModelProperty(value = "Need name", example = "Accommodation")
   val name: String? = null,
 
-  @ApiModelProperty(value = "Over Crimiogenic Need score threshold", example = "Accommodation")
+  @ApiModelProperty(value = "Over Criminogenic Need score threshold", example = "Accommodation")
   val overThreshold: Boolean? = null,
 
   @ApiModelProperty(value = "Related to risk of harm", example = "true")
@@ -22,11 +22,14 @@ data class AssessmentNeedDto(
   @ApiModelProperty(value = "Related to risk of reoffending", example = "true")
   val riskOfReoffending: Boolean? = null,
 
-  @ApiModelProperty(value = "Low scoring are flagged", example = "true")
+  @ApiModelProperty(value = "Low scoring area manually flagged by Offender Manager", example = "true")
   val flaggedAsNeed: Boolean? = null,
 
   @ApiModelProperty(value = "Need severity", example = "true")
-  val severity: NeedSeverity? = null
+  val severity: NeedSeverity? = null,
+
+  @ApiModelProperty(value = "Identified as Criminogenic Need", example = "true")
+  val identifiedAsNeed: Boolean? = null
 
 ) {
   companion object {
@@ -42,7 +45,8 @@ data class AssessmentNeedDto(
         need?.riskOfHarm,
         need?.riskOfReoffending,
         need?.flaggedAsNeed,
-        need?.severity
+        need?.severity,
+        need?.anyRiskFlagged()
       )
     }
   }
