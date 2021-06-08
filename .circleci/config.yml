@@ -94,3 +94,7 @@ workflows:
     jobs:
       - owasp/gradle_owasp_dependency_check:
           executor: hmpps/java
+      - hmpps/veracode_policy_scan:
+          context:
+            - hmpps-common-vars
+            - veracode-credentials
