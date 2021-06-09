@@ -1,8 +1,7 @@
 version: 2.1
 
 orbs:
-  owasp: entur/owasp@0.0.10
-  hmpps: ministryofjustice/hmpps@3.0.0
+  hmpps: ministryofjustice/hmpps@3.2
 
 jobs:
   validate:
@@ -92,5 +91,10 @@ workflows:
               only:
                 - main
     jobs:
-      - owasp/gradle_owasp_dependency_check:
-          executor: hmpps/java
+      - hmpps/gradle_owasp_dependency_check:
+          context:
+            - hmpps-common-vars
+      - hmpps/veracode_policy_scan:
+          context:
+            - hmpps-common-vars
+            - veracode-credentials
