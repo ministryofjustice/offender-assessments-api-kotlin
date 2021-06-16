@@ -40,6 +40,6 @@ class RiskController(private val risksService: RisksService) {
     @PathVariable("assessmentId") assessmentId: Long,
     @RequestBody sectionCodes: Set<SectionHeader>
   ): SectionAnswersDto? {
-    return risksService.getRiskSections(assessmentId, sectionCodes)
+    return risksService.getRisksForAssessmentSections(assessmentId, sectionCodes)
   }
 }

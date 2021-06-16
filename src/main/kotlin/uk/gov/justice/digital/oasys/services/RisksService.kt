@@ -97,7 +97,7 @@ class RisksService(
     return answerTypes.any { answers?.map { a -> a.refAnswerCode }?.contains(it) }
   }
 
-  fun getRiskSections(assessmentId: Long, sectionCodes: Set<SectionHeader>): SectionAnswersDto {
+  fun getRisksForAssessmentSections(assessmentId: Long, sectionCodes: Set<SectionHeader>): SectionAnswersDto {
     return answerService.getSectionAnswersForQuestions(assessmentId, RoshMapping.rosh(sectionCodes))
   }
 

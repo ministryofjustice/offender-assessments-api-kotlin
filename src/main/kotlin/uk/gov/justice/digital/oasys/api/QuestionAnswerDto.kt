@@ -24,8 +24,8 @@ data class QuestionAnswerDto(
 
   companion object {
     fun OasysQuestion.toAnswersDto(): Collection<QuestionAnswerDto> {
-      var oasysAnswers = if (this?.oasysAnswers.isNullOrEmpty()) {
-        return setOf(
+      return if (this?.oasysAnswers.isNullOrEmpty()) {
+        setOf(
           QuestionAnswerDto(
             refQuestionCode = this?.refQuestion?.refQuestionCode,
             questionText = this?.refQuestion?.refSectionQuestion,
@@ -33,10 +33,8 @@ data class QuestionAnswerDto(
           )
         )
       } else {
-        this?.oasysAnswers
+        oasysAnswers?.mapNotNull { it?.toAnswerDto() }?.toSet() ?: emptySet()
       }
-
-      return oasysAnswers?.mapNotNull { it?.toAnswerDto() }?.toSet() ?: emptySet()
     }
 
     private fun OasysAnswer.toAnswerDto(): QuestionAnswerDto {
