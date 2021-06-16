@@ -10,10 +10,13 @@ import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.roshSumQuestionCod
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.rsrQuestionCodes
 import uk.gov.justice.digital.oasys.api.QuestionDto.Companion.saraQuestionCodes
 import uk.gov.justice.digital.oasys.api.RiskDto
+import uk.gov.justice.digital.oasys.api.SectionAnswersDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 import uk.gov.justice.digital.oasys.services.domain.AssessmentPurposeType
 import uk.gov.justice.digital.oasys.services.domain.AssessmentType
+import uk.gov.justice.digital.oasys.services.domain.RoshMapping
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 @Service
@@ -92,6 +95,10 @@ class RisksService(
 
   private fun anySingleAnswersMatch(answerTypes: Set<String>, answers: Collection<AnswerDto>): Boolean {
     return answerTypes.any { answers?.map { a -> a.refAnswerCode }?.contains(it) }
+  }
+
+  fun getRiskSections(assessmentId: Long, sectionCodes: Set<SectionHeader>): SectionAnswersDto {
+    return answerService.getSectionAnswersForQuestions(assessmentId, RoshMapping.rosh(sectionCodes))
   }
 
   companion object {

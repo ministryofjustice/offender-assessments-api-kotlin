@@ -11,10 +11,19 @@ import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.RiskAnswerDto
 import uk.gov.justice.digital.oasys.api.RiskDto
 import uk.gov.justice.digital.oasys.api.RiskQuestionDto
+import uk.gov.justice.digital.oasys.api.SectionAnswersDto
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @SqlGroup(
-  Sql(scripts = ["classpath:risks/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:risks/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:risks/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:risks/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class RisksControllerTest : IntegrationTest() {
@@ -130,6 +139,32 @@ class RisksControllerTest : IntegrationTest() {
       .headers(setAuthorisation())
       .exchange()
       .expectStatus().isForbidden
+  }
+
+  @Test
+  fun `can get assessment rosh risk sections by Assessment ID for assessment with ROSH`() {
+    val assessmentId = 9487347
+
+    webTestClient.post().uri("/offenders/risks/assessment/$assessmentId/sections")
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .bodyValue(
+        setOf(
+          SectionHeader.ROSH_SCREENING.name,
+          SectionHeader.ROSH_FULL_ANALYSIS.name,
+          SectionHeader.ROSH_SUMMARY.name
+        )
+      )
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<SectionAnswersDto>()
+      .consumeWith {
+        val sectionAnswers = it.responseBody
+        assertThat(sectionAnswers?.assessmentId).isEqualTo(9487347)
+        assertThat(sectionAnswers?.sections).hasSize(3)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SCREENING.value) ?: emptyList()).hasSize(10)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_FULL_ANALYSIS.value) ?: emptyList()).hasSize(4)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SUMMARY.value) ?: emptyList()).hasSize(9)
+      }
   }
 
   fun validRoshaQuestion(): RiskQuestionDto {

@@ -17,7 +17,6 @@ class AssessmentServiceRisksAndNeedsTest {
   private val assessmentRepository: AssessmentRepository = mockk()
   private val offenderService: OffenderService = mockk()
   private val sectionService: SectionService = mockk()
-  private val assessmentsService = AssessmentService(assessmentRepository, offenderService, sectionService)
 
   private fun setupAssessmentGroup(): AssessmentGroup {
     return AssessmentGroup(historicStatus = "Current")
