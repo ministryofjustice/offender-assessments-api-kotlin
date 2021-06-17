@@ -128,7 +128,7 @@ class AssessmentServiceTest {
         oasysOffenderPk.toString()
       )
     } returns oasysOffenderPk
-    val assessment = Assessment()
+    val assessment = Assessment(oasysSetPk = 123)
     every {
       assessmentRepository.getLatestAssessmentsForOffenderInPeriod(
         oasysOffenderPk,

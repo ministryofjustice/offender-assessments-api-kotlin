@@ -50,7 +50,7 @@ class AssessmentService constructor(
       filterVoided,
       filterAssessmentStatus
     )
-    log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
+    log.info("Found ${assessments.size} Assessments for identity: ($identity, $identityType)")
     return assessments.toAssessmentsSummaryDto()
   }
 
