@@ -46,26 +46,25 @@ data class AssessmentSummaryDto(
 
   companion object {
 
-    fun from(assessments: Collection<Assessment?>?): Collection<AssessmentSummaryDto> {
-      return assessments?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
+    fun Collection<Assessment?>?.toAssessmentsSummaryDto(): Collection<AssessmentSummaryDto> {
+      return this?.filterNotNull()?.map { it.toAssessmentSummaryDto() }?.toSet().orEmpty()
     }
 
-    private fun from(assessment: Assessment?): AssessmentSummaryDto {
-
-      val assessmentVersion = assessment?.assessmentVersion
+    fun Assessment.toAssessmentSummaryDto(): AssessmentSummaryDto {
+      val assessmentVersion = this?.assessmentVersion
       return AssessmentSummaryDto(
-        assessment?.oasysSetPk,
+        this?.oasysSetPk,
         assessmentVersion?.refAssVersionCode,
         assessmentVersion?.versionNumber,
         assessmentVersion?.refAssVersionUk,
-        assessment?.assessmentType,
-        assessment?.assessmentStatus,
-        assessment?.group?.historicStatus,
+        this?.assessmentType,
+        this?.assessmentStatus,
+        this?.group?.historicStatus,
         assessmentVersion?.oasysScoringAlgVersion,
-        assessment?.assessorName,
-        assessment?.createDate,
-        assessment?.dateCompleted,
-        assessment?.assessmentVoidedDate
+        this?.assessorName,
+        this?.createDate,
+        this?.dateCompleted,
+        this?.assessmentVoidedDate
       )
     }
   }

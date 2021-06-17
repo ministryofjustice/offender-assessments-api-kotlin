@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
+import uk.gov.justice.digital.oasys.api.PeriodUnit
 import uk.gov.justice.digital.oasys.services.AssessmentService
 
 @RestController
@@ -45,6 +46,37 @@ class AssessmentController(private val assessmentService: AssessmentService) {
     @RequestParam(value = "voided", required = false) filterVoided: Boolean?,
     @RequestParam(value = "assessmentStatus", required = false) filterAssessmentStatus: String?
   ): Collection<AssessmentSummaryDto> {
-    return assessmentService.getAssessmentsForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
+    return assessmentService.getAssessmentsForOffender(
+      identityType,
+      identity,
+      filterGroupStatus,
+      filterAssessmentType,
+      filterVoided,
+      filterAssessmentStatus
+    )
+  }
+
+  @GetMapping(path = ["/offenders/{identityType}/{identity}/assessments"])
+  @ApiOperation(value = "Gets latest assessment in period(if one exists) for an assessment with status and types requested for an offender")
+  @ApiResponses(
+    ApiResponse(code = 404, message = "Offender not found"),
+    ApiResponse(code = 200, message = "OK")
+  )
+  fun getAssessmentsForOffender(
+    @PathVariable("identityType") identityType: String,
+    @PathVariable("identity") identity: String,
+    @RequestParam(value = "assessmentStatus", required = false) assessmentStatus: String?,
+    @RequestParam(value = "assessmentTypes", required = false) assessmentTypes: Set<String>?,
+    @RequestParam(value = "period", required = true) period: PeriodUnit,
+    @RequestParam(value = "periodUnits", required = true) periodUnits: Long
+  ): AssessmentSummaryDto? {
+    return assessmentService.getLatestAssessmentsForOffenderInPeriod(
+      identityType,
+      identity,
+      assessmentTypes,
+      assessmentStatus,
+      period,
+      periodUnits
+    )
   }
 }
