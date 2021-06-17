@@ -12,14 +12,20 @@ import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import java.time.LocalDateTime
 
 @SqlGroup(
-  Sql(scripts = ["classpath:assessments/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:assessments/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:assessments/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:assessments/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class AssessmentControllerTest : IntegrationTest() {
 
   private val validOasysSetId = 5433L
-  private val oasysOffenderId = 1234L
 
   @Test
   fun `access forbidden when no authority`() {
@@ -88,6 +94,6 @@ class AssessmentControllerTest : IntegrationTest() {
     assertThat(assessment.voided).isNull()
 
     // Sections check
-    assertThat(assessment.sections).hasSize(17)
+    assertThat(assessment.sections).hasSize(19)
   }
 }
