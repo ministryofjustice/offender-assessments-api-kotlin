@@ -7,12 +7,18 @@ import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
 import uk.gov.justice.digital.oasys.api.SectionAnswersDto
 import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.repositories.QuestionRepository
+import uk.gov.justice.digital.oasys.services.domain.RoshMapping
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @Service
 class AnswerService(private val questionRepository: QuestionRepository) {
 
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
+  }
+
+  fun getRisksForAssessmentSections(assessmentId: Long, sectionCodes: Set<SectionHeader>): SectionAnswersDto {
+    return getSectionAnswersForQuestions(assessmentId, RoshMapping.rosh(sectionCodes))
   }
 
   fun getAnswersForQuestions(oasysSetPk: Long, questionCodes: Map<String, Collection<String>>): AssessmentAnswersDto {

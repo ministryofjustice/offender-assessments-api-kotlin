@@ -8,6 +8,8 @@ import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
+import uk.gov.justice.digital.oasys.api.SectionAnswersDto
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @SqlGroup(
   Sql(
@@ -73,6 +75,32 @@ class AnswersControllerTest : IntegrationTest() {
         val answers = it.responseBody
         assertThat(answers.assessmentId).isEqualTo(12345)
         assertThat(answers.questionAnswers).isEmpty()
+      }
+  }
+
+  @Test
+  fun `can get assessment rosh risk sections by Assessment ID for assessment with ROSH`() {
+    val assessmentId = 5433L
+
+    webTestClient.post().uri("/assessments/oasysSetId/$assessmentId/sections/answers")
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .bodyValue(
+        setOf(
+          SectionHeader.ROSH_SCREENING.name,
+          SectionHeader.ROSH_FULL_ANALYSIS.name,
+          SectionHeader.ROSH_SUMMARY.name
+        )
+      )
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<SectionAnswersDto>()
+      .consumeWith {
+        val sectionAnswers = it.responseBody
+        assertThat(sectionAnswers?.assessmentId).isEqualTo(5433L)
+        assertThat(sectionAnswers?.sections).hasSize(3)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SCREENING.value) ?: emptyList()).hasSize(10)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_FULL_ANALYSIS.value) ?: emptyList()).hasSize(4)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SUMMARY.value) ?: emptyList()).hasSize(9)
       }
   }
 }

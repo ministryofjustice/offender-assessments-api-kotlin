@@ -12,14 +12,10 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.oasys.api.AnswerDto
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
-import uk.gov.justice.digital.oasys.api.QuestionAnswerDto
 import uk.gov.justice.digital.oasys.api.QuestionDto
 import uk.gov.justice.digital.oasys.api.RiskAssessmentAnswersDto
-import uk.gov.justice.digital.oasys.api.SectionAnswersDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
-import uk.gov.justice.digital.oasys.services.domain.RoshMapping
-import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
 
 @ExtendWith(MockKExtension::class)
@@ -212,31 +208,6 @@ class RisksServiceTest {
         assertThat(isRrsOnly).isTrue
       }
     }
-
-    @Test
-    fun `should get Risks For Assessment Sections`() {
-      every {
-        answerService.getSectionAnswersForQuestions(
-          3333,
-          RoshMapping.rosh(setOf(SectionHeader.ROSH_SUMMARY, SectionHeader.ROSH_SCREENING))
-        )
-      } returns (sectionAnswers())
-
-      val risks = risksService.getRisksForAssessmentSections(
-        3333L,
-        setOf(SectionHeader.ROSH_SUMMARY, SectionHeader.ROSH_SCREENING)
-      )
-      with(risks!!) {
-        assertThat(assessmentId).isEqualTo(3333L)
-        assertThat(sections).hasSize(1)
-      }
-      verify(exactly = 1) {
-        answerService.getSectionAnswersForQuestions(
-          3333,
-          RoshMapping.rosh(setOf(SectionHeader.ROSH_SUMMARY, SectionHeader.ROSH_SCREENING))
-        )
-      }
-    }
   }
 }
 
@@ -290,13 +261,6 @@ private fun roshaAnswers(): AssessmentAnswersDto {
   return AssessmentAnswersDto(
     assessmentId = 1111,
     questionAnswers = listOf(QuestionDto())
-  )
-}
-
-private fun sectionAnswers(): SectionAnswersDto {
-  return SectionAnswersDto(
-    assessmentId = 3333L,
-    sections = mapOf("ROSH" to setOf(QuestionAnswerDto()))
   )
 }
 
