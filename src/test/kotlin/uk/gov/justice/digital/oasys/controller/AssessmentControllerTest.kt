@@ -104,7 +104,7 @@ class AssessmentControllerTest : IntegrationTest() {
   fun `can't assessments for offender`() {
     val crn = 999
 
-    webTestClient.get().uri("/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE")
+    webTestClient.get().uri("/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE&period=YEAR&periodUnits=100")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isNotFound
