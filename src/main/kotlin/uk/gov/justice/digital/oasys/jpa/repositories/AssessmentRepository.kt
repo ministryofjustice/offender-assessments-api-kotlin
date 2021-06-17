@@ -42,7 +42,7 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     if (filterAssessmentStatus?.isNotEmpty() == true) {
       query.where(assessment.assessmentStatus.equalsIgnoreCase(filterAssessmentStatus))
     }
-    if (!filterAssessmentType?.isNullOrEmpty()!!) {
+    if (filterAssessmentType?.isNotEmpty() == true && !filterAssessmentType?.isNullOrEmpty()) {
       query.where(assessment.assessmentType.`in`(filterAssessmentType))
     }
     query

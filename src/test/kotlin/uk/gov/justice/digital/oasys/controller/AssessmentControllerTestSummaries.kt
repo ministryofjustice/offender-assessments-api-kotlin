@@ -12,8 +12,15 @@ import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import java.time.LocalDateTime
 
 @SqlGroup(
-  Sql(scripts = ["classpath:assessments/before-test-summary.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:assessments/after-test-summary.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:assessments/before-test-summary.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:assessments/after-test-summary.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient(timeout = "36000")
 class AssessmentControllerTestSummaries : IntegrationTest() {
@@ -27,6 +34,7 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   private val layerOneAssessmentId = 5434L
   private val openAssessmentId = 5433L
   private val completeAssessmentId = 5432L
+  private val completeAssessmentId2 = 5436L
   private val voidedAssessmentId = 5431L
   private val historicAssessmentId = 5430L
 
@@ -41,9 +49,18 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(5)
+        assertThat(summaries).hasSize(6)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
 
         validateOpenAssessmentSummary(summaries.first { s -> s.assessmentId == openAssessmentId })
       }
@@ -69,9 +86,18 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(5)
+        assertThat(summaries).hasSize(6)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
 
         validateOpenAssessmentSummary(summaries.first { s -> s.assessmentId == openAssessmentId })
       }
@@ -97,9 +123,18 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(5)
+        assertThat(summaries).hasSize(6)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
 
         validateOpenAssessmentSummary(summaries.first { s -> s.assessmentId == openAssessmentId })
       }
@@ -125,9 +160,18 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(5)
+        assertThat(summaries).hasSize(6)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
 
         validateOpenAssessmentSummary(summaries.first { s -> s.assessmentId == openAssessmentId })
       }
@@ -153,9 +197,18 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(5)
+        assertThat(summaries).hasSize(6)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
 
         validateOpenAssessmentSummary(summaries.first { s -> s.assessmentId == openAssessmentId })
       }
@@ -173,7 +226,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment status returns only COMPLETE summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentStatus=COMPLETE")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentStatus=COMPLETE")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -181,9 +235,16 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(3)
+        assertThat(summaries).hasSize(4)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, voidedAssessmentId, completeAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              voidedAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2
+            )
+          )
         assertThat(summaries.map { a -> a.assessmentStatus }).containsOnly("COMPLETE")
       }
   }
@@ -191,7 +252,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `voided filter returns only voided assessment summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?voided=true")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?voided=true")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -209,7 +271,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `not voided filter returns only non voided assessment summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?voided=false")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?voided=false")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -217,9 +280,17 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(4)
+        assertThat(summaries).hasSize(5)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              layerOneAssessmentId
+            )
+          )
         assertThat(summaries.map { a -> a.voided }).containsOnlyNulls()
       }
   }
@@ -227,7 +298,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment type filter returns only LAYER_3 type summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentType=laYER_3")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentType=laYER_3")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -237,7 +309,14 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
 
         assertThat(summaries).hasSize(4)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(historicAssessmentId, openAssessmentId, completeAssessmentId, voidedAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              historicAssessmentId,
+              openAssessmentId,
+              completeAssessmentId,
+              voidedAssessmentId
+            )
+          )
         assertThat(summaries.map { a -> a.assessmentType }).containsOnly("LAYER_3")
       }
   }
@@ -245,7 +324,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment type filter returns only LAYER_1 type summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentType=LAYER_1")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?assessmentType=LAYER_1")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -253,9 +333,9 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(1)
+        assertThat(summaries).hasSize(2)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(setOf(layerOneAssessmentId, completeAssessmentId2))
         assertThat(summaries.map { a -> a.assessmentType }).containsOnly("LAYER_1")
       }
   }
@@ -263,7 +343,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment historic status returns only CURRENT summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=CurreNT")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=CurreNT")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -271,9 +352,17 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
       .consumeWith {
         val summaries = it.responseBody
 
-        assertThat(summaries).hasSize(4)
+        assertThat(summaries).hasSize(5)
         assertThat(summaries.map { a -> a.assessmentId })
-          .containsExactlyInAnyOrderElementsOf(setOf(openAssessmentId, completeAssessmentId, voidedAssessmentId, layerOneAssessmentId))
+          .containsExactlyInAnyOrderElementsOf(
+            setOf(
+              openAssessmentId,
+              completeAssessmentId,
+              completeAssessmentId2,
+              voidedAssessmentId,
+              layerOneAssessmentId
+            )
+          )
         assertThat(summaries.map { a -> a.historicStatus }).containsOnly("CURRENT")
       }
   }
@@ -281,7 +370,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment historic status returns only OTHER summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=OTheR")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=OTheR")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
@@ -299,7 +389,8 @@ class AssessmentControllerTestSummaries : IntegrationTest() {
   @Test
   fun `assessment historic status and assessment status returns only combined summaries`() {
 
-    webTestClient.get().uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=current&assessmentType=layer_3")
+    webTestClient.get()
+      .uri("/offenders/${OffenderIdentifier.OASYS.value}/$oasysOffenderId/assessments/summary?historicStatus=current&assessmentType=layer_3")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
