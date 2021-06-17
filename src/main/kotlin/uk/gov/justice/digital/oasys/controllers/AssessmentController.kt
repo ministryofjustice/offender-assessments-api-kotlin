@@ -47,4 +47,19 @@ class AssessmentController(private val assessmentService: AssessmentService) {
   ): Collection<AssessmentSummaryDto> {
     return assessmentService.getAssessmentsForOffender(identityType, identity, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
   }
+
+  @GetMapping(path = ["/offenders/{identityType}/{identity}/assessments"])
+  @ApiOperation(value = "Gets latest assessment in period(if one exists) for an assessment with status and types requested for an offender")
+  @ApiResponses(
+    ApiResponse(code = 404, message = "Offender not found"),
+    ApiResponse(code = 200, message = "OK")
+  )
+  fun getAssessmentsForOffender(
+    @PathVariable("identityType") identityType: String,
+    @PathVariable("identity") identity: String,
+    @RequestParam(value = "assessmentStatus", required = false) assessmentStatus: String?,
+    @RequestParam(value = "assessmentTypes", required = false) assessmentTypes: Set<String>?
+  ): AssessmentSummaryDto? {
+    return assessmentService.getLatestAssessmentsForOffenderInPeriod(identityType, identity, assessmentTypes, assessmentStatus)
+  }
 }

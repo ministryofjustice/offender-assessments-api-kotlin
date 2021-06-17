@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.QAssessment.assessment
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.persistence.EntityManager
 
 @Repository
@@ -16,10 +18,38 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     return queryFactory.selectFrom(assessment).where(assessment.oasysSetPk.eq(oasysSetId)).fetchFirst()
   }
 
-  fun getAssessmentsForOffender(offenderId: Long?, filterGroupStatus: String? = null, filterAssessmentType: String? = null, filterVoided: Boolean? = null, filterAssessmentStatus: String? = null): Collection<Assessment>? {
+  fun getAssessmentsForOffender(
+    offenderId: Long?,
+    filterGroupStatus: String? = null,
+    filterAssessmentType: String? = null,
+    filterVoided: Boolean? = null,
+    filterAssessmentStatus: String? = null
+  ): Collection<Assessment>? {
     val query = getAssessmentsQueryForOffender(offenderId)
     filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
     return query.fetch()
+  }
+
+  fun getLatestCompletedAssessmentsForOffender(
+    offenderId: Long?,
+    filterAssessmentType: Set<String>?,
+    filterAssessmentStatus: String?,
+    period: String?
+  ): Assessment? {
+    val query = queryFactory.selectFrom(assessment)
+    query
+      .where(assessment.group.offenderPk.eq(offenderId))
+      .where(assessment.deletedDate.isNull)
+    if (filterAssessmentStatus?.isNotEmpty() == true) {
+      query.where(assessment.assessmentStatus.equalsIgnoreCase(filterAssessmentStatus))
+    }
+    if (!filterAssessmentType?.isNullOrEmpty()!!) {
+      query.where(assessment.assessmentType.`in`(filterAssessmentType))
+    }
+    query
+      .where(assessment.dateCompleted.after(LocalDateTime.now().minus(100, ChronoUnit.YEARS)))
+      .orderBy(assessment.dateCompleted.desc())
+    return query.fetchFirst()
   }
 
   fun getAssessmentsForOffender(offenderId: Long?): Collection<Assessment>? {
@@ -31,7 +61,13 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     return query.where(assessment.group.offenderPk.eq(offenderId)).where(assessment.deletedDate.isNull)
   }
 
-  private fun filterQuery(query: JPAQuery<Assessment>, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?) {
+  private fun filterQuery(
+    query: JPAQuery<Assessment>,
+    filterGroupStatus: String?,
+    filterAssessmentType: String?,
+    filterVoided: Boolean?,
+    filterAssessmentStatus: String?
+  ) {
     if (filterAssessmentStatus?.isNotEmpty() == true) {
       query.where(assessment.assessmentStatus.equalsIgnoreCase(filterAssessmentStatus))
     }
