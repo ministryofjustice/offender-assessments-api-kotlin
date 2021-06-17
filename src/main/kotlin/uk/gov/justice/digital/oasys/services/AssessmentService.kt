@@ -9,6 +9,7 @@ import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto.Companion.toAssessmentSummaryDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto.Companion.toAssessmentsSummaryDto
+import uk.gov.justice.digital.oasys.api.PeriodUnit
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
 import uk.gov.justice.digital.oasys.services.domain.AssessmentType
@@ -18,6 +19,7 @@ import uk.gov.justice.digital.oasys.services.domain.NeedConfiguration
 import uk.gov.justice.digital.oasys.services.domain.NeedSeverity
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -56,14 +58,17 @@ class AssessmentService constructor(
     identityType: String?,
     identity: String?,
     filterAssessmentType: Set<String>?,
-    filterAssessmentStatus: String?
+    filterAssessmentStatus: String?,
+    period: PeriodUnit,
+    periodUnits: Long
   ): AssessmentSummaryDto {
     val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
-    val assessment = assessmentRepository.getLatestCompletedAssessmentsForOffender(
+
+    val assessment = assessmentRepository.getLatestAssessmentsForOffenderInPeriod(
       offenderId,
       filterAssessmentType,
       filterAssessmentStatus,
-      "1y"
+      LocalDateTime.now().minus(periodUnits, period.chronoUnit)
     )
       ?: throw EntityNotFoundException("Latest $filterAssessmentStatus with types $filterAssessmentType type not found for $identityType, $identity")
     log.info("Found ${assessment?.oasysSetPk} Assessment for identity: ($identity, $identityType)")

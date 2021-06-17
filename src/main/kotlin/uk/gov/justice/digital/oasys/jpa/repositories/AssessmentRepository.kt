@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.QAssessment.assessment
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import javax.persistence.EntityManager
 
 @Repository
@@ -30,11 +29,11 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     return query.fetch()
   }
 
-  fun getLatestCompletedAssessmentsForOffender(
+  fun getLatestAssessmentsForOffenderInPeriod(
     offenderId: Long?,
     filterAssessmentType: Set<String>?,
     filterAssessmentStatus: String?,
-    period: String?
+    dateCompletedFrom: LocalDateTime
   ): Assessment? {
     val query = queryFactory.selectFrom(assessment)
     query
@@ -47,7 +46,7 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
       query.where(assessment.assessmentType.`in`(filterAssessmentType))
     }
     query
-      .where(assessment.dateCompleted.after(LocalDateTime.now().minus(100, ChronoUnit.YEARS)))
+      .where(assessment.dateCompleted.after(dateCompletedFrom))
       .orderBy(assessment.dateCompleted.desc())
     return query.fetchFirst()
   }

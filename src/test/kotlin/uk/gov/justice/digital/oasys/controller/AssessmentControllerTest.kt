@@ -85,7 +85,11 @@ class AssessmentControllerTest : IntegrationTest() {
   fun `get latest complete assessment doesn't find an assessment`() {
     val crn = "CRN"
 
-    webTestClient.get().uri("/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE&assessmentTypes=LAYER_1,LAYER_3")
+    webTestClient.get()
+      .uri(
+        "/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE" +
+          "&assessmentTypes=LAYER_1,LAYER_3&period=YEAR&periodUnits=100"
+      )
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .exchange()
       .expectStatus().isOk
