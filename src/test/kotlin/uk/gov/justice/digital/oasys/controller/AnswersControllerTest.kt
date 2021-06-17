@@ -103,4 +103,32 @@ class AnswersControllerTest : IntegrationTest() {
         assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SUMMARY.value) ?: emptyList()).hasSize(9)
       }
   }
+
+  @Test
+  fun `get latest complete assessment find a completed assessment and rosh sections`() {
+    val crn = "X320741"
+
+    webTestClient.post()
+      .uri(
+        "/assessments/crn/$crn/sections/answers?assessmentStatus=COMPLETE" +
+          "&assessmentTypes=LAYER_1,LAYER_3&period=YEAR&periodUnits=100"
+      )
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .bodyValue(
+        setOf(
+          SectionHeader.ROSH_SCREENING.name,
+          SectionHeader.ROSH_FULL_ANALYSIS.name,
+          SectionHeader.ROSH_SUMMARY.name
+        )
+      )
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<SectionAnswersDto>()
+      .consumeWith {
+        val sectionAnswers = it.responseBody
+        assertThat(sectionAnswers?.assessmentId).isEqualTo(1L)
+        assertThat(sectionAnswers?.sections).hasSize(1)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SCREENING.value) ?: emptyList()).hasSize(10)
+      }
+  }
 }
