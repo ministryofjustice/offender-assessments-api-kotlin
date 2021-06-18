@@ -34,20 +34,14 @@ class AssessmentSummaryDtoTest {
   }
 
   @Test
-  fun `Builds valid Assessments Summaries DTO Null`() {
-    val assessmentDto = null.toAssessmentsSummaryDto()
-    assertThat(assessmentDto).isEmpty()
-  }
-
-  @Test
   fun `Builds valid Assessment Summary DTO empty set`() {
     val assessmentDto = emptySet<Assessment>().toAssessmentsSummaryDto()
     assertThat(assessmentDto).isEmpty()
   }
 
   @Test
-  fun `Builds valid Assessment Summary DTO null values in set set`() {
-    val assessmentDto = setOf(null).toAssessmentsSummaryDto()
+  fun `Builds valid empty Assessment Summary DTO when empty assessments provided`() {
+    val assessmentDto = emptySet<Assessment>().toAssessmentsSummaryDto()
     assertThat(assessmentDto).isEmpty()
   }
 

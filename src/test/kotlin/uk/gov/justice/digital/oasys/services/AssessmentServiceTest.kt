@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
 import uk.gov.justice.digital.oasys.api.OffenderIdentifier
 import uk.gov.justice.digital.oasys.api.PeriodUnit
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
@@ -128,7 +129,7 @@ class AssessmentServiceTest {
         oasysOffenderPk.toString()
       )
     } returns oasysOffenderPk
-    val assessment = Assessment()
+    val assessment = Assessment(oasysSetPk = 123)
     every {
       assessmentRepository.getLatestAssessmentsForOffenderInPeriod(
         oasysOffenderPk,
@@ -147,7 +148,40 @@ class AssessmentServiceTest {
       1
     )
 
-    // assertThat(result).isEqualTo(assessmentSummary)
+    assertThat(result).isEqualTo(AssessmentSummaryDto(assessmentId = 123))
+  }
+
+  @Test
+  fun `get latest assessment in period throws not found`() {
+    val oasysOffenderPk = 1L
+    val filterAssessmentType = setOf("LAYER_1")
+    val filterAssessmentStatus = "COMPLETE"
+    every {
+      offenderService.getOffenderIdByIdentifier(
+        OffenderIdentifier.CRN.value,
+        oasysOffenderPk.toString()
+      )
+    } returns oasysOffenderPk
+
+    every {
+      assessmentRepository.getLatestAssessmentsForOffenderInPeriod(
+        oasysOffenderPk,
+        filterAssessmentType,
+        filterAssessmentStatus,
+        any()
+      )
+    } returns null
+
+    assertThrows<EntityNotFoundException> {
+      assessmentsService.getLatestAssessmentsForOffenderInPeriod(
+        OffenderIdentifier.CRN.value,
+        oasysOffenderPk.toString(),
+        filterAssessmentType,
+        filterAssessmentStatus,
+        PeriodUnit.YEAR,
+        1
+      )
+    }
   }
 
   private fun setupAssessmentGroup(): AssessmentGroup {

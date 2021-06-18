@@ -23,10 +23,11 @@ class AssessmentRepository constructor(entityManager: EntityManager) {
     filterAssessmentType: String? = null,
     filterVoided: Boolean? = null,
     filterAssessmentStatus: String? = null
-  ): Collection<Assessment>? {
+  ): Collection<Assessment> {
     val query = getAssessmentsQueryForOffender(offenderId)
     filterQuery(query, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-    return query.fetch()
+    val assessments = query.fetch()
+    return assessments ?: emptySet()
   }
 
   fun getLatestAssessmentsForOffenderInPeriod(

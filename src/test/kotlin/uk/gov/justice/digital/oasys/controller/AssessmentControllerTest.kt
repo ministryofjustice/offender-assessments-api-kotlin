@@ -82,7 +82,7 @@ class AssessmentControllerTest : IntegrationTest() {
   }
 
   @Test
-  fun `get latest complete assessment doesn't find an assessment`() {
+  fun `get latest complete assessment find a completed assessment in the last 100 years`() {
     val crn = "CRN"
 
     webTestClient.get()
