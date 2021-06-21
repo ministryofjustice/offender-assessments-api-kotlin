@@ -86,10 +86,12 @@ class AnswersControllerTest : IntegrationTest() {
     webTestClient.post().uri("/assessments/oasysSetId/$assessmentId/sections/answers")
       .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
       .bodyValue(
-        setOf(
-          SectionHeader.ROSH_SCREENING.name,
-          SectionHeader.ROSH_FULL_ANALYSIS.name,
-          SectionHeader.ROSH_SUMMARY.name
+        SectionCodesDto(
+          setOf(
+            SectionHeader.ROSH_SCREENING,
+            SectionHeader.ROSH_FULL_ANALYSIS,
+            SectionHeader.ROSH_SUMMARY
+          )
         )
       )
       .exchange()
