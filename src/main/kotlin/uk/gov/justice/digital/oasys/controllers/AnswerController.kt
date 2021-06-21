@@ -15,7 +15,6 @@ import uk.gov.justice.digital.oasys.api.SectionAnswersDto
 import uk.gov.justice.digital.oasys.api.SectionCodesDto
 import uk.gov.justice.digital.oasys.services.AnswerService
 import uk.gov.justice.digital.oasys.services.AssessmentService
-import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @RestController
 @Api(value = "Assessments ", tags = ["Assessments"])
@@ -38,9 +37,9 @@ class AnswerController(
   @ApiResponses(ApiResponse(code = 404, message = "Assessment not found"), ApiResponse(code = 200, message = "OK"))
   fun getSectionsForAGivenAssessment(
     @PathVariable("oasysSetId") assessmentId: Long,
-    @RequestBody sectionCodes: Set<SectionHeader>
+    @RequestBody sections: SectionCodesDto
   ): SectionAnswersDto? {
-    return answerService.getRisksForAssessmentSections(assessmentId, sectionCodes)
+    return answerService.getRisksForAssessmentSections(assessmentId, sections.sectionCodes)
   }
 
   @PostMapping(path = ["/assessments/{identityType}/{identity}/sections/answers"])
