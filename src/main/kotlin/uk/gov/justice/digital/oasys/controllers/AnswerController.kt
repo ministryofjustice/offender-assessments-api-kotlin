@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
 import uk.gov.justice.digital.oasys.api.PeriodUnit
 import uk.gov.justice.digital.oasys.api.SectionAnswersDto
+import uk.gov.justice.digital.oasys.api.SectionCodesDto
 import uk.gov.justice.digital.oasys.services.AnswerService
 import uk.gov.justice.digital.oasys.services.AssessmentService
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
@@ -51,7 +52,7 @@ class AnswerController(
     @RequestParam(value = "assessmentTypes", required = false) assessmentTypes: Set<String>?,
     @RequestParam(value = "period", required = true) period: PeriodUnit,
     @RequestParam(value = "periodUnits", required = true) periodUnits: Long,
-    @RequestBody sectionCodes: Set<SectionHeader>
+    @RequestBody sections: SectionCodesDto
   ): SectionAnswersDto? {
     val latestAssessmentsForOffenderInPeriod = assessmentService.getLatestAssessmentsForOffenderInPeriod(
       identityType,
@@ -61,6 +62,6 @@ class AnswerController(
       period,
       periodUnits
     )
-    return answerService.getRisksForAssessmentSections(latestAssessmentsForOffenderInPeriod.assessmentId, sectionCodes)
+    return answerService.getRisksForAssessmentSections(latestAssessmentsForOffenderInPeriod.assessmentId, sections.sectionCodes)
   }
 }

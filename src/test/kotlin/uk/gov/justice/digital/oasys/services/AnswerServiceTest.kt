@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import uk.gov.justice.digital.oasys.api.QuestionAnswerDto
 import uk.gov.justice.digital.oasys.jpa.entities.OasysAnswer
 import uk.gov.justice.digital.oasys.jpa.entities.OasysQuestion
 import uk.gov.justice.digital.oasys.jpa.entities.RefAnswer
@@ -71,7 +72,56 @@ class AnswerServiceTest {
     assertThat(sectionAnswers.sections).hasSize(1)
   }
 
-  private fun oasysQuestion(): OasysQuestion {
+  @Test
+  fun `should get Rosh section answers for Assessment rosh questions`() {
+    val assessmentId = 3333L
+    val questions = mapOf(
+      "ROSH" to setOf("R2.1", "R2.2"),
+      "ROSHSUM" to setOf(
+        "SUM1",
+        "SUM4",
+        "SUM5",
+        "SUM6"
+      )
+    )
+
+    every {
+      questionRepository.getQuestionAnswersFromQuestionCodes(
+        assessmentId,
+        questions
+      )
+    } returns
+      listOf(
+        oasysQuestion("R2.1", "ROSH"),
+        oasysQuestion("SUM1", "ROSHSUM"),
+        oasysQuestion("SUM6", "ROSHSUM")
+      )
+
+    val sectionAnswers = service.getSectionAnswersForQuestions(
+      assessmentId,
+      questions
+    )
+
+    assertThat(sectionAnswers.assessmentId).isEqualTo(assessmentId)
+    assertThat(sectionAnswers.sections).hasSize(2)
+    assertThat(sectionAnswers.sections["ROSH"]).containsExactly(
+      QuestionAnswerDto(
+        refQuestionCode = "R2.1",
+        refAnswerCode = "NO",
+        staticText = "No"
+      )
+    )
+    assertThat(sectionAnswers.sections["ROSHSUM"]).containsExactly(
+      QuestionAnswerDto(
+        refQuestionCode = "SUM1",
+        refAnswerCode = "NO",
+        staticText = "No"
+      ),
+      QuestionAnswerDto(refQuestionCode = "SUM6", refAnswerCode = "NO", staticText = "No")
+    )
+  }
+
+  private fun oasysQuestion(refQuestionCode: String? = "1.1", refSectionCode: String? = "ROSH"): OasysQuestion {
     val oasysAnswer = OasysAnswer(
       refAnswer = RefAnswer(
         refAnswerCode = "NO",
@@ -79,10 +129,13 @@ class AnswerServiceTest {
         ogpScore = 1,
         ovpScore = 2,
         qaRawScore = 3,
-        refSectionAnswer = "No"
+        refSectionAnswer = "No",
+        refQuestionCode = refQuestionCode,
+        refSectionCode = refSectionCode
       )
     )
-    val oasysQuestion = OasysQuestion(refQuestion = RefQuestion(refQuestionCode = "1.1"))
+    val oasysQuestion =
+      OasysQuestion(refQuestion = RefQuestion(refQuestionCode = refQuestionCode, refSectionCode = refSectionCode))
     oasysQuestion.oasysAnswers = mutableSetOf(oasysAnswer)
     oasysAnswer.oasysQuestion = oasysQuestion
 
