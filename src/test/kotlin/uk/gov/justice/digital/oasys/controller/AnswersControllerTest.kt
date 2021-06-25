@@ -8,6 +8,9 @@ import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentAnswersDto
+import uk.gov.justice.digital.oasys.api.SectionAnswersDto
+import uk.gov.justice.digital.oasys.api.SectionCodesDto
+import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 
 @SqlGroup(
   Sql(
@@ -73,6 +76,64 @@ class AnswersControllerTest : IntegrationTest() {
         val answers = it.responseBody
         assertThat(answers.assessmentId).isEqualTo(12345)
         assertThat(answers.questionAnswers).isEmpty()
+      }
+  }
+
+  @Test
+  fun `can get assessment rosh risk sections by Assessment ID for assessment with ROSH`() {
+    val assessmentId = 5433L
+
+    webTestClient.post().uri("/assessments/oasysSetId/$assessmentId/sections/answers")
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .bodyValue(
+        SectionCodesDto(
+          setOf(
+            SectionHeader.ROSH_SCREENING,
+            SectionHeader.ROSH_FULL_ANALYSIS,
+            SectionHeader.ROSH_SUMMARY
+          )
+        )
+      )
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<SectionAnswersDto>()
+      .consumeWith {
+        val sectionAnswers = it.responseBody
+        assertThat(sectionAnswers?.assessmentId).isEqualTo(5433L)
+        assertThat(sectionAnswers?.sections).hasSize(3)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SCREENING.value) ?: emptyList()).hasSize(10)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_FULL_ANALYSIS.value) ?: emptyList()).hasSize(4)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SUMMARY.value) ?: emptyList()).hasSize(9)
+      }
+  }
+
+  @Test
+  fun `get latest complete assessment find a completed assessment and rosh sections`() {
+    val crn = "X320741"
+
+    webTestClient.post()
+      .uri(
+        "/assessments/crn/$crn/sections/answers?assessmentStatus=COMPLETE" +
+          "&assessmentTypes=LAYER_1,LAYER_3&period=YEAR&periodUnits=100"
+      )
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .bodyValue(
+        SectionCodesDto(
+          setOf(
+            SectionHeader.ROSH_SCREENING,
+            SectionHeader.ROSH_FULL_ANALYSIS,
+            SectionHeader.ROSH_SUMMARY
+          )
+        )
+      )
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<SectionAnswersDto>()
+      .consumeWith {
+        val sectionAnswers = it.responseBody
+        assertThat(sectionAnswers?.assessmentId).isEqualTo(1L)
+        assertThat(sectionAnswers?.sections).hasSize(1)
+        assertThat(sectionAnswers?.sections?.get(SectionHeader.ROSH_SCREENING.value) ?: emptyList()).hasSize(10)
       }
   }
 }

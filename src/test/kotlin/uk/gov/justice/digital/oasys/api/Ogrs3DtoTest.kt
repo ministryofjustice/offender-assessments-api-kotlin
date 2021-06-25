@@ -26,6 +26,7 @@ class Ogrs3DtoTest {
 
   private fun setupAssessment(): Assessment {
     return Assessment(
+      oasysSetPk = 123,
       ogrs31Year = BigDecimal.valueOf(4),
       ogrs32Year = BigDecimal.valueOf(5),
       ogrs3RiskRecon = RefElement(refElementDesc = "Low", refElementCode = "L")

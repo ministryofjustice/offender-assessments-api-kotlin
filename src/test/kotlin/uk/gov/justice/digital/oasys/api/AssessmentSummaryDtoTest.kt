@@ -3,6 +3,7 @@ package uk.gov.justice.digital.oasys.api
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto.Companion.toAssessmentsSummaryDto
 import uk.gov.justice.digital.oasys.jpa.entities.Assessment
 import uk.gov.justice.digital.oasys.jpa.entities.AssessmentGroup
 import uk.gov.justice.digital.oasys.jpa.entities.RefAssessmentVersion
@@ -16,7 +17,7 @@ class AssessmentSummaryDtoTest {
 
   @Test
   fun `Builds valid Assessment Summary DTO from Entity `() {
-    val assessmentDto = AssessmentSummaryDto.from(setOf(assessment)).first()
+    val assessmentDto = setOf(assessment).toAssessmentsSummaryDto().first()
 
     assertThat(assessmentDto.assessmentId).isEqualTo(assessment.oasysSetPk)
     assertThat(assessmentDto.assessorName).isEqualTo(assessment.assessorName)
@@ -33,20 +34,14 @@ class AssessmentSummaryDtoTest {
   }
 
   @Test
-  fun `Builds valid Assessment Summary DTO Null`() {
-    val assessmentDto = AssessmentSummaryDto.from(null)
-    assertThat(assessmentDto).isEmpty()
-  }
-
-  @Test
   fun `Builds valid Assessment Summary DTO empty set`() {
-    val assessmentDto = AssessmentSummaryDto.from(emptySet())
+    val assessmentDto = emptySet<Assessment>().toAssessmentsSummaryDto()
     assertThat(assessmentDto).isEmpty()
   }
 
   @Test
-  fun `Builds valid Assessment Summary DTO null values in set set`() {
-    val assessmentDto = AssessmentSummaryDto.from(setOf(null))
+  fun `Builds valid empty Assessment Summary DTO when empty assessments provided`() {
+    val assessmentDto = emptySet<Assessment>().toAssessmentsSummaryDto()
     assertThat(assessmentDto).isEmpty()
   }
 

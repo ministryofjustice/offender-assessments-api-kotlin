@@ -24,6 +24,7 @@ class OspDtoTest {
 
   private fun setupAssessment(): Assessment {
     return Assessment(
+      oasysSetPk = 123,
       ospIndecentRiskRecon = RefElement(
         refElementCode = "L",
         refElementDesc = "Long",
