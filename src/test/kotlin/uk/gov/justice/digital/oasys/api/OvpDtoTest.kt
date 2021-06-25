@@ -26,7 +26,6 @@ class OvpDtoTest {
 
   private fun setupAssessment(): Assessment {
     return Assessment(
-      oasysSetPk = 123,
       ovp1Year = BigDecimal.valueOf(1),
       ovp2Year = BigDecimal.valueOf(2),
       ovpAgeWesc = BigDecimal.valueOf(3),

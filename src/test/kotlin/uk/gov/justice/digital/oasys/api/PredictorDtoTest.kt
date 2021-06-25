@@ -24,7 +24,7 @@ class PredictorDtoTest {
 
   @Test
   fun `should not be completed when completed date is null`() {
-    val predictor = PredictorDto.from(Assessment(oasysSetPk = 123))
+    val predictor = PredictorDto.from(Assessment())
     assertThat(predictor.completedDate).isNull()
     assertThat(predictor.assessmentCompleted).isFalse
   }

@@ -24,7 +24,6 @@ class RsrDtoTest {
 
   private fun setupAssessment(): Assessment {
     return Assessment(
-      oasysSetPk = 123,
       rsrRiskRecon = RefElement(
         refElementCode = "L",
         refElementDesc = "Long",

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class AssessmentSummaryDto(
 
   @ApiModelProperty(value = "Assessment primary key (OASysSetPK)", example = "1234")
-  val assessmentId: Long,
+  val assessmentId: Long? = null,
 
   @ApiModelProperty(value = "Assessment Reference Version Code", example = "LAYER3")
   val refAssessmentVersionCode: String? = null,
@@ -46,25 +46,26 @@ data class AssessmentSummaryDto(
 
   companion object {
 
-    fun Collection<Assessment>.toAssessmentsSummaryDto(): Collection<AssessmentSummaryDto> {
-      return this.map { it.toAssessmentSummaryDto() }?.toSet()
+    fun from(assessments: Collection<Assessment?>?): Collection<AssessmentSummaryDto> {
+      return assessments?.filterNotNull()?.map { from(it) }?.toSet().orEmpty()
     }
 
-    fun Assessment.toAssessmentSummaryDto(): AssessmentSummaryDto {
-      val assessmentVersion = this.assessmentVersion
+    private fun from(assessment: Assessment?): AssessmentSummaryDto {
+
+      val assessmentVersion = assessment?.assessmentVersion
       return AssessmentSummaryDto(
-        this.oasysSetPk,
+        assessment?.oasysSetPk,
         assessmentVersion?.refAssVersionCode,
         assessmentVersion?.versionNumber,
         assessmentVersion?.refAssVersionUk,
-        this.assessmentType,
-        this.assessmentStatus,
-        this.group?.historicStatus,
+        assessment?.assessmentType,
+        assessment?.assessmentStatus,
+        assessment?.group?.historicStatus,
         assessmentVersion?.oasysScoringAlgVersion,
-        this.assessorName,
-        this.createDate,
-        this.dateCompleted,
-        this.assessmentVoidedDate
+        assessment?.assessorName,
+        assessment?.createDate,
+        assessment?.dateCompleted,
+        assessment?.assessmentVoidedDate
       )
     }
   }

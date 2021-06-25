@@ -18,7 +18,7 @@ data class Assessment(
 
   @Id
   @Column(name = "OASYS_SET_PK")
-  val oasysSetPk: Long,
+  val oasysSetPk: Long? = null,
 
   @Column(name = "ASSESSOR_NAME")
   val assessorName: String? = null,

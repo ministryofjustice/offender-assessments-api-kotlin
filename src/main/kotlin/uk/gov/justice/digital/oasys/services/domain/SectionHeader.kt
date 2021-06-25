@@ -15,10 +15,7 @@ enum class SectionHeader(val value: String) {
   ATTITUDES("12"),
   HEATH_AND_OTHER_CONSIDERATIONS("13"),
   INITIAL_SENTENCE_PLAN("ISP"),
-  REVIEW_SENTENCE_PLAN("RSP"),
-  ROSH_SCREENING("ROSH"),
-  ROSH_FULL_ANALYSIS("ROSHFULL"),
-  ROSH_SUMMARY("ROSHSUM");
+  REVIEW_SENTENCE_PLAN("RSP");
 
   companion object {
     fun findByValue(value: String?): SectionHeader? {

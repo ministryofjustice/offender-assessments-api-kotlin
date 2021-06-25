@@ -264,6 +264,16 @@ private fun roshaAnswers(): AssessmentAnswersDto {
   )
 }
 
+private fun emptyRoshAnswers(): AssessmentAnswersDto {
+  return AssessmentAnswersDto(
+    assessmentId = 1111,
+    questionAnswers = listOf(
+      QuestionDto(refQuestionCode = "R2.1", answers = emptyList()),
+      QuestionDto(refQuestionCode = "R2.2", answers = emptyList())
+    )
+  )
+}
+
 private fun answers(refQuestionCode: Map<String, String?>): AssessmentAnswersDto {
   return AssessmentAnswersDto(
     assessmentId = 1111,
