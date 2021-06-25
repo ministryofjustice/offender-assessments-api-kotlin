@@ -26,6 +26,7 @@ class OgpDtoTest {
 
   private fun setupAssessment(): Assessment {
     return Assessment(
+      oasysSetPk = 123,
       ogpStWesc = BigDecimal.valueOf(1),
       ogpDyWesc = BigDecimal.valueOf(2),
       ogpTotWesc = BigDecimal.valueOf(3),
@@ -34,6 +35,7 @@ class OgpDtoTest {
       ogpRiskRecon = RefElement(refElementDesc = ("Low"), refElementCode = ("L"))
     )
   }
+
   private fun setupValidOgp(): OgpDto {
     return OgpDto(
       ogpStaticWeightedScore = BigDecimal.valueOf(1),

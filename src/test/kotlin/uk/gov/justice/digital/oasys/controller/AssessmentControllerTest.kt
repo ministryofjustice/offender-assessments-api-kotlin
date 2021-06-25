@@ -9,17 +9,25 @@ import org.springframework.test.context.jdbc.SqlGroup
 import org.springframework.test.web.reactive.server.expectBody
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
+import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
 import java.time.LocalDateTime
 
 @SqlGroup(
-  Sql(scripts = ["classpath:assessments/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:assessments/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:assessments/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:assessments/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class AssessmentControllerTest : IntegrationTest() {
 
   private val validOasysSetId = 5433L
-  private val oasysOffenderId = 1234L
+  private val oasysSetIdForCompletedAssessment = 5432L
 
   @Test
   fun `access forbidden when no authority`() {
@@ -73,6 +81,35 @@ class AssessmentControllerTest : IntegrationTest() {
       }
   }
 
+  @Test
+  fun `get latest complete assessment find a completed assessment in the last 100 years`() {
+    val crn = "CRN"
+
+    webTestClient.get()
+      .uri(
+        "/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE" +
+          "&assessmentTypes=LAYER_1,LAYER_3&period=YEAR&periodUnits=100"
+      )
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody<AssessmentSummaryDto>()
+      .consumeWith {
+        val assessment = it.responseBody
+        validateCompletedAssessmentSummary(assessment)
+      }
+  }
+
+  @Test
+  fun `can't assessments for offender`() {
+    val crn = 999
+
+    webTestClient.get().uri("/offenders/crn/$crn/assessments?assessmentStatus=COMPLETE&period=YEAR&periodUnits=100")
+      .headers(setAuthorisation(roles = listOf("ROLE_OASYS_READ_ONLY")))
+      .exchange()
+      .expectStatus().isNotFound
+  }
+
   fun validateAssessment(assessment: AssessmentDto) {
     assertThat(assessment.assessmentId).isEqualTo(validOasysSetId)
     assertThat(assessment.refAssessmentVersionCode).isEqualTo("LAYER3")
@@ -88,6 +125,21 @@ class AssessmentControllerTest : IntegrationTest() {
     assertThat(assessment.voided).isNull()
 
     // Sections check
-    assertThat(assessment.sections).hasSize(17)
+    assertThat(assessment.sections).hasSize(19)
+  }
+
+  private fun validateCompletedAssessmentSummary(assessmentSummary: AssessmentSummaryDto) {
+    assertThat(assessmentSummary.assessmentId).isEqualTo(oasysSetIdForCompletedAssessment)
+    assertThat(assessmentSummary.refAssessmentVersionCode).isEqualTo("LAYER3")
+    assertThat(assessmentSummary.refAssessmentVersionNumber).isEqualTo("1")
+    assertThat(assessmentSummary.refAssessmentId).isEqualTo(4L)
+    assertThat(assessmentSummary.assessmentType).isEqualTo("LAYER_3")
+    assertThat(assessmentSummary.assessmentStatus).isEqualTo("COMPLETE")
+    assertThat(assessmentSummary.historicStatus).isEqualTo("CURRENT")
+    assertThat(assessmentSummary.refAssessmentOasysScoringAlgorithmVersion).isEqualTo(3L)
+    assertThat(assessmentSummary.assessorName).isEqualTo("Probation Test")
+    assertThat(assessmentSummary.created).isEqualTo(LocalDateTime.of(2018, 5, 20, 23, 0, 9))
+    assertThat(assessmentSummary.completed).isEqualTo(LocalDateTime.of(2018, 6, 20, 23, 0, 9))
+    assertThat(assessmentSummary.voided).isNull()
   }
 }

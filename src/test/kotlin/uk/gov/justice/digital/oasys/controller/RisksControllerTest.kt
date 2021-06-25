@@ -13,8 +13,15 @@ import uk.gov.justice.digital.oasys.api.RiskDto
 import uk.gov.justice.digital.oasys.api.RiskQuestionDto
 
 @SqlGroup(
-  Sql(scripts = ["classpath:risks/before-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:risks/after-test-full.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:risks/before-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:risks/after-test-full.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @AutoConfigureWebTestClient
 class RisksControllerTest : IntegrationTest() {

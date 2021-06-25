@@ -7,14 +7,19 @@ import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.oasys.api.AssessmentDto
 import uk.gov.justice.digital.oasys.api.AssessmentNeedDto
 import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto
+import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto.Companion.toAssessmentSummaryDto
+import uk.gov.justice.digital.oasys.api.AssessmentSummaryDto.Companion.toAssessmentsSummaryDto
+import uk.gov.justice.digital.oasys.api.PeriodUnit
 import uk.gov.justice.digital.oasys.jpa.entities.Section
 import uk.gov.justice.digital.oasys.jpa.repositories.AssessmentRepository
+import uk.gov.justice.digital.oasys.services.domain.AssessmentType
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeed
 import uk.gov.justice.digital.oasys.services.domain.CriminogenicNeedMapping
 import uk.gov.justice.digital.oasys.services.domain.NeedConfiguration
 import uk.gov.justice.digital.oasys.services.domain.NeedSeverity
 import uk.gov.justice.digital.oasys.services.domain.SectionHeader
 import uk.gov.justice.digital.oasys.services.exceptions.EntityNotFoundException
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -25,15 +30,49 @@ class AssessmentService constructor(
 ) {
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
-    const val LAYER_3 = "LAYER_3"
+    val LAYER_3 = AssessmentType.LAYER3.value
     val POSITIVE_ANSWERS = setOf("YES", "Y")
   }
 
-  fun getAssessmentsForOffender(identityType: String?, identity: String?, filterGroupStatus: String?, filterAssessmentType: String?, filterVoided: Boolean?, filterAssessmentStatus: String?): Collection<AssessmentSummaryDto> {
+  fun getAssessmentsForOffender(
+    identityType: String?,
+    identity: String?,
+    filterGroupStatus: String?,
+    filterAssessmentType: String?,
+    filterVoided: Boolean?,
+    filterAssessmentStatus: String?
+  ): Collection<AssessmentSummaryDto> {
     val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
-    val assessments = assessmentRepository.getAssessmentsForOffender(offenderId, filterGroupStatus, filterAssessmentType, filterVoided, filterAssessmentStatus)
-    log.info("Found ${assessments?.size} Assessments for identity: ($identity, $identityType)")
-    return AssessmentSummaryDto.from(assessments)
+    val assessments = assessmentRepository.getAssessmentsForOffender(
+      offenderId,
+      filterGroupStatus,
+      filterAssessmentType,
+      filterVoided,
+      filterAssessmentStatus
+    )
+    log.info("Found ${assessments.size} Assessments for identity: ($identity, $identityType)")
+    return assessments.toAssessmentsSummaryDto()
+  }
+
+  fun getLatestAssessmentsForOffenderInPeriod(
+    identityType: String?,
+    identity: String?,
+    filterAssessmentType: Set<String>?,
+    filterAssessmentStatus: String?,
+    period: PeriodUnit,
+    periodUnits: Long
+  ): AssessmentSummaryDto {
+    val offenderId = offenderService.getOffenderIdByIdentifier(identityType, identity)
+
+    val assessment = assessmentRepository.getLatestAssessmentsForOffenderInPeriod(
+      offenderId,
+      filterAssessmentType,
+      filterAssessmentStatus,
+      LocalDateTime.now().minus(periodUnits, period.chronoUnit)
+    )
+      ?: throw EntityNotFoundException("Latest $filterAssessmentStatus with types $filterAssessmentType type not found for $identityType, $identity")
+    log.info("Found ${assessment?.oasysSetPk} Assessment for identity: ($identity, $identityType)")
+    return assessment.toAssessmentSummaryDto()
   }
 
   fun getAssessment(oasysSetId: Long?): AssessmentDto {
@@ -48,7 +87,8 @@ class AssessmentService constructor(
     if (LAYER_3 != assessmentType) {
       return emptySet()
     }
-    val needsSections: Collection<Section> = sectionService.getSectionsForAssessment(oasysSetId, CriminogenicNeedMapping.getNeedsSectionHeadings())
+    val needsSections: Collection<Section> =
+      sectionService.getSectionsForAssessment(oasysSetId, CriminogenicNeedMapping.getNeedsSectionHeadings())
     return needsSections.map { checkRiskAndThresholdLevels(it) }
   }
 
@@ -67,7 +107,15 @@ class AssessmentService constructor(
     val flaggedAsNeed = isPositiveAnswer(section?.lowScoreNeedAttnInd)
     val severity = calculateNeedSeverity(section, needConfig)
 
-    return CriminogenicNeed(sectionName, shortDescription, riskHarm, riskReoffending, overThreshold, flaggedAsNeed, severity)
+    return CriminogenicNeed(
+      sectionName,
+      shortDescription,
+      riskHarm,
+      riskReoffending,
+      overThreshold,
+      flaggedAsNeed,
+      severity
+    )
   }
 
   private fun calculateNeedSeverity(section: Section?, needConfig: NeedConfiguration?): NeedSeverity {

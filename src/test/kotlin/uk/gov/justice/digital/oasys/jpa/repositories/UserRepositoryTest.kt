@@ -12,8 +12,15 @@ import org.springframework.test.context.jdbc.SqlGroup
 import uk.gov.justice.digital.oasys.controller.IntegrationTest
 
 @SqlGroup(
-  Sql(scripts = ["classpath:authentication/before-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)),
-  Sql(scripts = ["classpath:authentication/after-test.sql"], config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  Sql(
+    scripts = ["classpath:authentication/before-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
+  ),
+  Sql(
+    scripts = ["classpath:authentication/after-test.sql"],
+    config = SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+    executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+  )
 )
 @DisplayName("User Repository Tests")
 class UserRepositoryTest(@Autowired private val repository: UserRepository) : IntegrationTest() {
@@ -32,7 +39,6 @@ class UserRepositoryTest(@Autowired private val repository: UserRepository) : In
     val regions = repository.findCtAreasEstByUserCode("USER2")
 
     assertThat(regions).hasSize(2)
-    // assertThat(regions).containsExactly("Wakefield (HMP)", "West Yorkshire")
   }
 
   @Test
