@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.oasys.controllers
 
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.slf4j.Logger
@@ -26,6 +27,7 @@ class SentencePlanController(private val sentencePlanService: SentencePlanServic
   @RequestMapping(path = ["/offenders/{identityType}/{identity}/basicSentencePlans"], method = [RequestMethod.GET])
   @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
   fun getSentenceBasicPlansForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String,
     @PathVariable("identity") identity: String,
     @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
@@ -39,6 +41,7 @@ class SentencePlanController(private val sentencePlanService: SentencePlanServic
   @RequestMapping(path = ["/offenders/{identityType}/{identity}/fullSentencePlans"], method = [RequestMethod.GET])
   @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
   fun getFullSentencePlansForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String?,
     @PathVariable("identity") identity: String?,
     @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
@@ -54,6 +57,7 @@ class SentencePlanController(private val sentencePlanService: SentencePlanServic
   @RequestMapping(path = ["/offenders/{identityType}/{identity}/fullSentencePlans/{oasysSetPk}"], method = [RequestMethod.GET])
   @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
   fun getFullSentencePlanForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String?,
     @PathVariable("identity") identity: String?,
     @PathVariable("oasysSetPk") oasysSetPk: Long?
@@ -66,6 +70,7 @@ class SentencePlanController(private val sentencePlanService: SentencePlanServic
   @RequestMapping(path = ["/offenders/{identityType}/{identity}/fullSentencePlans/summary"], method = [RequestMethod.GET])
   @ApiResponses(ApiResponse(code = 404, message = "Offender not found"), ApiResponse(code = 200, message = "OK"))
   fun getSummarySentencePlansForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String?,
     @PathVariable("identity") identity: String?,
     @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,

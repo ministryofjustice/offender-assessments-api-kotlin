@@ -2,6 +2,7 @@ package uk.gov.justice.digital.oasys.controllers
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,6 +40,7 @@ class AssessmentController(private val assessmentService: AssessmentService) {
     ApiResponse(code = 200, message = "OK")
   )
   fun getAssessmentsForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String,
     @PathVariable("identity") identity: String,
     @RequestParam(value = "historicStatus", required = false) filterGroupStatus: String?,
@@ -63,6 +65,7 @@ class AssessmentController(private val assessmentService: AssessmentService) {
     ApiResponse(code = 200, message = "OK")
   )
   fun getAssessmentsForOffender(
+    @ApiParam(value = "Offender Identitiy Type", required = true, allowableValues = "oasysOffenderId, crn, nomisId, pnc")
     @PathVariable("identityType") identityType: String,
     @PathVariable("identity") identity: String,
     @RequestParam(value = "assessmentStatus", required = false) assessmentStatus: String?,
