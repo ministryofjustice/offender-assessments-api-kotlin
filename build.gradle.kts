@@ -1,11 +1,10 @@
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.7"
-  kotlin("plugin.spring") version "1.4.21"
-  kotlin("plugin.jpa") version "1.4.21"
-  kotlin("plugin.allopen") version "1.4.10"
-  kotlin("kapt") version "1.4.10"
-  id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.0"
+  kotlin("plugin.spring") version "1.5.20"
+  kotlin("plugin.jpa") version "1.5.20"
+  kotlin("plugin.allopen") version "1.5.20"
+  kotlin("kapt") version "1.5.20"
 }
 
 allOpen {
@@ -64,4 +63,5 @@ dependencies {
   testImplementation("com.ninja-squad:springmockk:3.0.1")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
   testImplementation("com.github.tomakehurst:wiremock-standalone:2.27.2")
+  testImplementation("io.swagger.parser.v3:swagger-parser-v2-converter:2.0.21")
 }

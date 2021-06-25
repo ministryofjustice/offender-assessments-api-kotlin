@@ -25,26 +25,26 @@ class OffenderRepository constructor(entityManager: EntityManager) {
     when (identityType) {
       OffenderIdentifier.CRN -> {
         query.where(
-          offender.cmsProbNumber.toUpperCase().eq(identity.toUpperCase())
+          offender.cmsProbNumber.toUpperCase().eq(identity.uppercase())
             .and(offender.deletedDate.isNull)
         )
       }
       OffenderIdentifier.PNC -> {
         query.where(
-          offender.pnc.toUpperCase().eq(identity.toUpperCase())
+          offender.pnc.toUpperCase().eq(identity.uppercase())
             .and(offender.deletedDate.isNull)
         )
       }
       OffenderIdentifier.NOMIS -> {
         query.where(
-          offender.cmsPrisNumber.toUpperCase().eq(identity.toUpperCase())
+          offender.cmsPrisNumber.toUpperCase().eq(identity.uppercase())
             .and(offender.deletedDate.isNull)
         )
       }
       OffenderIdentifier.OASYS -> query.where(offender.offenderPk.eq(identity.toLong()))
       OffenderIdentifier.BOOKING -> {
         query.where(
-          offender.prisonNumber.toUpperCase().eq(identity.toUpperCase())
+          offender.prisonNumber.toUpperCase().eq(identity.uppercase())
             .and(offender.deletedDate.isNull)
         )
       }
