@@ -8,6 +8,8 @@ jobs:
     executor:
       name: hmpps/java
       tag: "16.0"
+    environment:
+      _JAVA_OPTIONS: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false
     steps:
       - checkout
       - restore_cache:
@@ -24,11 +26,7 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build/libs
-            - build.gradle.kts
+
 
 workflows:
   version: 2
