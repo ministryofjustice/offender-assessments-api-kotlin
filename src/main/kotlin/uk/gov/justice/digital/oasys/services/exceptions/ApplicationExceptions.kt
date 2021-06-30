@@ -13,4 +13,4 @@ class InvalidOasysRequestException(msg: String) : RuntimeException(msg)
 
 class UserPermissionsChecksFailedException(msg: String, val permissions: PermissionsDetailsDto) : RuntimeException(msg)
 
-class UserPermissionsBadRequestException(msg: String, val errors: List<ErrorDetailsDto> = emptyList()) : RuntimeException(msg)
+class UserPermissionsBadRequestException(msg: String, val errors: List<ErrorDetailsDto>? = null) : RuntimeException(msg)
