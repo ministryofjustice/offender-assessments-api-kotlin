@@ -45,8 +45,6 @@ dependencies {
   implementation("commons-io:commons-io:2.8.0")
   implementation("com.zaxxer:HikariCP:4.0.3")
   implementation("io.springfox:springfox-boot-starter:3.0.0")
-  implementation("com.google.code.gson:gson:2.8.6")
-  implementation("com.google.guava:guava:30.1.1-jre")
 
   runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.10.0.0")
   implementation("org.apache.commons:commons-lang3:3.12.0")
@@ -62,6 +60,5 @@ dependencies {
   }
   testImplementation("com.ninja-squad:springmockk:3.0.1")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
-  testImplementation("com.github.tomakehurst:wiremock-standalone:2.27.2")
   testImplementation("io.swagger.parser.v3:swagger-parser-v2-converter:2.0.21")
 }
