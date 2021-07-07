@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service
 @Service
 class OffenderStubService(val offenderStubRepository: OffenderStubRepository) {
 
-  fun getOffenderStubs(): List<OffenderStub>? {
-    return offenderStubRepository.getOffenderStubs()
+  fun getOffenderStubs(): List<OffenderStubDto> {
+    val offenderStubEntities = offenderStubRepository.getOffenderStubs()
+    return OffenderStubDto.from(offenderStubEntities)
   }
 }
