@@ -9,7 +9,7 @@ import javax.persistence.EntityManager
 class OffenderStubRepository constructor(entityManager: EntityManager) {
   private val queryFactory: JPAQueryFactory = JPAQueryFactory(entityManager)
 
-  fun getOffenderStubs(): List<OffenderStub> {
+  fun getOffenderStubs(): List<OffenderStubEntity> {
     return queryFactory.selectFrom(offenderStub)
       .fetch()
   }

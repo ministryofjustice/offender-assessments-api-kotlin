@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 class OffenderStubController(val offenderStubService: OffenderStubService) {
 
   @GetMapping(path = ["/offender/stub"])
-  fun getOffenderStubs(): List<OffenderStub>? {
+  fun getOffenderStubs(): List<OffenderStubDto>? {
     return offenderStubService.getOffenderStubs()
   }
 }
