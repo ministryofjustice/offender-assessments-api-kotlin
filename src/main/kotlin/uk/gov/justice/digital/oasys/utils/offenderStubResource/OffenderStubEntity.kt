@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "CMS_STUB_OFFENDER")
-data class OffenderStub(
+class OffenderStubEntity(
   @Id
   @Column(name = "CMS_STUB_OFFENDER_PK")
   val offenderPk: Long,

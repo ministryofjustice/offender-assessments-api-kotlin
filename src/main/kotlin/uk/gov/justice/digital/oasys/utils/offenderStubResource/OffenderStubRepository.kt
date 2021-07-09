@@ -2,15 +2,15 @@ package uk.gov.justice.digital.oasys.utils.offenderStubResource
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
-import uk.gov.justice.digital.oasys.utils.offenderStubResource.QOffenderStub.offenderStub
+import uk.gov.justice.digital.oasys.utils.offenderStubResource.QOffenderStubEntity.offenderStubEntity
 import javax.persistence.EntityManager
 
 @Repository
 class OffenderStubRepository constructor(entityManager: EntityManager) {
   private val queryFactory: JPAQueryFactory = JPAQueryFactory(entityManager)
 
-  fun getOffenderStubs(): List<OffenderStub> {
-    return queryFactory.selectFrom(offenderStub)
+  fun getOffenderStubs(): List<OffenderStubEntity> {
+    return queryFactory.selectFrom(offenderStubEntity)
       .fetch()
   }
 }
