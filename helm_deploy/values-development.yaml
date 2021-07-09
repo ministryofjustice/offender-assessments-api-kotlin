@@ -23,3 +23,4 @@ env:
   JAVA_OPTS: "-Xmx512m -Duser.timezone=UTC"
   TZ: UTC
   OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+  SPRING_PROFILES_ACTIVE: "oracle,logstash,dev"
