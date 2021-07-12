@@ -95,6 +95,7 @@ workflows:
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
+          image_name: offender-assessments-api
           context:
             - hmpps-common-vars
       - hmpps/veracode_policy_scan:
