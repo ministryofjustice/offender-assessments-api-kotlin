@@ -8,7 +8,7 @@ env:
     value: "{{ .Values.image.port }}"
 
   - name: SPRING_PROFILES_ACTIVE
-    value: "oracle,logstash"
+    value: "{{ .Values.env.SPRING_PROFILES_ACTIVE }}"
 
   - name: TZ
     value: "{{ .Values.env.TZ }}"
