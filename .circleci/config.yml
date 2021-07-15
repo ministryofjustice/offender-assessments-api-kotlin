@@ -3,6 +3,11 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@3.8
 
+parameters:
+  alerts-slack-channel:
+    type: string
+    default: "hmpps-assessments-dev"
+
 jobs:
   validate:
     executor:
@@ -95,6 +100,7 @@ workflows:
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
           image_name: offender-assessments-api
           context:
             - hmpps-common-vars
