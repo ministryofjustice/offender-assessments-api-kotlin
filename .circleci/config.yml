@@ -102,7 +102,7 @@ workflows:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
           slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          image_name: offender-assessments-api
+          image_name: quay.io/hmpps/offender-assessments-api
           context:
             - hmpps-common-vars
       - hmpps/veracode_policy_scan:
