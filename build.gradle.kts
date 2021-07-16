@@ -1,6 +1,6 @@
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.4"
   kotlin("plugin.spring") version "1.5.20"
   kotlin("plugin.jpa") version "1.5.20"
   kotlin("plugin.allopen") version "1.5.20"
@@ -38,18 +38,18 @@ dependencies {
   implementation("javax.annotation:javax.annotation-api:1.3.2")
   implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
   implementation("javax.activation:activation:1.1.1")
-  implementation("com.sun.xml.bind:jaxb-impl:3.0.0")
-  implementation("com.sun.xml.bind:jaxb-core:3.0.0")
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")
-  implementation("commons-io:commons-io:2.8.0")
-  implementation("com.zaxxer:HikariCP:4.0.3")
+  implementation("com.sun.xml.bind:jaxb-impl:3.0.1")
+  implementation("com.sun.xml.bind:jaxb-core:3.0.1")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.4")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
+  implementation("commons-io:commons-io:2.11.0")
+  implementation("com.zaxxer:HikariCP:5.0.0")
   implementation("io.springfox:springfox-boot-starter:3.0.0")
 
-  runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.10.0.0")
+  runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.11.0.0")
   implementation("org.apache.commons:commons-lang3:3.12.0")
   runtimeOnly("com.h2database:h2:1.4.200")
-  runtimeOnly("org.flywaydb:flyway-core:7.8.1")
+  runtimeOnly("org.flywaydb:flyway-core:7.11.2")
 
   testRuntimeOnly("com.h2database:h2:1.4.200")
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -60,5 +60,5 @@ dependencies {
   }
   testImplementation("com.ninja-squad:springmockk:3.0.1")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
-  testImplementation("io.swagger.parser.v3:swagger-parser-v2-converter:2.0.21")
+  testImplementation("io.swagger.parser.v3:swagger-parser-v2-converter:2.0.27")
 }
